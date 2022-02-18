@@ -1,11 +1,11 @@
 # Charbile's Hatful Adventure
 # main.hss
 
-include,array.hss
-include,util.hss
-include,geometry.hss
+include,.\Util\array.hss
+include,.\Util\util.hss
+include,.\Util\geometry.hss
+include,.\Util\effects.hss
 include,input.hss
-include,effects.hss
 include,animate.hss
 include,combat.hss
 include,movement.hss
