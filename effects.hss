@@ -1,0 +1,355 @@
+# effects.hss
+# animations and particle systems
+
+defineConstant, begin
+    
+end
+
+# ANIMATING SPRITES
+# ==========================
+
+script, createAnimation, handle, duration, spd=1, repeat=0, dissolve=false, begin
+    # takes an existing Slice and converts it into an animating sprite
+    # spd is tickcount: higher is slower
+    # repeat: true or false
+    #realignSlice(handle, edge:left, edge:top, edge:center, edge:center)
+    setSliceExtra(handle, extra0, duration)
+    setSliceExtra(handle, extra1, spd)
+    if(repeat) then(
+        setSliceExtra(handle, extra2, duration)
+    )
+    if(dissolve) then(
+        setTopPadding(handle, dissolve)
+        dissolveSprite(handle, dissolve, duration)
+    )
+    # store handle in array
+    append(animHandles, handle)
+end
+
+script, animateEffects, purge=false, begin
+    # Loop through children of animHandles and apply animation:
+    # Decrement a child's individual 'timer' (extra0)
+    # If timer,mod,spd (extra1) == 0, increment frame
+    # If timer == 0 & repeat (extra2) > 0, reset timer and continue
+    # If timer == 0 & repeat == 0, free child
+    # If purge is true, instead set all children will be freed
+    variable(i, sl)
+    
+    for(i, childCount(animHandles)--1, 0, -1) do(     # Work through array backwards so removing elements is safe
+        sl := ge(animHandles, i)
+        # Animate this slice
+        if(purge || sliceIsValid(sl) == false) then(
+            pop(animHandles, i) # Remove handle from array
+            if(sliceIsValid(sl)) then(freeSlice(sl))
+        ) else(
+            # Decrement timer
+            setSliceExtra(sl, extra0, getSliceExtra(sl, extra0)--1)
+            if(getSliceExtra(sl, extra0),mod,getSliceExtra(sl, extra1) == 0) then(
+                # timer value is divisible by spd
+                if(sliceIsSprite(sl)) then(
+                    # Increment frame
+                    setSpriteFrame(sl, (getSpriteFrame(sl) + 1),mod,spriteFrameCount(sl))
+                ) elseif(sliceIsText(sl)) then(
+                    # Adjust vertical velocity (text decelerates as it rises)
+                    setSliceVelocityY(sl, 0--sqrt(getSliceExtra(sl, extra0)/2))
+                )
+            )
+            if(getSliceExtra(sl, extra0) == 0) then(
+                # Timer hit 0: reset or mark slice to be freed
+                if(getSliceExtra(sl, extra2) > 0) then(
+                    # Extra 2 is repeat duration, reset timer to this value
+                    setsliceExtra(sl, extra0, getSliceExtra(sl, extra2))
+                    if(getTopPadding(sl) > 0) then(dissolveSprite(sl, getTopPadding(sl), getSliceExtra(sl, extra2)))
+                ) else(
+                    # Duration over, free slice
+                    pop(animHandles, i) # Remove handle from array
+                    freeSlice(sl)
+                )
+            )
+        )
+    )
+end
+
+# PARTICLES
+# ==========================
+
+script, createParticle, handle, dur, spd, bearing, weight=0, gravity=false, dissolve=0, begin
+    # Takes an existing slice handle and makes it a particle
+    # This particle will move every frame based on the stats given
+    # dur = duration in ticks, will delete itself after this duration
+    # spd = distance to move each tick
+    # bearing = direction to move in, in degrees
+    # weight = amount speed will decrease and vertical momentum changes
+    # gravity = whether gravity is enabled
+    # dissolve = which dissolve pattern is on the slice, if any
+    variable(sl)
+
+    #realignSlice(handle, edge:left, edge:top, edge:center, edge:center)
+    setParticleDuration(handle, dur)
+    setParticleSpeed(handle, spd)
+    setParticleBearing(handle, bearing)
+    # Child slice for more data storage
+    sl := createContainer()
+    setParent(sl, handle)
+    setParticleWeight(handle, weight)
+    setParticleGravity(handle, gravity)
+    sl := createContainer()
+    setParent(sl, handle)
+    # Subpixel position
+    setSubX(handle, sliceX(handle)*1000)
+    setSubY(handle, sliceY(handle)*1000)
+    # store handle in array
+    append(particleHandles, handle)
+    if(dissolve <> false && sliceIsSprite(handle)) then(
+        dissolveSprite(handle, dissolve, dur)
+    )
+    if(sliceIsSprite(handle)) then(setParticleAnimSpd(handle, dur/spriteFrameCount(handle)))
+end
+
+script, moveParticles, purge=false, begin
+    # NOTE: it is assumed data slices are the last children of the particle slice
+    variable(i, sl, x, y, xv, yv, animSpd)
+
+    for(i, childCount(particleHandles)--1, 0, -1) do(
+        sl := ge(particleHandles, i)
+
+        if(purge || sliceIsValid(sl) == false) then(
+            pop(particleHandles, i)
+            if(sliceIsValid(sl)) then(freeSlice(sl))
+            continue
+        )
+        # Offscreen culling
+        if(sliceX(sl) < 0--100 || sliceX(sl) > getScreenWidth+100
+        || sliceY(sl) < 0--100 || sliceY(sl) > getScreenHeight+100) then(
+            #pop(particleHandles, i)
+            #freeSlice(sl)
+            #continue
+        )
+        # Duration
+        setParticleDuration(sl, getParticleDuration(sl)--1)
+        if(getParticleDuration(sl) <= 0) then(
+            pop(particleHandles, i)
+            freeSlice(sl)
+            continue
+        )
+        # Speed and Bearing
+        xv := get_x_subpixels(getParticleSpeed(sl), getParticleBearing(sl))
+        yv := get_y_subpixels(getParticleSpeed(sl), getParticleBearing(sl))
+        x := getSubX(sl) + xv
+        y := getSubY(sl) + yv
+        setSubX(sl, x)
+        setSubY(sl, y)
+        putSlice(sl, x/1000, y/1000)
+        # Weight & Gravity
+        if(getParticleWeight(sl) > 0) then(
+            if(sign(getParticleSpeed(sl)) <> sign(getParticleSpeed(sl) -- (getParticleWeight(sl)*5))) then(
+                setParticleSpeed(sl, sign(getParticleSpeed(sl)) * 10)
+            ) else(
+                setParticleSpeed(sl, getParticleSpeed(sl) -- (getParticleWeight(sl)*5))
+            )
+        )
+        else(setParticleSpeed(sl, getParticleSpeed(sl) + (getParticleWeight(sl)*5)))
+        if(getParticleBearing(sl) < 180) then(
+            setParticleBearing(sl, getParticleBearing(sl) + (getParticleWeight(sl) * getParticleGravity(sl)))
+            if(getParticleBearing(sl) < 0) then(setParticleBearing(sl, 0))
+            if(getParticleBearing(sl) > 180) then(setParticleBearing(sl, 180))
+        ) else(
+            setParticleBearing(sl, getParticleBearing(sl) -- (getParticleWeight(sl) * getParticleGravity(sl)))
+            if(getParticleBearing(sl) > 360) then(setParticleBearing(sl, 360))
+            if(getParticleBearing(sl) < 180) then(setParticleBearing(sl, 180))
+        )
+        # Animation
+        if(sliceIsSprite(sl)) then(
+            animSpd := getParticleAnimSpd(sl)
+            if(getParticleDuration(sl),mod,animSpd == 0) then(
+                if(getSpriteFrame(sl)+1 < spriteFrameCount(sl)) then(
+                    setSpriteFrame(sl, getSpriteFrame(sl)+1)
+                )
+            )
+        )
+    )
+end
+
+script, getParticleDuration, handle, begin
+    exitReturning(getSliceExtra(handle, extra0))
+end
+
+script, getParticleSpeed, handle, begin
+    exitReturning(getSliceExtra(handle, extra1))
+end
+
+script, getParticleBearing, handle, begin
+    exitReturning(getSliceExtra(handle, extra2))
+end
+
+script, getParticleWeight, handle, begin
+    exitReturning(getSliceExtra(sliceChild(handle, 0), extra0))
+end
+
+script, getParticleGravity, handle, begin
+    exitReturning(getSliceExtra(sliceChild(handle, 0), extra1))
+end
+
+script, getParticleAnimSpd, handle, begin
+    exitReturning(getSliceExtra(sliceChild(handle, 0), extra2))
+end
+
+script, setParticleDuration, handle, v, begin
+    exitReturning(setSliceExtra(handle, extra0, v))
+end
+
+script, setParticleSpeed, handle, v, begin
+    exitReturning(setSliceExtra(handle, extra1, v))
+end
+
+script, setParticleBearing, handle, v, begin
+    exitReturning(setSliceExtra(handle, extra2, v))
+end
+
+script, setParticleWeight, handle, v, begin
+    exitReturning(setSliceExtra(sliceChild(handle, 0), extra0, v))
+end
+
+script, setParticleGravity, handle, v, begin
+    exitReturning(setSliceExtra(sliceChild(handle, 0), extra1, v))
+end
+
+script, setParticleAnimSpd, handle, v, begin
+    exitReturning(setSliceExtra(sliceChild(handle, 0), extra2, v))
+end
+
+# EMITTERS
+# ==========================
+
+script, createEmitter, handle, rate=1, time=30, noise=0, parent=0, dissolve=false, begin
+    # Takes an existing slice and makes it a particle emitter
+
+    # assumes this existing slice structure:
+    # Handle
+    # > Variant 0
+    # > ...
+    # > Variant n
+    
+    # rate = how many ticks pass between emitted particles
+    # time = time emitter lasts
+    # noise = amount of randomness applied to particle parameters
+    # all other args passed to particle upon creation
+    # bearing is random when -1
+
+    while(index(emitterHandles, handle) <> -1) do(remove(emitterHandles, handle))
+
+    setSliceVisible(handle, false)
+    setEmitterRate(handle, rate)
+    setEmitterTime(handle, time)
+    setEmitterNoise(handle, noise)
+    if(parent) then(setEmitterParent(handle, parent))
+    else(setEmitterParent(handle, spriteLayer))
+    setEmitterDissolve(handle, dissolve)
+    # store handle in array
+    append(emitterHandles, handle)
+end
+
+script, processEmitters, purge=false, begin
+    variable(i, sl, p, dr, sp, br, wt, gr)
+
+    for(i, childCount(emitterHandles)--1, 0, -1) do(
+        sl := ge(emitterHandles, i)
+
+        if(purge || sliceIsValid(sl) == false) then(
+            pop(emitterHandles, i)
+            continue
+        )
+        # Time
+        if(getEmitterTime(sl) == 0) then(
+            pop(emitterHandles, i)
+            continue
+        )
+        if(getEmitterTime(sl) <> -1) then(setEmitterTime(sl, getEmitterTime(sl)--1))
+        
+        # Rate + Noise
+        setEmitterCooldown(sl, getEmitterCooldown(sl)--1)
+        if(getEmitterCooldown(sl) <= 0) then(
+            # Spew your particle load, baby
+            p := cloneSlice(sliceChild(sl, random(0,childCount(sl)--1)))
+            setParent(p, getEmitterParent(sl))
+            putSliceScreen(p, sliceScreenX(sl)+sliceX(p), sliceScreenY(sl)+sliceY(p))
+            dr := getParticleDuration(p)+random(0--getEmitterNoise(sl), getEmitterNoise(sl))
+            sp := getParticleSpeed(p)+random(0--getEmitterNoise(sl)*10, getEmitterNoise(sl)*10)
+            br := getParticleBearing(p)+random(0--getEmitterNoise(sl)*10, getEmitterNoise(sl)*10)
+            wt := getParticleWeight(p)
+            gr := getParticleGravity(p)
+            freeSliceChildren(p)
+            createParticle(p, dr, sp, br, wt, gr, getEmitterDissolve(sl))
+            # Reset cooldown
+            setEmitterCooldown(sl, getEmitterRate(sl))
+        )
+    )
+end
+
+script, getEmitterRate, handle, begin
+    exitReturning(getSliceExtra(handle, extra0))
+end
+
+script, getEmitterTime, handle, begin
+    exitReturning(getSliceExtra(handle, extra1))
+end
+
+script, getEmitterNoise, handle, begin
+    exitReturning(getSliceExtra(handle, extra2))
+end
+
+script, getEmitterCooldown, handle, begin
+    exitReturning(getTopPadding(handle))
+end
+
+script, getEmitterParent, handle, begin
+    exitReturning(getBottomPadding(handle))
+end
+
+script, getEmitterDissolve, handle, begin
+    exitReturning(getLeftPadding(handle))
+end
+
+script, setEmitterRate, handle, v, begin
+    exitReturning(setSliceExtra(handle, extra0, v))
+end
+
+script, setEmitterTime, handle, v, begin
+    exitReturning(setSliceExtra(handle, extra1, v))
+end
+
+script, setEmitterNoise, handle, v, begin
+    exitReturning(setSliceExtra(handle, extra2, v))
+end
+
+script, setEmitterCooldown, handle, v, begin
+    exitReturning(setTopPadding(handle, v))
+end
+
+script, setEmitterParent, handle, v, begin
+    exitReturning(setBottomPadding(handle, v))
+end
+
+script, setEmitterDissolve, handle, v, begin
+    exitReturning(setLeftPadding(handle, v))
+end
+
+# GENERAL MOVEMENT SCRIPTS
+# ==========================
+
+script, getSubX, sl, begin
+    # Subpixel position data for moving slices
+    exitReturning(getSliceExtra(lastChild(sl), extra0))
+end
+
+script, getSubY, sl, begin
+    exitReturning(getSliceExtra(lastChild(sl), extra1))
+end
+
+script, setSubX, sl, x, begin
+    exitReturning(setSliceExtra(lastChild(sl), extra0, x))
+end
+
+script, setSubY, sl, y, begin
+    exitReturning(setSliceExtra(lastChild(sl), extra1, y))
+end

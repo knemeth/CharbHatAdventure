@@ -1,0 +1,522 @@
+Loading C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\support\CrashRpt1403.dll
+ 0.0   ----Starting OHRRPGCE Custom----
+ 0.0  02-17-2022 15:45:45
+ 0.0  OHRRPGCE wip 20220214.12785 gfx_sdl2+directx+fb/music_sdl2 FreeBASIC 1.08.1 (2021-07-05) gcc 8.1.0 x86 pdb  Built on vampirecell -g -exx -gen gcc Win32 32-bit
+ 0.0  exepath: C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217, exe: C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\custom.exe
+ 0.0  orig_dir: C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217
+ 0.0  curdir: C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217
+ 0.0  Runtime info:   music_sdl2, SDL 2.0.16, SDL_Mixer 2.0.5  Windows 6.2.9200 (8/Server 2012 or later) , ANSI codepage: 1252
+ 0.0  documents_dir: C:\Users\Kiefer\Documents
+ 0.0  config: C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\ohrrpgce_config.ini
+ 0.0  prefer_gfx_backend: gfx backend sdl isn't available
+ 0.0  set_resolution 475*315
+ 0.0  Setting graphics scaling to x2 change_windowsize=-1
+ 0.0  gfx_sdl2_set_window_size 475,315, zoom=2
+ 0.0  Initialising gfx_sdl2...
+ 0.1  setvideomode zoom=2 w*h = 950,630
+ 0.2  gfx_sdl2 "SDL 2.0.16 (0 joysticks) Driver: windows (Drivers: windows dummy) Render driver: direct3d (Drivers: direct3d (hwaccel,vsync,textarget) opengl (hwaccel,vsync,textarget) opengles2 (hwaccel,vsync,textarget) software (textarget))"
+ 0.2  disable_native_text_input=0
+ 0.2  unlock_resolution(320,200)
+ 0.2  music_sdl2, SDL 2.0.16, SDL_Mixer 2.0.5
+ 0.2  music_sdl2, SDL_Mixer 2.0.5 (48000Hz, Music decoders:WAVE,MODPLUG,MOD,MAD,MP3,OGG,NATIVEMIDI,MIDI Sample decoders:WAVE,AIFF,VOC,MOD,MP3,OGG,MID)
+ 0.2  Working in C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\working0.tmp
+ 4.2  check_ok_to_open...
+ 4.2  pid_current_exe = \Device\HarddiskVolume3\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\custom.exe
+ 4.2  prev_session.workingdir = C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\working0.tmp
+ 4.2  prev_session.info_file_exists = YES
+ 4.2  prev_session.pid = 4988 (exe = \Device\HarddiskVolume3\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\custom.exe)
+ 4.2  prev_session.running = YES
+ 4.2  prev_session.partial_rpg = NO
+ 4.2  prev_session.fresh_danger_tmp = NO
+ 4.2  prev_session.sourcerpg = 
+ 4.2  prev_session.sourcerpg_old_mtime = 0
+ 4.2  prev_session.sourcerpg_current_mtime = 0
+ 4.2  prev_session.session_start_time = 2022 Feb 17 15:45:45
+ 4.2  prev_session.last_lump_mtime = 0
+end_debug: no debug/error messages during startup (skipping rest of startup)
+
+ 4.2   ----Loading a game----
+ 4.2  02-17-2022 15:45:49
+ 4.2  curdir: C:\Users\Kiefer\Documents\OHRRPGCE\My Games\CharbHatAdventure
+ 4.2  tmpdir: C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\
+ 4.2  settings_dir: C:\Users\Kiefer\AppData\Roaming\OHRRPGCE
+ 4.2  config: C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\ohrrpgce_config.ini
+ 4.2  Editing game C:\Users\Kiefer\Documents\OHRRPGCE\My Games\CharbHatAdventure\CHA.rpg ( )
+ 4.3  Full game data upgrade...
+ 4.3  Last edited by: [[OHRRPGCE wip 20220214.12785 gfx_sdl2+directx+fb/music_sdl2 FreeBASIC 1.08.1 (2021-07-05) gcc 8.1.0 x86 pdb  Built on vampirecell  -g -exx -gen gcc Win32 32-bit]] branch_rev 12220
+ 4.3  archinym creation info: OHRRPGCE wip 20220214
+16.1  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 3.bmp twice! Probably a mistake
+16.1  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 3.bmp twice! Probably a mistake
+16.9  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 4.bmp twice! Probably a mistake
+16.9  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 4.bmp twice! Probably a mistake
+17.2  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 5.bmp twice! Probably a mistake
+17.2  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 5.bmp twice! Probably a mistake
+17.4  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 4.bmp twice! Probably a mistake
+17.4  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 4.bmp twice! Probably a mistake
+17.5  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 3.bmp twice! Probably a mistake
+17.5  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 3.bmp twice! Probably a mistake
+32.0  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 3.bmp twice! Probably a mistake
+32.0  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 3.bmp twice! Probably a mistake
+32.6  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 4.bmp twice! Probably a mistake
+32.6  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 4.bmp twice! Probably a mistake
+42.0  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 4.bmp twice! Probably a mistake
+42.0  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 4.bmp twice! Probably a mistake
+42.6  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 5.bmp twice! Probably a mistake
+42.6  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 5.bmp twice! Probably a mistake
+50.6  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 5.bmp twice! Probably a mistake
+50.6  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 5.bmp twice! Probably a mistake
+51.2  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 6.bmp twice! Probably a mistake
+51.2  ! (BUG) Opening C:\Users\Kiefer\Documents\GitHub\ohrcollab-pri\digitalsouldata walkabout set 6.bmp twice! Probably a mistake
+67.7  Saving - been editing for 1m03s
+77.2  Saving - been editing for 10s
+92.0  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_67852
+92.0  Channel connection received (after 41ms)
+104.0  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+112.6  Saving - been editing for 35s
+161.6  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.879216.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.370677.tmp"
+161.6  hspeak version '3Ug'
+161.6  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+196.0  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.79268.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.36932.tmp"
+196.0  hspeak version '3Ug'
+196.0  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+270.4  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.641076.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.360240.tmp"
+270.5  hspeak version '3Ug'
+270.5  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+364.1  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.896435.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.86004.tmp"
+364.1  hspeak version '3Ug'
+364.1  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+414.0  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.539871.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.55266.tmp"
+414.1  hspeak version '3Ug'
+414.1  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+420.5  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.580988.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.44279.tmp"
+420.6  hspeak version '3Ug'
+420.6  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+438.4  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.306366.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.528537.tmp"
+438.4  hspeak version '3Ug'
+438.4  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+439.7  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_39660
+439.7  Channel connection received (after 41ms)
+447.6  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+447.9  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_30040
+448.0  Channel connection received (after 41ms)
+457.8  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+564.4  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.148307.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.194579.tmp"
+564.4  hspeak version '3Ug'
+564.4  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+565.3  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_4404
+565.4  Channel connection received (after 42ms)
+625.1  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+625.6  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.321750.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.411414.tmp"
+625.7  hspeak version '3Ug'
+625.7  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+626.8  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_53506
+626.9  Channel connection received (after 46ms)
+640.6  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+641.0  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.154067.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.599589.tmp"
+641.0  hspeak version '3Ug'
+641.0  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+642.5  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_356
+642.6  Channel connection received (after 41ms)
+695.1  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+695.4  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.807060.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.661732.tmp"
+695.5  hspeak version '3Ug'
+695.5  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+697.2  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_92961
+697.3  Channel connection received (after 40ms)
+752.2  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+752.5  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.619358.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.6592.tmp"
+752.5  hspeak version '3Ug'
+752.5  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+753.7  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_80344
+753.8  Channel connection received (after 41ms)
+760.8  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+1113.3  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_86146
+1113.4  Channel connection received (after 41ms)
+1214.3  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+1223.2  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_21831
+1223.4  Channel connection received (after 41ms)
+1312.7  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+1313.5  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.926042.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.593194.tmp"
+1313.5  hspeak version '3Ug'
+1313.5  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+1314.5  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_96891
+1314.6  Channel connection received (after 40ms)
+1446.5  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+1524.8  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_63535
+1524.9  Channel connection received (after 41ms)
+1760.7  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.552535.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.403761.tmp"
+1760.7  hspeak version '3Ug'
+1760.7  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+1812.5  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.133683.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.422968.tmp"
+1812.5  hspeak version '3Ug'
+1812.5  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+1816.5  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+1817.4  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_65141
+1817.4  Channel connection received (after 42ms)
+1834.1  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+1849.1  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.373266.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.710278.tmp"
+1849.1  hspeak version '3Ug'
+1849.1  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+1849.9  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_42604
+1850.1  Channel connection received (after 42ms)
+1856.7  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+1862.2  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_80544
+1862.3  Channel connection received (after 41ms)
+1924.7  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.349622.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.229723.tmp"
+1924.7  hspeak version '3Ug'
+1924.7  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+1927.3  channel_write error (closing) (wrote 0 of 3): The pipe is being closed.
+1927.3  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_71462
+1927.4  Channel connection received (after 41ms)
+1939.0  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+1944.6  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_14507
+1944.7  Channel connection received (after 41ms)
+2067.3  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+2068.0  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_42394
+2068.1  Channel connection received (after 43ms)
+2098.2  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+2099.0  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_86051
+2099.1  Channel connection received (after 41ms)
+2143.3  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+2143.5  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.269536.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.653203.tmp"
+2143.6  hspeak version '3Ug'
+2143.6  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+2145.4  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_23875
+2145.5  Channel connection received (after 42ms)
+2178.3  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+2191.7  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.786933.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.891663.tmp"
+2191.7  hspeak version '3Ug'
+2191.7  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+2192.7  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_90276
+2192.7  Channel connection received (after 40ms)
+2209.6  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+2224.4  Saving - been editing for 14m39s
+2226.2  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_51182
+2226.2  Channel connection received (after 41ms)
+2350.2  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.716506.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.695861.tmp"
+2350.3  hspeak version '3Ug'
+2350.3  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+2358.2  channel_write error (closing) (wrote 0 of 3): The pipe is being closed.
+2358.2  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_1114
+2358.2  Channel connection received (after 41ms)
+2408.8  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.615105.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.554368.tmp"
+2408.8  hspeak version '3Ug'
+2408.8  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+2409.1  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+2409.9  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_86307
+2410.0  Channel connection received (after 42ms)
+2429.6  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+2430.3  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.814409.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.505123.tmp"
+2430.4  hspeak version '3Ug'
+2430.4  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+2431.4  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_92285
+2431.5  Channel connection received (after 40ms)
+2444.7  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+2870.0  Saving - been editing for 4m49s
+3219.8  Saving - been editing for 1m14s
+3409.4  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.645181.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.297198.tmp"
+3409.4  hspeak version '3Ug'
+3409.4  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+3411.0  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_14595
+3411.0  Channel connection received (after 41ms)
+4228.2  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+4377.1  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.716521.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.893932.tmp"
+4377.1  hspeak version '3Ug'
+4377.1  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+4525.3  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.251947.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.855621.tmp"
+4525.3  hspeak version '3Ug'
+4525.3  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+4526.3  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_53449
+4526.5  Channel connection received (after 42ms)
+4707.9  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+4708.2  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_50746
+4708.3  Channel connection received (after 43ms)
+4723.6  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+4724.0  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.995454.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.370191.tmp"
+4724.1  hspeak version '3Ug'
+4724.1  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+4724.8  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_47196
+4724.9  Channel connection received (after 41ms)
+4730.7  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+4768.3  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.254791.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.324480.tmp"
+4768.4  hspeak version '3Ug'
+4768.4  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+4769.3  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_41310
+4769.3  Channel connection received (after 41ms)
+4808.0  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+4810.2  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.762735.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.67739.tmp"
+4810.2  hspeak version '3Ug'
+4810.2  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+4811.0  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_84236
+4811.1  Channel connection received (after 41ms)
+4822.3  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+4835.3  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.877262.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.763620.tmp"
+4835.3  hspeak version '3Ug'
+4835.3  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+4836.2  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_61235
+4836.3  Channel connection received (after 40ms)
+4847.0  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+4847.2  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_4226
+4847.4  Channel connection received (after 41ms)
+4881.7  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+4882.1  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.826188.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.8390.tmp"
+4882.2  hspeak version '3Ug'
+4882.2  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+4883.1  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_56912
+4883.2  Channel connection received (after 39ms)
+5004.0  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+5004.4  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.862671.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.261647.tmp"
+5004.5  hspeak version '3Ug'
+5004.5  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+5005.5  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_36477
+5005.6  Channel connection received (after 41ms)
+5086.9  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.463784.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.121868.tmp"
+5086.9  hspeak version '3Ug'
+5086.9  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+5159.8  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.287547.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.300757.tmp"
+5159.9  hspeak version '3Ug'
+5159.9  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+5189.5  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.134030.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.689568.tmp"
+5189.6  hspeak version '3Ug'
+5189.6  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+5324.1  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+5328.2  Saving - been editing for 8m24s
+5329.5  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_80785
+5329.6  Channel connection received (after 41ms)
+5353.0  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+5398.4  Saving - been editing for 1m06s
+5399.6  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_85110
+5399.7  Channel connection received (after 40ms)
+5538.4  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.785323.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.870487.tmp"
+5538.4  hspeak version '3Ug'
+5538.4  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+5563.6  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+5617.4  Saving - been editing for 1m51s
+5646.7  Saving - been editing for 29s
+5868.7  Saving - been editing for 38s
+5987.5  getinputtext: not enabled
+5987.6  getinputtext: not enabled
+6050.6  getinputtext: not enabled
+6050.6  getinputtext: not enabled
+6050.7  getinputtext: not enabled
+6050.7  getinputtext: not enabled
+6096.8  getinputtext: not enabled
+6096.8  getinputtext: not enabled
+6096.9  getinputtext: not enabled
+6160.8  getinputtext: not enabled
+6160.9  getinputtext: not enabled
+6186.9  Saving - been editing for 3m39s
+6257.1  getinputtext: not enabled
+6267.1  Saving - been editing for 41s
+6395.4  Saving - been editing for 34s
+6479.3  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.143585.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.623309.tmp"
+6479.3  hspeak version '3Ug'
+6479.3  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+6480.8  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_28539
+6480.8  Channel connection received (after 40ms)
+6588.8  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.385920.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.31226.tmp"
+6588.8  hspeak version '3Ug'
+6588.8  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+6600.6  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.947871.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.380187.tmp"
+6600.6  hspeak version '3Ug'
+6600.6  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+6632.9  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+6633.2  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.958114.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.648009.tmp"
+6633.2  hspeak version '3Ug'
+6633.2  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+6634.7  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_74549
+6634.7  Channel connection received (after 39ms)
+6766.0  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+6766.4  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.257267.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.787608.tmp"
+6766.4  hspeak version '3Ug'
+6766.4  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+6767.3  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_58098
+6767.4  Channel connection received (after 41ms)
+6814.6  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+6815.0  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.39955.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.536067.tmp"
+6815.0  hspeak version '3Ug'
+6815.0  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+6816.0  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_66270
+6816.1  Channel connection received (after 41ms)
+6853.0  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+6853.4  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.590414.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.742064.tmp"
+6853.4  hspeak version '3Ug'
+6853.4  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+6854.5  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_56410
+6854.6  Channel connection received (after 41ms)
+6903.8  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+7025.9  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.997966.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.92112.tmp"
+7026.0  hspeak version '3Ug'
+7026.0  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+7041.9  Saving - been editing for 5m21s
+7065.0  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.624405.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.530990.tmp"
+7065.0  hspeak version '3Ug'
+7065.0  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+7066.2  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_6702
+7066.3  Channel connection received (after 41ms)
+7103.2  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+7104.3  Saving - been editing for 55s
+7185.0  Saving - been editing for 1m21s
+7225.8  Saving - been editing for 41s
+7227.1  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_27403
+7227.1  Channel connection received (after 42ms)
+7418.1  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+7505.8  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.250792.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.786963.tmp"
+7505.8  hspeak version '3Ug'
+7505.8  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+7507.0  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_69814
+7507.1  Channel connection received (after 40ms)
+7525.9  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+7526.4  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.743548.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.886071.tmp"
+7526.4  hspeak version '3Ug'
+7526.4  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+7527.1  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_19453
+7527.2  Channel connection received (after 39ms)
+7577.8  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+7578.2  Saving - been editing for 1m53s
+9252.1  Saving - been editing for 1m06s
+9960.8  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.345675.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.703863.tmp"
+9960.8  hspeak version '3Ug'
+9960.8  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+9962.4  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_78205
+9962.4  Channel connection received (after 41ms)
+10009.1  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+10009.5  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.246843.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.736960.tmp"
+10009.5  hspeak version '3Ug'
+10009.5  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+10011.5  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_62283
+10011.5  Channel connection received (after 42ms)
+10024.2  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+10024.9  Saving - been editing for 2m29s
+10146.3  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.627650.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.732685.tmp"
+10146.3  hspeak version '3Ug'
+10146.3  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+10147.6  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_60480
+10147.6  Channel connection received (after 42ms)
+10155.5  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+10160.7  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.739908.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.913168.tmp"
+10160.7  hspeak version '3Ug'
+10160.7  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+10161.9  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_31019
+10161.9  Channel connection received (after 41ms)
+10251.2  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+10252.2  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_98298
+10252.3  Channel connection received (after 42ms)
+10354.4  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+10355.3  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_91156
+10355.3  Channel connection received (after 42ms)
+10585.5  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+10586.9  Saving - been editing for 2m58s
+11053.9  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.632758.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.874525.tmp"
+11053.9  hspeak version '3Ug'
+11053.9  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+11091.0  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.741674.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.539242.tmp"
+11091.0  hspeak version '3Ug'
+11091.0  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+11092.4  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_42739
+11092.4  Channel connection received (after 42ms)
+11214.5  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+11215.1  Saving - been editing for 1m32s
+12566.2  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.601948.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.600574.tmp"
+12566.3  hspeak version '3Ug'
+12566.3  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+12578.9  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.799827.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.700419.tmp"
+12578.9  hspeak version '3Ug'
+12578.9  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+12602.6  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.458558.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.310560.tmp"
+12602.6  hspeak version '3Ug'
+12602.6  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+12613.1  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.947459.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.389882.tmp"
+12613.2  hspeak version '3Ug'
+12613.2  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+12614.4  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_32965
+12614.4  Channel connection received (after 41ms)
+12744.0  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.364638.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.51781.tmp"
+12744.0  hspeak version '3Ug'
+12744.0  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+12816.2  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.842186.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.196887.tmp"
+12816.3  hspeak version '3Ug'
+12816.3  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+12829.6  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.979334.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.255171.tmp"
+12829.6  hspeak version '3Ug'
+12829.6  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+12847.2  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.596401.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.420656.tmp"
+12847.2  hspeak version '3Ug'
+12847.2  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+12875.2  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.659248.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.616355.tmp"
+12875.2  hspeak version '3Ug'
+12875.2  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+12960.0  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.545226.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.988482.tmp"
+12960.0  hspeak version '3Ug'
+12960.0  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+12960.3  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+12961.2  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_45512
+12961.3  Channel connection received (after 41ms)
+13005.1  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+13005.7  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.541569.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.902856.tmp"
+13005.7  hspeak version '3Ug'
+13005.7  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13006.9  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_53160
+13007.0  Channel connection received (after 41ms)
+13089.3  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.186560.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.854086.tmp"
+13089.3  hspeak version '3Ug'
+13089.3  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13162.6  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.749769.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.19092.tmp"
+13162.6  hspeak version '3Ug'
+13162.6  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13250.9  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.135875.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.910169.tmp"
+13250.9  hspeak version '3Ug'
+13250.9  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13271.8  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.360231.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.998722.tmp"
+13271.8  hspeak version '3Ug'
+13271.8  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13287.7  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.928010.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.453523.tmp"
+13287.7  hspeak version '3Ug'
+13287.7  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13298.3  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.970190.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.719240.tmp"
+13298.3  hspeak version '3Ug'
+13298.3  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13332.3  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.733321.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.554276.tmp"
+13332.4  hspeak version '3Ug'
+13332.4  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13354.3  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.407091.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.750727.tmp"
+13354.3  hspeak version '3Ug'
+13354.3  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13379.8  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.857833.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.894958.tmp"
+13379.8  hspeak version '3Ug'
+13379.8  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13414.2  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.366657.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.341238.tmp"
+13414.2  hspeak version '3Ug'
+13414.2  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13422.9  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.754732.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.279448.tmp"
+13422.9  hspeak version '3Ug'
+13422.9  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13456.2  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.66174.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.232637.tmp"
+13456.3  hspeak version '3Ug'
+13456.3  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13468.8  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.167358.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.777934.tmp"
+13468.8  hspeak version '3Ug'
+13468.8  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13606.6  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.198601.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.573312.tmp"
+13606.6  hspeak version '3Ug'
+13606.6  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13656.5  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.337862.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.878327.tmp"
+13656.6  hspeak version '3Ug'
+13656.6  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+13701.4  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.915137.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.258133.tmp"
+13701.4  hspeak version '3Ug'
+13701.4  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+14021.4  "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -k > "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stdout.678795.tmp" 2> "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\temp_stderr.120600.tmp"
+14021.4  hspeak version '3Ug'
+14021.4  spawn_and_wait "C:\Users\Kiefer\Documents\OHRRPGCE\Nightlies\20220217\hspeak.exe" -y --reuse-ids "C:\Users\Kiefer\AppData\Roaming\OHRRPGCE\scripts.bin" --include "CHA.hsi" -j "main.hss"
+14024.6  channel_write error (closing) (wrote 0 of 3): The pipe is being closed.
+14024.6  Successfully opened IPC channel \\.\pipe\ohrrpgce_lump_updates_testing_49368
+14024.7  Channel connection received (after 41ms)
+15607.6  channel_write error (closing) (wrote 0 of 15): The pipe is being closed.
+15608.6  Saving - been editing for 11m51s
+15608.6  Cleaning up and terminating 0
+15608.7  Closing music backend...
+15608.7  ...done
+15609.4  Closing gfx backend & allmodex...
+15609.4  ...done
+15609.4  End.

@@ -1,0 +1,49 @@
+# animate.hss
+
+# ========================================
+# PLAYER ANIMATION
+# ========================================
+
+script, animatePlayer, begin
+    # Called from mainGameLoop
+    # Loops through player:frames sprite sets every player:animSpeed ticks
+    # Ticks stored in player sprite extra0
+    variable(timer, set, current)
+
+    timer := getSliceExtra(getHeroSprite(me), extra0)
+
+    if(timer <= 0) then(
+        setSliceExtra(getHeroSprite(me), extra0, player:animSpeed)
+        current := getSpriteSetNumber(getHeroSprite(me))
+        if(current >= playerSpriteset + playerFrames -- 1
+        || current < playerSpriteset) then(
+            set := playerSpriteset
+        ) else(
+            set := getSpriteSetNumber(getHeroSprite(me)) + 1
+        )
+        setSpriteSetNumber(getHeroSprite(me), set)
+    ) else(
+        setSliceExtra(getHeroSprite(me), extra0, getSliceExtra(getHeroSprite(me), extra0)--1)
+    )
+
+    invincibilityFlash()
+end
+
+script, invincibilityFlash, begin
+    # Called from animatePlayer
+    # Checks if dodge stat is >0 and makes the player transparent and flashing if so
+    variable(dodge, timer)
+
+    dodge := getHeroStat(me, stat:dodge)
+    timer := getSliceExtra(getHeroSprite(me), extra0) # used for animating as well
+
+    if(dodge > 0) then(
+        if(timer < player:animSpeed/2) then(
+            setOpacity(getHeroSprite(me), 20)
+        ) else(
+            setOpacity(getHeroSprite(me), 60)
+        )
+    ) else(
+        setOpacity(getHeroSprite(me), 100)
+    )
+end

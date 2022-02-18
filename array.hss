@@ -1,0 +1,217 @@
+# Array Data Structure using slices
+# by kylekrack
+
+# Modelled after Python Lists
+
+# Methods: 
+#   initArray(size, lookup, fill)      # Creates a slice with size children 
+#   getArray(lookup)                   # Returns the first slice with the given lookup code
+#   getElement(array, position)        # Gets the element (number) at given position of array
+#   setElement(array, position, value) # Sets the element (number) at given position of array
+#   append(array, element)             # Creates a new child of array and sets its x value to element
+#   clear(array)                       # Removes all the elements from the array
+#   subArray(array, position1, position2) # Returns a new array which is a copy of part of array (aka a 'slice' in Python)
+#   copy(array)                        # Returns a copy of array
+#   concat(array1, array2)             # Takes contents of array2 and copies them to the end of array1
+#   index(array, value)                # Returns the index (position) of the first element with the specified value
+#   insert(array, position, value)     # Adds an element at the specified position
+#   pop(array, position)               # Removes the element at the specified position and return its value
+#   remove(array, value)               # Removes the item with the specified value and return its index
+
+# NOTE: You can create a slice lookup code in Custom, in the Slice Collection Editor in
+# order to initialize your array and be able to refer back to it easily
+
+script, initArray, size=0, lookup=0, fill=0, begin
+    # Creates a slice with size children 
+    # All elements are initialized to fill
+    variable(sl, i, child)
+    sl := createContainer(0,0)
+    setSliceLookup(sl, lookup)
+    setSliceVisible(sl, false)
+    
+    for(i, 0, size--1) do(
+        child := createContainer(0,0)
+        setParent(child, sl)
+        setSliceX(child, fill)
+    )
+    
+    return(sl)
+end
+
+script, getArray, lookup, begin
+    # Returns the first slice with the given lookup code
+    # If multiple arrays have the same lookup code, this 
+    # may not return the one you're looking for.
+    return(lookupSlice(lookup))
+end
+
+script, ge, array, position=0, begin
+    # Gets the element (number) at given index of array
+    if (position < 0) then (position += childCount(array))
+    return(sliceX(sliceChild(array, position)))
+end
+
+script, se, array, position, value, begin
+    # Sets the element (number) at given index of array
+    if (position < 0) then (position += childCount(array))
+    setSliceX(sliceChild(array, position), value)
+end
+
+script, append, array, value=0, begin
+    # Creates a new child at the end of array and sets its value
+    # Returns value
+    variable(child)
+    child := createContainer(0,0)
+    setParent(child, array)
+    
+    # Data store in slice's X value
+    setSliceX(child, value)
+    
+    return(value)
+end
+
+script, appendPair, array, valueX=0, valueY=0, begin
+    # Creates a new child at the end of array and sets its value
+    # Returns value
+    if(array == false) then(exitReturning(false))
+    variable(child)
+    child := createContainer(0,0)
+    setParent(child, array)
+    
+    # Data store in slice's X value
+    setSliceX(child, valueX)
+    setSliceY(child, valueY)
+    
+    return(true)
+end
+
+script, getPairElementX, array, position=0, begin
+    # Gets the element (number) at given index of array
+    if (position < 0) then (position += childCount(array))
+    return(sliceX(sliceChild(array, position)))
+end
+
+script, getPairElementY, array, position=0, begin
+    # Gets the element (number) at given index of array
+    if (position < 0) then (position += childCount(array))
+    return(sliceY(sliceChild(array, position)))
+end
+
+script, setPairElementX, array, position, value, begin
+    # Sets the element (number) at given index of array
+    if (position < 0) then (position += childCount(array))
+    setSliceX(sliceChild(array, position), value)
+end
+
+script, setPairElementY, array, position, value, begin
+    # Sets the element (number) at given index of array
+    if (position < 0) then (position += childCount(array))
+    setSliceY(sliceChild(array, position), value)
+end
+
+script, clear, array, begin
+    # Removes all the elements from the array
+    freeSliceChildren(array)
+end
+
+script, copy, array, begin
+    # Returns a copy of array
+    return(cloneSlice(array))
+end
+
+script, subArray, array, position1, position2, begin
+    # Returns a new array which is a copy of elements of array
+    # starting at position1, up to but NOT including position2
+    variable(array2, i, child)
+    if (position1 < 0) then (position1 += childCount(array))
+    if (position2 < 0) then (position2 += childCount(array))
+    # Copy the array slice, but don't its children
+    array2 := cloneSlice(array, false)
+
+    child := sliceChild(array, position1)
+    for(i, position1, position2 -- 1) do(
+        if (child == false) then (break)
+        setParent(cloneSlice(child), array2)
+        child := nextSibling(child)
+    )
+
+    return(array2)
+end
+
+script, concat, array1, array2, begin
+    # Takes contents of array2 and adds them to the end of array1
+    # Returns array1, with new elements
+    variable(child)
+    child := firstChild(array2)
+    while(child) do(
+        append(array1, sliceX(child))
+        child := nextSibling(child)
+    )
+    
+    return(array1)
+end
+
+script, index, array, value, begin
+    # Returns the index of the first element with the specified value
+    # or -1 if no such element exists
+    variable(child)
+    child := firstChild(array)
+    while(child) do(
+        if(sliceX(child) == value) then(
+            exitReturning(sliceChildIndex(child)))
+        child := nextSibling(child)
+    )
+    
+    return(-1)
+end
+
+script, pairIndex, array, x, y, begin
+    # Returns the index of the first element with the specified value
+    # or -1 if no such element exists
+    variable(child)
+    child := firstChild(array)
+    while(child) do(
+        if(sliceX(child) == x && sliceY(child) == y) then(
+            exitReturning(sliceChildIndex(child)))
+        child := nextSibling(child)
+    )
+    
+    return(-1)
+end
+
+script, insert, array, position=0, value=0, begin
+    # Adds an element at the specified position
+    variable(child) 
+    child := createContainer(0,0)
+    setSliceX(child, value)
+    
+    moveSliceBelow(child, sliceChild(array, position))
+end
+
+script, pop, array, position=-1, begin
+    # Removes the element at the specified position - by default, the last
+    variable(child, r)
+    if (position < 0) then (position += childCount(array))
+    child := sliceChild(array, position)
+    # Set return value
+    r := sliceX(child)
+    
+    freeSlice(child)
+    return(r)
+end
+
+script, remove, array, value, begin
+    # Removes the item with the specified value
+    # Returns the index of the removed value, or -1 if not found
+    variable(child, r)
+    child := firstChild(array)
+    while(child) do(
+        if(sliceX(child) == value) then(
+            r := sliceChildIndex(child)
+            freeSlice(child)
+            exitReturning(r)
+        )
+        child := nextSibling(child)
+    )
+    return(-1)
+end

@@ -1,0 +1,32 @@
+# input.hss
+
+globalVariable, begin
+    100,wantLeft
+    101,wantRight
+    102,wantUp
+    103,wantDown
+    104,usePress
+    105,shiftPress
+    106,cancelPress
+end
+
+plotscript, keypressHandler, begin
+    if(keyIsPressed(key:left) || keyIsPressed(key:a)) then(wantLeft := true)
+    if(keyIsPressed(key:right) || keyIsPressed(key:d)) then(wantRight := true)
+    if(keyIsPressed(key:up) || keyIsPressed(key:w)) then(wantUp := true)
+    if(keyIsPressed(key:down) || keyIsPressed(key:s)) then(wantDown := true)
+    if(keypress(key:space) || keypress(key:enter) || keypress(key:z) || mouseRelease(leftButton)) then(usePress := true)
+    if(keyIsPressed(key:shift)) then(shiftPress := true)
+    if(keypress(key:esc) || keypress(key:x) || mouseRelease(rightButton)) then(cancelPress := true)
+    #if(keypress(key:r)) then(resetGame())
+end
+
+script, resetInputs, begin
+    wantLeft := false
+    wantRight := false
+    wantUp := false
+    wantDown := false
+    usePress := false
+    shiftPress := false
+    cancelPress := false
+end

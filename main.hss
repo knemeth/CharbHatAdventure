@@ -1,0 +1,129 @@
+# Charbile's Hatful Adventure
+# main.hss
+
+include,array.hss
+include,util.hss
+include,geometry.hss
+include,input.hss
+include,effects.hss
+include,animate.hss
+include,combat.hss
+include,movement.hss
+include,ui.hss
+
+globalVariable, begin
+    # Effects
+    0,animHandles
+    1,particleHandles
+    2,emitterHandles
+    # Player values
+    10,player
+    11,playerSpriteset
+    12,playerFrames
+    13,playerState
+    # UI
+    30,hud
+end
+
+defineConstant, begin
+    16,player:width
+    12,player:height
+    4,player:animSpeed
+    3,player:idleSet
+    4,player:idleFrames
+    3,player:walkSet
+    4,player:walkFrames
+    7,player:rollSet
+    2,player:rollFrames
+    13,player:rollDistance
+    0,player:attackSet
+    3,player:attackFrames
+    7,player:blockSet
+    2,player:blockFrames
+    10,player:blockTime
+
+    9,state:idle
+    10,state:walk
+    11,state:roll
+    12,state:block
+    13,state:attack
+
+    100,sli:attack
+
+    0,timer:stamina
+    1,timer:block
+    2,timer:attack
+end
+
+plotscript, initGame, begin
+    suspendPlayer
+    initMouse
+
+    wait
+
+    # Init player
+    player := getHeroSlice(me)
+    initObject(player, player:width, player:height, player:width * 2, player:height * 2)
+    setSliceSize(player, player:width, player:height)
+    playerState := state:idle
+    playerSpriteset := player:walkSet
+    playerFrames := player:walkFrames
+
+    # hud
+    hud := loadSliceCollection(0)
+
+    animHandles := createContainer()
+    particleHandles := createContainer()
+    emitterHandles := createContainer()
+
+    while(true) do(
+        primaryLoopContents()
+        wait
+    )
+end
+
+script, primaryLoopContents, begin
+    # These are commands that should be run at all times, regardless of game state
+    # Run at the beginning of any continuous while loop
+
+    # Effects
+    animateEffects()
+    moveParticles()
+    processEmitters()
+
+    # Player
+    evaluateInput()
+    movePlayer()
+    animatePlayer()
+
+    # UI
+    updateHud()
+
+    # Debug
+    showStringAt(0,0,0)
+
+    resetInputs()
+end
+
+script, initObject, handle, width, height, atkWidth, atkHeight, begin
+    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
+        exitScript() # slice is not a hero or npc
+    )
+
+    if(childCount(handle) == 1) then(
+        # Only has a sprite child, has not been initialized
+        variable(sl)
+        sl := firstChild(handle)
+        setHorizAlign(sl, edge:center)
+        setHorizAnchor(sl, edge:center)
+        sl := createRect(atkWidth, atkHeight, -1)
+        setParent(sl, handle)
+        setSliceVisible(sl, false)
+        centerSlice(sl)
+        setSliceLookup(sl, sli:attack)
+        sl := createContainer(0,0)      # stores subpixel data
+        setParent(sl, handle)
+    )
+
+    putSliceSubpixel(handle, sliceX(handle)*1000, sliceY(handle)*1000)
+end

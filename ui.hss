@@ -1,0 +1,10 @@
+# ui.hss
+
+script, updateHud, begin
+	variable(sl)
+
+	# stamina
+	variable(staminaBar)
+    staminaBar := lookupSlice(sli:stamina, hud)
+    setSliceWidth(staminaBar, getHeroStat(me, stat:SP) * (sliceWidth(sliceParent(staminaBar)) / 2))
+end

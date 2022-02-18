@@ -1,0 +1,2 @@
+This folder contains automatic backups. A copy of your game is made here
+every time that CUSTOM saves a game. At most 10 copies per game are kept.\nWARNING! These automatic backups are no substitute for manual backups!\nThey are just here to save your slime that one time you forget!\n\nIf you don't have any other backup plan, at least remember to e-mail\na copy of your .rpg file to yourself once a week.

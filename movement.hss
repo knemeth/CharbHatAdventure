@@ -1,0 +1,218 @@
+# movement.hss
+
+defineConstant, begin
+    500,player:accel
+    2500,player:speed
+end
+
+script, movePlayer, begin
+    variable(horiz, vert, xv, yv, subX, subY, clamp, bearing, accel)
+
+    clamp := player:speed
+    accel := player:accel
+
+    if(playerState == state:attack) then(
+        clamp := player:speed / 2
+        accel := player:accel / 10
+    )
+
+    if(playerState == state:roll) then(
+        clamp := player:speed * 2
+        bearing := getSliceDir(player)
+        horiz := get_x_subpixels(1000, bearing)
+        vert := get_y_subpixels(1000, bearing)
+        if(sign(horiz) <> 0 && sign(vert) <> 0) then(
+            clamp := multdiv(clamp, 3, 4)
+        )
+        xv := clamp * sign(horiz)
+        yv := clamp * sign(vert)
+        setHeroStat(me, stat:dodge, getHeroStat(me, stat:dodge) -- 1)
+        if(getHeroStat(me, stat:dodge) == 0) then(
+            returnToIdle()
+        )
+    ) else(
+        if(wantLeft) then(
+            horiz := -1
+            setHeroDirection(me, left)
+        ) elseif(wantRight) then(
+            horiz := 1
+            setHeroDirection(me, right)
+        ) else(
+            horiz := 0
+        )
+        if(wantUp) then(
+            vert := -1
+            setHeroDirection(me, up)
+        ) elseif(wantDown) then(
+            vert := 1
+            setHeroDirection(me, down)
+        ) else(
+            vert := 0
+        )
+
+        if(horiz <> 0 && vert <> 0) then(
+            clamp := multdiv(clamp, 4, 5)
+        )
+
+        # xv & yv stored in hero slice extra0 and extra1
+        xv := getSliceXV(player) + (accel * horiz)
+        yv := getSliceYV(player) + (accel * vert)
+        xv := clampValue(xv, 0--clamp, clamp)
+        yv := clampValue(yv, 0--clamp, clamp)
+
+        bearing := get_bearing(sliceSubX(player), sliceSubY(player), sliceSubX(player)+getSliceXV(player), sliceSubY(player)+getSliceYV(player))
+        if(xv <> 0 || yv <> 0) then(
+            # only update if player is not standing still
+            setSliceDir(player, bearing)
+        )
+    )
+
+    if(playerState == state:block) then(
+        horiz := 0
+        vert := 0
+    ) 
+
+    subX := get_x_subpixels(abs(xv), bearing) # actual value to move sprite with
+    subY := get_y_subpixels(abs(yv), bearing)
+
+    # Deleceration
+    if(horiz == 0) then(xv := xv/2)
+    if(vert == 0) then(yv := yv/2)
+
+    if(horiz == 0 && vert == 0 && playerState == state:idle) then(
+        playerState := state:walk
+        playerSpriteset := player:walkSet
+        playerFrames := player:walkFrames
+        setSliceExtra(getHeroSprite(me), extra0, 0)
+    )
+
+    # Screen Edges
+    if(sliceX(player) + (xv/1000) < 0) then(
+        setSliceX(player, 0)
+        putSliceSubpixel(player, sliceX(player)*1000, sliceSubY(player))
+        subX := 0
+        xv := 0
+    ) elseif(sliceX(player) + sliceWidth(player) + (xv/1000) > mapWidth()*20) then(
+        setSliceX(player, (mapWidth()*20)--sliceWidth(player))
+        putSliceSubpixel(player, sliceX(player)*1000, sliceSubY(player))
+        subX := 0
+        xv := 0
+    )
+    if(sliceY(player) + (yv/1000) < 0) then(
+        setSliceScreenY(player, 0)
+        putSliceSubpixel(player, sliceSubX(player), sliceY(player)*1000)
+        subY := 0
+        yv := 0
+    ) elseif(sliceScreenY(player) + sliceHeight(player) + (yv/1000) > mapHeight() * 20) then(
+        setSliceScreenY(player, (mapHeight()*20)--sliceHeight(player))
+        putSliceSubpixel(player, sliceSubX(player), sliceY(player)*1000)
+        subY := 0
+        yv := 0
+    )
+
+    applyMove(player, subX, subY, xv, yv)
+end
+
+script, recoverStamina, begin
+    setHeroStat(me, stat:SP, getHeroStat(me, stat:SP) + 1)
+    if(getHeroStat(me, stat:SP) < getHeroStat(me, stat:SP, maximumStat)) then(
+        setTimer(timer:stamina, getHeroStat(me, stat:MP~), 1, @recoverStamina)
+    )
+end
+
+script, applyMove, handle, subX, subY, xv, yv, begin
+    # Called in movePlayer and moveEnemies
+    # Moves a slice based on relative x and y
+
+    # Store subpixel position
+    putSliceSubpixel(handle, sliceSubX(handle)+subX, sliceSubY(handle)+subY)
+
+    moveSliceWithWallchecking(handle, xv/1000, yv/1000, 50)
+    updateNPCorHeroFromSlice(handle)
+    # Set player or enemy's stored velocities
+    setSliceXV(handle, xv)
+    setSliceYV(handle, yv)
+end
+
+# ========================================
+# GETTING/SETTING MOVEMENT DATA
+# ========================================
+
+script, getSliceXV, handle, begin
+    # Sets xv by slice handle, whether hero or npc
+    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
+        exitScript() # slice is not a hero or npc
+    )
+    exitReturning(getSliceExtra(handle, extra0))
+end
+
+script, getSliceYV, handle, begin
+    # Sets yv by slice handle, whether hero or npc
+    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
+        exitScript() # slice is not a hero or npc
+    )
+    exitReturning(getSliceExtra(handle, extra1))
+end
+
+script, getSliceDir, handle, begin
+    # gets the 360 degree bearing of a slice
+    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
+        exitScript() # slice is not a hero or npc
+    )
+    exitReturning(getSliceExtra(handle, extra2))
+end
+
+script, setSliceDir, handle, v, begin
+    # sets the 360 degree bearing of a slice
+    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
+        exitScript() # slice is not a hero or npc
+    )
+    setSliceExtra(handle, extra2, v)
+end
+
+script, setSliceXV, handle, v, begin
+    # Sets xv by slice handle, whether hero or npc
+    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
+        exitScript() # slice is not a hero or npc
+    )
+    setSliceExtra(handle, extra0, v)
+end
+
+script, setSliceYV, handle, v, begin
+    # Sets yv by slice handle, whether hero or npc
+    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
+        exitScript() # slice is not a hero or npc
+    )
+    setSliceExtra(handle, extra1, v)
+end
+
+script, sliceSubX, handle, begin
+    # Gets the subpixel X position, stored in the first child of the handle
+    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
+        exitScript() # slice is not a hero or npc
+    )
+    exitReturning(sliceX(lastChild(handle)))
+end
+
+script, sliceSubY, handle, begin
+    # Gets the subpixel Y position, stored in the first child of the handle
+    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
+        exitScript() # slice is not a hero or npc
+    )
+    exitReturning(sliceY(lastChild(handle)))
+end
+
+script, putSliceSubpixel, handle, subX, subY, begin
+    # Sets the subpixel position, which are pixels * 1000
+    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
+        exitScript() # slice is not a hero or npc
+    )
+    putSlice(lastChild(handle), subX, subY)
+end
+
+script, getSliceMoving, handle, begin
+    # Checks whether the slice is moving based on their xv and yv
+    if(getSliceXV(handle) <> 0 || getSliceYV(handle) <> 0) then(exitReturning(true))
+
+    exitReturning(false)
+end

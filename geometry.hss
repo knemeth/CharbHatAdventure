@@ -1,0 +1,3678 @@
+
+# This file contains geometry helper functions that can be included in other
+# scripts to make it easier to program smooth movements for objects.
+#
+# Polkakitty, 03/22/21
+
+
+
+# script, get_x_subpixels, distance, bearing
+#
+# This takes a line defined by a length measured in subpixels (units of 1/1000
+# of a pixel) and a compass bearing, and outputs the x component of that line,
+# also in subpixels.  The result can be positive or negative; it should always
+# be added to the subpixel coordinates of the object being moved,
+# not subtracted.
+#
+# Input variables
+# distance: The length of the line in subpixels
+# bearing: The compass bearing of the line.  Normally this will be between 0
+#     and 359, but the function will accept and work with numbers outside
+#     that range.
+#
+# Return value: The x component of the line in subpixels.
+
+
+
+# script, get_y_subpixels, distance, bearing
+#
+# This is the counterpart of get_x_subpixels; when called with the same
+# "distance" and "bearing" arguments, it will give the y component of the same
+# line in subpixels.  Again, the result can be positive or negative.
+#
+# Input variables
+# distance: The length of the line in subpixels
+# bearing: The compass bearing of the line.  Normally this will be between 0
+#     and 359, but the function will accept and work with numbers outside
+#     that range.
+#
+# Return value: The y component of the line in subpixels.
+
+
+
+# script, get_bearing, x1, y1, x2, y2
+#
+# This finds the bearing of a line from the point (x1, y1) to (x2, y2).
+# It works regardless of whether the input coordinates are in subpixels or
+# regular pixels.  This can be useful if you want to make an enemy that always
+# shoots straight towards the player; you can input the enemy's coordinates as
+# x1 and y1 and input the player's coordinates as x2 and y2.  The bearing you
+# get can be plugged into get_x_subpixels and "get_y_subpixels" to get a
+# trajectory that points straight towards the player.
+#
+# Input variables
+# x1, y1: x and y coordinates of the line's starting point
+# x2, y2: x and y coordinates of the line's ending point
+#
+# Return value: A compass bearing representing the direction of the line, always
+#     between 0 and 359.
+
+
+
+# script, look_up_sine, angle
+#
+# This takes in an angle in degrees, looks it up in a table, and returns the
+# integer closest to 1000 times the sine of that angle.  It was made for
+# get_x_subpixels to use, but you can use it if you need to calculate sines
+# for other purposes.
+#
+# Input variables
+# angle: An angle, measured in degrees (this must be between 0 and 359)
+#
+# Return value: The integer closest to the sine of that angle times 1000.
+#     It will be between -1000 and 1000.
+
+
+
+# script, look_up_cosine, angle
+#
+# This is the counterpart to look_up_sine; it looks up an angle in a table
+# and returns the integer closest to 1000 times that angle's cosine.  You can
+# use it if you need to calculate cosines somewhere else.
+#
+# Input variables
+# angle: An angle, measured in degrees (this must be between 0 and 359)
+#
+# Return value: The integer closest to the cosine of that angle times 1000.
+#     It will be between -1000 and 1000.
+
+
+
+# When using these functions, you'll want to remember these bearings which
+# correspond to the cardinal directions:
+#
+#   0: North
+#  45: Northeast
+#  90: East
+# 135: Southeast
+# 180: South
+# 225: Southwest
+# 270: West
+# 315: Northwest
+
+
+
+script, get_x_subpixels, distance, bearing
+(
+  variable(correction, sine, result)
+
+  # Constrain the bearing to the range between 0 and 359.
+  # If this function is given a bearing greater than 359, it will wrap around
+  # to 0, and if it's given a bearing less than 0, it will wrap around to 359.
+  # For any input bearing i, this function will give the same result if it's
+  # called with (i + 360) or (i - 360) as its bearing argument.  Since the
+  # bearing is a measurement of points on a circle, it's useful for it to be
+  # able to go all the way around, starting from any point.
+  if(bearing > 359) then
+  (
+     correction := bearing / 360
+     correction := correction * 360
+     bearing -= correction
+  )
+  else if (bearing < 0) then
+  (
+     correction := (bearing + 1) / -360
+     correction += 1
+     correction := correction * 360
+     bearing += correction
+  )
+
+  # Take the bearing of the line, and get the integer closest to its sine
+  # times 1000 from a lookup table (using a lookup table is a lot faster to run
+  # and a lot less complicated for me to implement, especially in integer math,
+  # than calculating the sine the proper way.)
+  sine := look_up_sine(bearing)
+
+  # Multiply the distance by the (sine * 1000) measurement we looked up, then
+  # divide it by 1000.  The result is the delta-x of a line whose length and
+  # bearing match the inputs given.
+  result := (distance * sine) / 1000
+  exit returning(result)
+)
+
+
+
+script, get_y_subpixels, distance, bearing
+(
+  variable(correction, cosine, result)
+
+  # Constrain the bearing to the range between 0 and 359.
+  # If this function is given a bearing greater than 359, it will wrap around
+  # to 0, and if it's given a bearing less than 0, it will wrap around to 359.
+  # For any input bearing i, this function will give the same result if it's
+  # called with (i + 360) or (i - 360) as its bearing argument.  Since the
+  # bearing is a measurement of points on a circle, it's useful for it to be
+  # able to go all the way around, starting from any point.
+  if(bearing > 359) then
+  (
+     correction := bearing / 360
+     correction := correction * 360
+     bearing -= correction
+  )
+  else if (bearing < 0) then
+  (
+     correction := (bearing + 1) / -360
+     correction += 1
+     correction := correction * 360
+     bearing += correction
+  )
+
+  # Take the bearing of the line, and get the integer closest to its cosine
+  # times 1000 from a lookup table (using a lookup table is a lot faster to run
+  # and a lot less complicated for me to implement, especially in integer math,
+  # than calculating the cosine the proper way.)
+  cosine := look_up_cosine(bearing)
+
+  # Multiply the distance by the (cosine * 1000) measurement we looked up, then
+  # divide it by 1000.  The result is the delta-y of a line whose length and
+  # bearing match the inputs given.
+  #
+  # However, in the OHRRPGCE, negative Y coordinates are up and positive
+  # Y coordinates are down.  This is the opposite of how the Y coordinate is
+  # normally defined in trigonometry, so the delta-y we've calculated must be
+  # multiplied by -1.
+  result := (distance * cosine * -1) / 1000
+  exit returning(result)
+)
+
+
+script, get_bearing, x1, y1, x2, y2
+(
+  variable(deltaX, deltaY, absoluteDeltaX, absoluteDeltaY)
+  variable(cardinal, addAngle, relative, slope, result)
+
+  # Find the distance traveled on the x and y axes between the starting point
+  # and the ending point.  The absolute values of these distances will also be
+  # needed for some calculations.
+  deltaX := x2
+  deltaX -= x1
+  deltaY := y2
+  deltaY -= y1
+  absoluteDeltaX := abs(deltaX)
+  absoluteDeltaY := abs(deltaY)
+
+  # First, filter out the cases where either delta-X or delta-Y is 0.
+  # If we filter out these cases first, we don't need to worry about any
+  # divide-by-zero errors later.
+  if(deltaX == 0) then
+  (
+     if(deltaY > 0) then
+     (
+        exit returning(180)
+     )
+     else
+     (
+        exit returning(0)
+     )
+  )
+  else if(deltaY == 0) then
+  (
+     if(deltaX > 0) then
+     (
+        exit returning(90)
+     )
+     else
+     (
+        exit returning(270)
+     )
+  )
+
+  # To find the correct angle, we must find the slope of the input line, and
+  # then use the inverse tangent function to convert it to an angle.  However,
+  # as that angle approaches 90 degrees, the line's slope will asymptotically
+  # approach infinity, which makes it increasingly difficult to work with using
+  # integer math.  Therefore, I've split the circle into 8 segments of
+  # 45 degrees each, which can be defined by the variables "cardinal" and
+  # "add angle":
+  #
+  # cardinal: A cardinal direction to start with, either 0, 90, 180, or 270
+  # add angle: True if the angle we're trying to find is between cardinal and
+  #     cardinal + 45, so we can add the line's relative slope to cardinal to
+  #     get the desired bearing, false if the angle we're trying to find is
+  #     between cardinal and cardinal - 45, so we can subtract the line's
+  #     relative slope from cardinal to get the desired bearing
+  #
+  # All points on the circle are within 45 degrees of one of the cardinal
+  # directions, so instead of finding the angle between the original line and
+  # north, we can find the angle between the original line and the closest
+  # cardinal direction.  Measured this way, the slope of the line will always be
+  # between 0 and 1, so we can impose restrictions on the "look up inverse
+  # tangent" function that make it easier to write: its input (the slope of the
+  # line times 1000) will always be between 0 and 1000, and its output will
+  # always be between 0 and 45 degrees.
+  #
+  # These if statements will classify the line's direction as fitting within one
+  # of the 8 segments of the circle, set "slope" to the slope of the line
+  # (relative to the nearest cardinal direction) times 1000, and set "cardinal"
+  # and "add angle" to decide what to do with the angle we get from plugging
+  # "slope" into look_up_inverse_tangent.
+  if(absoluteDeltaX > absoluteDeltaY) then
+  (
+    slope := absoluteDeltaY * 1000
+    slope := slope / absoluteDeltaX
+
+    if(deltaX > 0) then
+    (
+      cardinal := 90
+
+      if(deltaY > 0) then
+      (
+        addAngle := true
+      )
+      else
+      (
+        addAngle := false
+      )
+    )
+    else
+    (
+      cardinal := 270
+
+      if(deltaY > 0) then
+      (
+        addAngle := false
+      )
+      else
+      (
+        addAngle := true
+      )
+    )
+  )
+  else
+  (
+    slope := absoluteDeltaX * 1000
+    slope := slope / absoluteDeltaY
+
+    if(deltaY > 0) then
+    (
+      cardinal := 180
+
+      if(deltaX > 0) then
+      (
+        addAngle := false
+      )
+      else
+      (
+        addAngle := true
+      )
+    )
+    else
+    (
+      cardinal := 0
+
+      if(deltaX > 0) then
+      (
+        addAngle := true
+      )
+      else
+      (
+        addAngle := false
+      )
+    )
+  )
+
+  # Get the angle between the input line and the nearest cardinal direction from
+  # a lookup table, and then add or subtract that angle from the cardinal
+  # direction.
+  relative := look_up_inverse_tangent(slope)
+
+  if(addAngle) then
+  (
+    result := cardinal
+    result += relative
+  )
+  else
+  (
+    result := cardinal
+    result -= relative
+  )
+
+  # Constrain the returned value to the range between 0 and 359.
+  # This is just done to make the result easier to understand if it's displayed;
+  # get_x_subpixels and "get_y_subpixels" *can* work with bearings outside
+  # that range.
+  if(result < 0) then
+  (
+    result += 360
+  )
+
+  exit returning(result)
+)
+
+
+
+# This is just a lookup table that get_x_subpixels uses to get the closest
+# integer to the sine of an angle times 1000.  It can be reused to get sines
+# from angles for other purposes.
+script, look_up_sine, angle
+(
+  if(angle < 20) then
+  (
+    switch(angle) do
+    (
+      case(0) do
+      (
+        exit returning(0)
+      )
+      case(1) do
+      (
+        exit returning(17)
+      )
+      case(2) do
+      (
+        exit returning(35)
+      )
+      case(3) do
+      (
+        exit returning(52)
+      )
+      case(4) do
+      (
+        exit returning(70)
+      )
+      case(5) do
+      (
+        exit returning(87)
+      )
+      case(6) do
+      (
+        exit returning(105)
+      )
+      case(7) do
+      (
+        exit returning(122)
+      )
+      case(8) do
+      (
+        exit returning(139)
+      )
+      case(9) do
+      (
+        exit returning(156)
+      )
+      case(10) do
+      (
+        exit returning(174)
+      )
+      case(11) do
+      (
+        exit returning(191)
+      )
+      case(12) do
+      (
+        exit returning(208)
+      )
+      case(13) do
+      (
+        exit returning(225)
+      )
+      case(14) do
+      (
+        exit returning(242)
+      )
+      case(15) do
+      (
+        exit returning(259)
+      )
+      case(16) do
+      (
+        exit returning(276)
+      )
+      case(17) do
+      (
+        exit returning(292)
+      )
+      case(18) do
+      (
+        exit returning(309)
+      )
+      case(19) do
+      (
+        exit returning(326)
+      )
+    )
+  )
+  else if(angle < 40) then
+  (
+    switch(angle) do
+    (
+      case(20) do
+      (
+        exit returning(342)
+      )
+      case(21) do
+      (
+        exit returning(358)
+      )
+      case(22) do
+      (
+        exit returning(375)
+      )
+      case(23) do
+      (
+        exit returning(391)
+      )
+      case(24) do
+      (
+        exit returning(407)
+      )
+      case(25) do
+      (
+        exit returning(423)
+      )
+      case(26) do
+      (
+        exit returning(438)
+      )
+      case(27) do
+      (
+        exit returning(454)
+      )
+      case(28) do
+      (
+        exit returning(469)
+      )
+      case(29) do
+      (
+        exit returning(485)
+      )
+      case(30) do
+      (
+        exit returning(500)
+      )
+      case(31) do
+      (
+        exit returning(515)
+      )
+      case(32) do
+      (
+        exit returning(530)
+      )
+      case(33) do
+      (
+        exit returning(545)
+      )
+      case(34) do
+      (
+        exit returning(559)
+      )
+      case(35) do
+      (
+        exit returning(574)
+      )
+      case(36) do
+      (
+        exit returning(588)
+      )
+      case(37) do
+      (
+        exit returning(602)
+      )
+      case(38) do
+      (
+        exit returning(616)
+      )
+      case(39) do
+      (
+        exit returning(629)
+      )
+    )
+  )
+  else if(angle < 60) then
+  (
+    switch(angle) do
+    (
+      case(40) do
+      (
+        exit returning(643)
+      )
+      case(41) do
+      (
+        exit returning(656)
+      )
+      case(42) do
+      (
+        exit returning(669)
+      )
+      case(43) do
+      (
+        exit returning(682)
+      )
+      case(44) do
+      (
+        exit returning(695)
+      )
+      case(45) do
+      (
+        exit returning(707)
+      )
+      case(46) do
+      (
+        exit returning(719)
+      )
+      case(47) do
+      (
+        exit returning(731)
+      )
+      case(48) do
+      (
+        exit returning(743)
+      )
+      case(49) do
+      (
+        exit returning(755)
+      )
+      case(50) do
+      (
+        exit returning(766)
+      )
+      case(51) do
+      (
+        exit returning(777)
+      )
+      case(52) do
+      (
+        exit returning(788)
+      )
+      case(53) do
+      (
+        exit returning(799)
+      )
+      case(54) do
+      (
+        exit returning(809)
+      )
+      case(55) do
+      (
+        exit returning(819)
+      )
+      case(56) do
+      (
+        exit returning(829)
+      )
+      case(57) do
+      (
+        exit returning(839)
+      )
+      case(58) do
+      (
+        exit returning(848)
+      )
+      case(59) do
+      (
+        exit returning(857)
+      )
+    )
+  )
+  else if(angle < 80) then
+  (
+    switch(angle) do
+    (
+      case(60) do
+      (
+        exit returning(866)
+      )
+      case(61) do
+      (
+        exit returning(875)
+      )
+      case(62) do
+      (
+        exit returning(883)
+      )
+      case(63) do
+      (
+        exit returning(891)
+      )
+      case(64) do
+      (
+        exit returning(899)
+      )
+      case(65) do
+      (
+        exit returning(906)
+      )
+      case(66) do
+      (
+        exit returning(914)
+      )
+      case(67) do
+      (
+        exit returning(921)
+      )
+      case(68) do
+      (
+        exit returning(927)
+      )
+      case(69) do
+      (
+        exit returning(934)
+      )
+      case(70) do
+      (
+        exit returning(940)
+      )
+      case(71) do
+      (
+        exit returning(946)
+      )
+      case(72) do
+      (
+        exit returning(951)
+      )
+      case(73) do
+      (
+        exit returning(956)
+      )
+      case(74) do
+      (
+        exit returning(961)
+      )
+      case(75) do
+      (
+        exit returning(966)
+      )
+      case(76) do
+      (
+        exit returning(970)
+      )
+      case(77) do
+      (
+        exit returning(974)
+      )
+      case(78) do
+      (
+        exit returning(978)
+      )
+      case(79) do
+      (
+        exit returning(982)
+      )
+    )
+  )
+  else if(angle < 100) then
+  (
+    switch(angle) do
+    (
+      case(80) do
+      (
+        exit returning(985)
+      )
+      case(81) do
+      (
+        exit returning(988)
+      )
+      case(82) do
+      (
+        exit returning(990)
+      )
+      case(83) do
+      (
+        exit returning(993)
+      )
+      case(84) do
+      (
+        exit returning(995)
+      )
+      case(85) do
+      (
+        exit returning(996)
+      )
+      case(86) do
+      (
+        exit returning(998)
+      )
+      case(87) do
+      (
+        exit returning(999)
+      )
+      case(88) do
+      (
+        exit returning(999)
+      )
+      case(89) do
+      (
+        exit returning(1000)
+      )
+      case(90) do
+      (
+        exit returning(1000)
+      )
+      case(91) do
+      (
+        exit returning(1000)
+      )
+      case(92) do
+      (
+        exit returning(999)
+      )
+      case(93) do
+      (
+        exit returning(999)
+      )
+      case(94) do
+      (
+        exit returning(998)
+      )
+      case(95) do
+      (
+        exit returning(996)
+      )
+      case(96) do
+      (
+        exit returning(995)
+      )
+      case(97) do
+      (
+        exit returning(993)
+      )
+      case(98) do
+      (
+        exit returning(990)
+      )
+      case(99) do
+      (
+        exit returning(988)
+      )
+    )
+  )
+  else if(angle < 120) then
+  (
+    switch(angle) do
+    (
+      case(100) do
+      (
+        exit returning(985)
+      )
+      case(101) do
+      (
+        exit returning(982)
+      )
+      case(102) do
+      (
+        exit returning(978)
+      )
+      case(103) do
+      (
+        exit returning(974)
+      )
+      case(104) do
+      (
+        exit returning(970)
+      )
+      case(105) do
+      (
+        exit returning(966)
+      )
+      case(106) do
+      (
+        exit returning(961)
+      )
+      case(107) do
+      (
+        exit returning(956)
+      )
+      case(108) do
+      (
+        exit returning(951)
+      )
+      case(109) do
+      (
+        exit returning(946)
+      )
+      case(110) do
+      (
+        exit returning(940)
+      )
+      case(111) do
+      (
+        exit returning(934)
+      )
+      case(112) do
+      (
+        exit returning(927)
+      )
+      case(113) do
+      (
+        exit returning(921)
+      )
+      case(114) do
+      (
+        exit returning(914)
+      )
+      case(115) do
+      (
+        exit returning(906)
+      )
+      case(116) do
+      (
+        exit returning(899)
+      )
+      case(117) do
+      (
+        exit returning(891)
+      )
+      case(118) do
+      (
+        exit returning(883)
+      )
+      case(119) do
+      (
+        exit returning(875)
+      )
+    )
+  )
+  else if(angle < 140) then
+  (
+    switch(angle) do
+    (
+      case(120) do
+      (
+        exit returning(866)
+      )
+      case(121) do
+      (
+        exit returning(857)
+      )
+      case(122) do
+      (
+        exit returning(848)
+      )
+      case(123) do
+      (
+        exit returning(839)
+      )
+      case(124) do
+      (
+        exit returning(829)
+      )
+      case(125) do
+      (
+        exit returning(819)
+      )
+      case(126) do
+      (
+        exit returning(809)
+      )
+      case(127) do
+      (
+        exit returning(799)
+      )
+      case(128) do
+      (
+        exit returning(788)
+      )
+      case(129) do
+      (
+        exit returning(777)
+      )
+      case(130) do
+      (
+        exit returning(766)
+      )
+      case(131) do
+      (
+        exit returning(755)
+      )
+      case(132) do
+      (
+        exit returning(743)
+      )
+      case(133) do
+      (
+        exit returning(731)
+      )
+      case(134) do
+      (
+        exit returning(719)
+      )
+      case(135) do
+      (
+        exit returning(707)
+      )
+      case(136) do
+      (
+        exit returning(695)
+      )
+      case(137) do
+      (
+        exit returning(682)
+      )
+      case(138) do
+      (
+        exit returning(669)
+      )
+      case(139) do
+      (
+        exit returning(656)
+      )
+    )
+  )
+  else if(angle < 160) then
+  (
+    switch(angle) do
+    (
+      case(140) do
+      (
+        exit returning(643)
+      )
+      case(141) do
+      (
+        exit returning(629)
+      )
+      case(142) do
+      (
+        exit returning(616)
+      )
+      case(143) do
+      (
+        exit returning(602)
+      )
+      case(144) do
+      (
+        exit returning(588)
+      )
+      case(145) do
+      (
+        exit returning(574)
+      )
+      case(146) do
+      (
+        exit returning(559)
+      )
+      case(147) do
+      (
+        exit returning(545)
+      )
+      case(148) do
+      (
+        exit returning(530)
+      )
+      case(149) do
+      (
+        exit returning(515)
+      )
+      case(150) do
+      (
+        exit returning(500)
+      )
+      case(151) do
+      (
+        exit returning(485)
+      )
+      case(152) do
+      (
+        exit returning(469)
+      )
+      case(153) do
+      (
+        exit returning(454)
+      )
+      case(154) do
+      (
+        exit returning(438)
+      )
+      case(155) do
+      (
+        exit returning(423)
+      )
+      case(156) do
+      (
+        exit returning(407)
+      )
+      case(157) do
+      (
+        exit returning(391)
+      )
+      case(158) do
+      (
+        exit returning(375)
+      )
+      case(159) do
+      (
+        exit returning(358)
+      )
+    )
+  )
+  else if(angle < 180) then
+  (
+    switch(angle) do
+    (
+      case(160) do
+      (
+        exit returning(342)
+      )
+      case(161) do
+      (
+        exit returning(326)
+      )
+      case(162) do
+      (
+        exit returning(309)
+      )
+      case(163) do
+      (
+        exit returning(292)
+      )
+      case(164) do
+      (
+        exit returning(276)
+      )
+      case(165) do
+      (
+        exit returning(259)
+      )
+      case(166) do
+      (
+        exit returning(242)
+      )
+      case(167) do
+      (
+        exit returning(225)
+      )
+      case(168) do
+      (
+        exit returning(208)
+      )
+      case(169) do
+      (
+        exit returning(191)
+      )
+      case(170) do
+      (
+        exit returning(174)
+      )
+      case(171) do
+      (
+        exit returning(156)
+      )
+      case(172) do
+      (
+        exit returning(139)
+      )
+      case(173) do
+      (
+        exit returning(122)
+      )
+      case(174) do
+      (
+        exit returning(105)
+      )
+      case(175) do
+      (
+        exit returning(87)
+      )
+      case(176) do
+      (
+        exit returning(70)
+      )
+      case(177) do
+      (
+        exit returning(52)
+      )
+      case(178) do
+      (
+        exit returning(35)
+      )
+      case(179) do
+      (
+        exit returning(17)
+      )
+    )
+  )
+  else if(angle < 200) then
+  (
+    switch(angle) do
+    (
+      case(180) do
+      (
+        exit returning(0)
+      )
+      case(181) do
+      (
+        exit returning(-17)
+      )
+      case(182) do
+      (
+        exit returning(-35)
+      )
+      case(183) do
+      (
+        exit returning(-52)
+      )
+      case(184) do
+      (
+        exit returning(-70)
+      )
+      case(185) do
+      (
+        exit returning(-87)
+      )
+      case(186) do
+      (
+        exit returning(-105)
+      )
+      case(187) do
+      (
+        exit returning(-122)
+      )
+      case(188) do
+      (
+        exit returning(-139)
+      )
+      case(189) do
+      (
+        exit returning(-156)
+      )
+      case(190) do
+      (
+        exit returning(-174)
+      )
+      case(191) do
+      (
+        exit returning(-191)
+      )
+      case(192) do
+      (
+        exit returning(-208)
+      )
+      case(193) do
+      (
+        exit returning(-225)
+      )
+      case(194) do
+      (
+        exit returning(-242)
+      )
+      case(195) do
+      (
+        exit returning(-259)
+      )
+      case(196) do
+      (
+        exit returning(-276)
+      )
+      case(197) do
+      (
+        exit returning(-292)
+      )
+      case(198) do
+      (
+        exit returning(-309)
+      )
+      case(199) do
+      (
+        exit returning(-326)
+      )
+    )
+  )
+  else if(angle < 220) then
+  (
+    switch(angle) do
+    (
+      case(200) do
+      (
+        exit returning(-342)
+      )
+      case(201) do
+      (
+        exit returning(-358)
+      )
+      case(202) do
+      (
+        exit returning(-375)
+      )
+      case(203) do
+      (
+        exit returning(-391)
+      )
+      case(204) do
+      (
+        exit returning(-407)
+      )
+      case(205) do
+      (
+        exit returning(-423)
+      )
+      case(206) do
+      (
+        exit returning(-438)
+      )
+      case(207) do
+      (
+        exit returning(-454)
+      )
+      case(208) do
+      (
+        exit returning(-469)
+      )
+      case(209) do
+      (
+        exit returning(-485)
+      )
+      case(210) do
+      (
+        exit returning(-500)
+      )
+      case(211) do
+      (
+        exit returning(-515)
+      )
+      case(212) do
+      (
+        exit returning(-530)
+      )
+      case(213) do
+      (
+        exit returning(-545)
+      )
+      case(214) do
+      (
+        exit returning(-559)
+      )
+      case(215) do
+      (
+        exit returning(-574)
+      )
+      case(216) do
+      (
+        exit returning(-588)
+      )
+      case(217) do
+      (
+        exit returning(-602)
+      )
+      case(218) do
+      (
+        exit returning(-616)
+      )
+      case(219) do
+      (
+        exit returning(-629)
+      )
+    )
+  )
+  else if(angle < 240) then
+  (
+    switch(angle) do
+    (
+      case(220) do
+      (
+        exit returning(-643)
+      )
+      case(221) do
+      (
+        exit returning(-656)
+      )
+      case(222) do
+      (
+        exit returning(-669)
+      )
+      case(223) do
+      (
+        exit returning(-682)
+      )
+      case(224) do
+      (
+        exit returning(-695)
+      )
+      case(225) do
+      (
+        exit returning(-707)
+      )
+      case(226) do
+      (
+        exit returning(-719)
+      )
+      case(227) do
+      (
+        exit returning(-731)
+      )
+      case(228) do
+      (
+        exit returning(-743)
+      )
+      case(229) do
+      (
+        exit returning(-755)
+      )
+      case(230) do
+      (
+        exit returning(-766)
+      )
+      case(231) do
+      (
+        exit returning(-777)
+      )
+      case(232) do
+      (
+        exit returning(-788)
+      )
+      case(233) do
+      (
+        exit returning(-799)
+      )
+      case(234) do
+      (
+        exit returning(-809)
+      )
+      case(235) do
+      (
+        exit returning(-819)
+      )
+      case(236) do
+      (
+        exit returning(-829)
+      )
+      case(237) do
+      (
+        exit returning(-839)
+      )
+      case(238) do
+      (
+        exit returning(-848)
+      )
+      case(239) do
+      (
+        exit returning(-857)
+      )
+    )
+  )
+  else if(angle < 260) then
+  (
+    switch(angle) do
+    (
+      case(240) do
+      (
+        exit returning(-866)
+      )
+      case(241) do
+      (
+        exit returning(-875)
+      )
+      case(242) do
+      (
+        exit returning(-883)
+      )
+      case(243) do
+      (
+        exit returning(-891)
+      )
+      case(244) do
+      (
+        exit returning(-899)
+      )
+      case(245) do
+      (
+        exit returning(-906)
+      )
+      case(246) do
+      (
+        exit returning(-914)
+      )
+      case(247) do
+      (
+        exit returning(-921)
+      )
+      case(248) do
+      (
+        exit returning(-927)
+      )
+      case(249) do
+      (
+        exit returning(-934)
+      )
+      case(250) do
+      (
+        exit returning(-940)
+      )
+      case(251) do
+      (
+        exit returning(-946)
+      )
+      case(252) do
+      (
+        exit returning(-951)
+      )
+      case(253) do
+      (
+        exit returning(-956)
+      )
+      case(254) do
+      (
+        exit returning(-961)
+      )
+      case(255) do
+      (
+        exit returning(-966)
+      )
+      case(256) do
+      (
+        exit returning(-970)
+      )
+      case(257) do
+      (
+        exit returning(-974)
+      )
+      case(258) do
+      (
+        exit returning(-978)
+      )
+      case(259) do
+      (
+        exit returning(-982)
+      )
+    )
+  )
+  else if(angle < 280) then
+  (
+    switch(angle) do
+    (
+      case(260) do
+      (
+        exit returning(-985)
+      )
+      case(261) do
+      (
+        exit returning(-988)
+      )
+      case(262) do
+      (
+        exit returning(-990)
+      )
+      case(263) do
+      (
+        exit returning(-993)
+      )
+      case(264) do
+      (
+        exit returning(-995)
+      )
+      case(265) do
+      (
+        exit returning(-996)
+      )
+      case(266) do
+      (
+        exit returning(-998)
+      )
+      case(267) do
+      (
+        exit returning(-999)
+      )
+      case(268) do
+      (
+        exit returning(-999)
+      )
+      case(269) do
+      (
+        exit returning(-1000)
+      )
+      case(270) do
+      (
+        exit returning(-1000)
+      )
+      case(271) do
+      (
+        exit returning(-1000)
+      )
+      case(272) do
+      (
+        exit returning(-999)
+      )
+      case(273) do
+      (
+        exit returning(-999)
+      )
+      case(274) do
+      (
+        exit returning(-998)
+      )
+      case(275) do
+      (
+        exit returning(-996)
+      )
+      case(276) do
+      (
+        exit returning(-995)
+      )
+      case(277) do
+      (
+        exit returning(-993)
+      )
+      case(278) do
+      (
+        exit returning(-990)
+      )
+      case(279) do
+      (
+        exit returning(-988)
+      )
+    )
+  )
+  else if(angle < 300) then
+  (
+    switch(angle) do
+    (
+      case(280) do
+      (
+        exit returning(-985)
+      )
+      case(281) do
+      (
+        exit returning(-982)
+      )
+      case(282) do
+      (
+        exit returning(-978)
+      )
+      case(283) do
+      (
+        exit returning(-974)
+      )
+      case(284) do
+      (
+        exit returning(-970)
+      )
+      case(285) do
+      (
+        exit returning(-966)
+      )
+      case(286) do
+      (
+        exit returning(-961)
+      )
+      case(287) do
+      (
+        exit returning(-956)
+      )
+      case(288) do
+      (
+        exit returning(-951)
+      )
+      case(289) do
+      (
+        exit returning(-946)
+      )
+      case(290) do
+      (
+        exit returning(-940)
+      )
+      case(291) do
+      (
+        exit returning(-934)
+      )
+      case(292) do
+      (
+        exit returning(-927)
+      )
+      case(293) do
+      (
+        exit returning(-921)
+      )
+      case(294) do
+      (
+        exit returning(-914)
+      )
+      case(295) do
+      (
+        exit returning(-906)
+      )
+      case(296) do
+      (
+        exit returning(-899)
+      )
+      case(297) do
+      (
+        exit returning(-891)
+      )
+      case(298) do
+      (
+        exit returning(-883)
+      )
+      case(299) do
+      (
+        exit returning(-875)
+      )
+    )
+  )
+  else if(angle < 320) then
+  (
+    switch(angle) do
+    (
+      case(300) do
+      (
+        exit returning(-866)
+      )
+      case(301) do
+      (
+        exit returning(-857)
+      )
+      case(302) do
+      (
+        exit returning(-848)
+      )
+      case(303) do
+      (
+        exit returning(-839)
+      )
+      case(304) do
+      (
+        exit returning(-829)
+      )
+      case(305) do
+      (
+        exit returning(-819)
+      )
+      case(306) do
+      (
+        exit returning(-809)
+      )
+      case(307) do
+      (
+        exit returning(-799)
+      )
+      case(308) do
+      (
+        exit returning(-788)
+      )
+      case(309) do
+      (
+        exit returning(-777)
+      )
+      case(310) do
+      (
+        exit returning(-766)
+      )
+      case(311) do
+      (
+        exit returning(-755)
+      )
+      case(312) do
+      (
+        exit returning(-743)
+      )
+      case(313) do
+      (
+        exit returning(-731)
+      )
+      case(314) do
+      (
+        exit returning(-719)
+      )
+      case(315) do
+      (
+        exit returning(-707)
+      )
+      case(316) do
+      (
+        exit returning(-695)
+      )
+      case(317) do
+      (
+        exit returning(-682)
+      )
+      case(318) do
+      (
+        exit returning(-669)
+      )
+      case(319) do
+      (
+        exit returning(-656)
+      )
+    )
+  )
+  else if(angle < 340) then
+  (
+    switch(angle) do
+    (
+      case(320) do
+      (
+        exit returning(-643)
+      )
+      case(321) do
+      (
+        exit returning(-629)
+      )
+      case(322) do
+      (
+        exit returning(-616)
+      )
+      case(323) do
+      (
+        exit returning(-602)
+      )
+      case(324) do
+      (
+        exit returning(-588)
+      )
+      case(325) do
+      (
+        exit returning(-574)
+      )
+      case(326) do
+      (
+        exit returning(-559)
+      )
+      case(327) do
+      (
+        exit returning(-545)
+      )
+      case(328) do
+      (
+        exit returning(-530)
+      )
+      case(329) do
+      (
+        exit returning(-515)
+      )
+      case(330) do
+      (
+        exit returning(-500)
+      )
+      case(331) do
+      (
+        exit returning(-485)
+      )
+      case(332) do
+      (
+        exit returning(-469)
+      )
+      case(333) do
+      (
+        exit returning(-454)
+      )
+      case(334) do
+      (
+        exit returning(-438)
+      )
+      case(335) do
+      (
+        exit returning(-423)
+      )
+      case(336) do
+      (
+        exit returning(-407)
+      )
+      case(337) do
+      (
+        exit returning(-391)
+      )
+      case(338) do
+      (
+        exit returning(-375)
+      )
+      case(339) do
+      (
+        exit returning(-358)
+      )
+    )
+  )
+  else
+  (
+    switch(angle) do
+    (
+      case(340) do
+      (
+        exit returning(-342)
+      )
+      case(341) do
+      (
+        exit returning(-326)
+      )
+      case(342) do
+      (
+        exit returning(-309)
+      )
+      case(343) do
+      (
+        exit returning(-292)
+      )
+      case(344) do
+      (
+        exit returning(-276)
+      )
+      case(345) do
+      (
+        exit returning(-259)
+      )
+      case(346) do
+      (
+        exit returning(-242)
+      )
+      case(347) do
+      (
+        exit returning(-225)
+      )
+      case(348) do
+      (
+        exit returning(-208)
+      )
+      case(349) do
+      (
+        exit returning(-191)
+      )
+      case(350) do
+      (
+        exit returning(-174)
+      )
+      case(351) do
+      (
+        exit returning(-156)
+      )
+      case(352) do
+      (
+        exit returning(-139)
+      )
+      case(353) do
+      (
+        exit returning(-122)
+      )
+      case(354) do
+      (
+        exit returning(-105)
+      )
+      case(355) do
+      (
+        exit returning(-87)
+      )
+      case(356) do
+      (
+        exit returning(-70)
+      )
+      case(357) do
+      (
+        exit returning(-52)
+      )
+      case(358) do
+      (
+        exit returning(-35)
+      )
+      case(359) do
+      (
+        exit returning(-17)
+      )
+    )
+  )
+
+  exit returning(0)
+)
+
+
+
+# This is just a lookup table that get_y_subpixels uses to get the closest
+# integer to the cosine of an angle times 1000.  It can be reused to get cosines
+# from angles for other purposes.
+script, look_up_cosine, angle
+(
+  if(angle < 20) then
+  (
+    switch(angle) do
+    (
+      case(0) do
+      (
+        exit returning(1000)
+      )
+      case(1) do
+      (
+        exit returning(1000)
+      )
+      case(2) do
+      (
+        exit returning(999)
+      )
+      case(3) do
+      (
+        exit returning(999)
+      )
+      case(4) do
+      (
+        exit returning(998)
+      )
+      case(5) do
+      (
+        exit returning(996)
+      )
+      case(6) do
+      (
+        exit returning(995)
+      )
+      case(7) do
+      (
+        exit returning(993)
+      )
+      case(8) do
+      (
+        exit returning(990)
+      )
+      case(9) do
+      (
+        exit returning(988)
+      )
+      case(10) do
+      (
+        exit returning(985)
+      )
+      case(11) do
+      (
+        exit returning(982)
+      )
+      case(12) do
+      (
+        exit returning(978)
+      )
+      case(13) do
+      (
+        exit returning(974)
+      )
+      case(14) do
+      (
+        exit returning(970)
+      )
+      case(15) do
+      (
+        exit returning(966)
+      )
+      case(16) do
+      (
+        exit returning(961)
+      )
+      case(17) do
+      (
+        exit returning(956)
+      )
+      case(18) do
+      (
+        exit returning(951)
+      )
+      case(19) do
+      (
+        exit returning(946)
+      )
+    )
+  )
+  else if(angle < 40) then
+  (
+    switch(angle) do
+    (
+      case(20) do
+      (
+        exit returning(940)
+      )
+      case(21) do
+      (
+        exit returning(934)
+      )
+      case(22) do
+      (
+        exit returning(927)
+      )
+      case(23) do
+      (
+        exit returning(921)
+      )
+      case(24) do
+      (
+        exit returning(914)
+      )
+      case(25) do
+      (
+        exit returning(906)
+      )
+      case(26) do
+      (
+        exit returning(899)
+      )
+      case(27) do
+      (
+        exit returning(891)
+      )
+      case(28) do
+      (
+        exit returning(883)
+      )
+      case(29) do
+      (
+        exit returning(875)
+      )
+      case(30) do
+      (
+        exit returning(866)
+      )
+      case(31) do
+      (
+        exit returning(857)
+      )
+      case(32) do
+      (
+        exit returning(848)
+      )
+      case(33) do
+      (
+        exit returning(839)
+      )
+      case(34) do
+      (
+        exit returning(829)
+      )
+      case(35) do
+      (
+        exit returning(819)
+      )
+      case(36) do
+      (
+        exit returning(809)
+      )
+      case(37) do
+      (
+        exit returning(799)
+      )
+      case(38) do
+      (
+        exit returning(788)
+      )
+      case(39) do
+      (
+        exit returning(777)
+      )
+    )
+  )
+  else if(angle < 60) then
+  (
+    switch(angle) do
+    (
+      case(40) do
+      (
+        exit returning(766)
+      )
+      case(41) do
+      (
+        exit returning(755)
+      )
+      case(42) do
+      (
+        exit returning(743)
+      )
+      case(43) do
+      (
+        exit returning(731)
+      )
+      case(44) do
+      (
+        exit returning(719)
+      )
+      case(45) do
+      (
+        exit returning(707)
+      )
+      case(46) do
+      (
+        exit returning(695)
+      )
+      case(47) do
+      (
+        exit returning(682)
+      )
+      case(48) do
+      (
+        exit returning(669)
+      )
+      case(49) do
+      (
+        exit returning(656)
+      )
+      case(50) do
+      (
+        exit returning(643)
+      )
+      case(51) do
+      (
+        exit returning(629)
+      )
+      case(52) do
+      (
+        exit returning(616)
+      )
+      case(53) do
+      (
+        exit returning(602)
+      )
+      case(54) do
+      (
+        exit returning(588)
+      )
+      case(55) do
+      (
+        exit returning(574)
+      )
+      case(56) do
+      (
+        exit returning(559)
+      )
+      case(57) do
+      (
+        exit returning(545)
+      )
+      case(58) do
+      (
+        exit returning(530)
+      )
+      case(59) do
+      (
+        exit returning(515)
+      )
+    )
+  )
+  else if(angle < 80) then
+  (
+    switch(angle) do
+    (
+      case(60) do
+      (
+        exit returning(500)
+      )
+      case(61) do
+      (
+        exit returning(485)
+      )
+      case(62) do
+      (
+        exit returning(469)
+      )
+      case(63) do
+      (
+        exit returning(454)
+      )
+      case(64) do
+      (
+        exit returning(438)
+      )
+      case(65) do
+      (
+        exit returning(423)
+      )
+      case(66) do
+      (
+        exit returning(407)
+      )
+      case(67) do
+      (
+        exit returning(391)
+      )
+      case(68) do
+      (
+        exit returning(375)
+      )
+      case(69) do
+      (
+        exit returning(358)
+      )
+      case(70) do
+      (
+        exit returning(342)
+      )
+      case(71) do
+      (
+        exit returning(326)
+      )
+      case(72) do
+      (
+        exit returning(309)
+      )
+      case(73) do
+      (
+        exit returning(292)
+      )
+      case(74) do
+      (
+        exit returning(276)
+      )
+      case(75) do
+      (
+        exit returning(259)
+      )
+      case(76) do
+      (
+        exit returning(242)
+      )
+      case(77) do
+      (
+        exit returning(225)
+      )
+      case(78) do
+      (
+        exit returning(208)
+      )
+      case(79) do
+      (
+        exit returning(191)
+      )
+    )
+  )
+  else if(angle < 100) then
+  (
+    switch(angle) do
+    (
+      case(80) do
+      (
+        exit returning(174)
+      )
+      case(81) do
+      (
+        exit returning(156)
+      )
+      case(82) do
+      (
+        exit returning(139)
+      )
+      case(83) do
+      (
+        exit returning(122)
+      )
+      case(84) do
+      (
+        exit returning(105)
+      )
+      case(85) do
+      (
+        exit returning(87)
+      )
+      case(86) do
+      (
+        exit returning(70)
+      )
+      case(87) do
+      (
+        exit returning(52)
+      )
+      case(88) do
+      (
+        exit returning(35)
+      )
+      case(89) do
+      (
+        exit returning(17)
+      )
+      case(90) do
+      (
+        exit returning(0)
+      )
+      case(91) do
+      (
+        exit returning(-17)
+      )
+      case(92) do
+      (
+        exit returning(-35)
+      )
+      case(93) do
+      (
+        exit returning(-52)
+      )
+      case(94) do
+      (
+        exit returning(-70)
+      )
+      case(95) do
+      (
+        exit returning(-87)
+      )
+      case(96) do
+      (
+        exit returning(-105)
+      )
+      case(97) do
+      (
+        exit returning(-122)
+      )
+      case(98) do
+      (
+        exit returning(-139)
+      )
+      case(99) do
+      (
+        exit returning(-156)
+      )
+    )
+  )
+  else if(angle < 120) then
+  (
+    switch(angle) do
+    (
+      case(100) do
+      (
+        exit returning(-174)
+      )
+      case(101) do
+      (
+        exit returning(-191)
+      )
+      case(102) do
+      (
+        exit returning(-208)
+      )
+      case(103) do
+      (
+        exit returning(-225)
+      )
+      case(104) do
+      (
+        exit returning(-242)
+      )
+      case(105) do
+      (
+        exit returning(-259)
+      )
+      case(106) do
+      (
+        exit returning(-276)
+      )
+      case(107) do
+      (
+        exit returning(-292)
+      )
+      case(108) do
+      (
+        exit returning(-309)
+      )
+      case(109) do
+      (
+        exit returning(-326)
+      )
+      case(110) do
+      (
+        exit returning(-342)
+      )
+      case(111) do
+      (
+        exit returning(-358)
+      )
+      case(112) do
+      (
+        exit returning(-375)
+      )
+      case(113) do
+      (
+        exit returning(-391)
+      )
+      case(114) do
+      (
+        exit returning(-407)
+      )
+      case(115) do
+      (
+        exit returning(-423)
+      )
+      case(116) do
+      (
+        exit returning(-438)
+      )
+      case(117) do
+      (
+        exit returning(-454)
+      )
+      case(118) do
+      (
+        exit returning(-469)
+      )
+      case(119) do
+      (
+        exit returning(-485)
+      )
+    )
+  )
+  else if(angle < 140) then
+  (
+    switch(angle) do
+    (
+      case(120) do
+      (
+        exit returning(-500)
+      )
+      case(121) do
+      (
+        exit returning(-515)
+      )
+      case(122) do
+      (
+        exit returning(-530)
+      )
+      case(123) do
+      (
+        exit returning(-545)
+      )
+      case(124) do
+      (
+        exit returning(-559)
+      )
+      case(125) do
+      (
+        exit returning(-574)
+      )
+      case(126) do
+      (
+        exit returning(-588)
+      )
+      case(127) do
+      (
+        exit returning(-602)
+      )
+      case(128) do
+      (
+        exit returning(-616)
+      )
+      case(129) do
+      (
+        exit returning(-629)
+      )
+      case(130) do
+      (
+        exit returning(-643)
+      )
+      case(131) do
+      (
+        exit returning(-656)
+      )
+      case(132) do
+      (
+        exit returning(-669)
+      )
+      case(133) do
+      (
+        exit returning(-682)
+      )
+      case(134) do
+      (
+        exit returning(-695)
+      )
+      case(135) do
+      (
+        exit returning(-707)
+      )
+      case(136) do
+      (
+        exit returning(-719)
+      )
+      case(137) do
+      (
+        exit returning(-731)
+      )
+      case(138) do
+      (
+        exit returning(-743)
+      )
+      case(139) do
+      (
+        exit returning(-755)
+      )
+    )
+  )
+  else if(angle < 160) then
+  (
+    switch(angle) do
+    (
+      case(140) do
+      (
+        exit returning(-766)
+      )
+      case(141) do
+      (
+        exit returning(-777)
+      )
+      case(142) do
+      (
+        exit returning(-788)
+      )
+      case(143) do
+      (
+        exit returning(-799)
+      )
+      case(144) do
+      (
+        exit returning(-809)
+      )
+      case(145) do
+      (
+        exit returning(-819)
+      )
+      case(146) do
+      (
+        exit returning(-829)
+      )
+      case(147) do
+      (
+        exit returning(-839)
+      )
+      case(148) do
+      (
+        exit returning(-848)
+      )
+      case(149) do
+      (
+        exit returning(-857)
+      )
+      case(150) do
+      (
+        exit returning(-866)
+      )
+      case(151) do
+      (
+        exit returning(-875)
+      )
+      case(152) do
+      (
+        exit returning(-883)
+      )
+      case(153) do
+      (
+        exit returning(-891)
+      )
+      case(154) do
+      (
+        exit returning(-899)
+      )
+      case(155) do
+      (
+        exit returning(-906)
+      )
+      case(156) do
+      (
+        exit returning(-914)
+      )
+      case(157) do
+      (
+        exit returning(-921)
+      )
+      case(158) do
+      (
+        exit returning(-927)
+      )
+      case(159) do
+      (
+        exit returning(-934)
+      )
+    )
+  )
+  else if(angle < 180) then
+  (
+    switch(angle) do
+    (
+      case(160) do
+      (
+        exit returning(-940)
+      )
+      case(161) do
+      (
+        exit returning(-946)
+      )
+      case(162) do
+      (
+        exit returning(-951)
+      )
+      case(163) do
+      (
+        exit returning(-956)
+      )
+      case(164) do
+      (
+        exit returning(-961)
+      )
+      case(165) do
+      (
+        exit returning(-966)
+      )
+      case(166) do
+      (
+        exit returning(-970)
+      )
+      case(167) do
+      (
+        exit returning(-974)
+      )
+      case(168) do
+      (
+        exit returning(-978)
+      )
+      case(169) do
+      (
+        exit returning(-982)
+      )
+      case(170) do
+      (
+        exit returning(-985)
+      )
+      case(171) do
+      (
+        exit returning(-988)
+      )
+      case(172) do
+      (
+        exit returning(-990)
+      )
+      case(173) do
+      (
+        exit returning(-993)
+      )
+      case(174) do
+      (
+        exit returning(-995)
+      )
+      case(175) do
+      (
+        exit returning(-996)
+      )
+      case(176) do
+      (
+        exit returning(-998)
+      )
+      case(177) do
+      (
+        exit returning(-999)
+      )
+      case(178) do
+      (
+        exit returning(-999)
+      )
+      case(179) do
+      (
+        exit returning(-1000)
+      )
+    )
+  )
+  else if(angle < 200) then
+  (
+    switch(angle) do
+    (
+      case(180) do
+      (
+        exit returning(-1000)
+      )
+      case(181) do
+      (
+        exit returning(-1000)
+      )
+      case(182) do
+      (
+        exit returning(-999)
+      )
+      case(183) do
+      (
+        exit returning(-999)
+      )
+      case(184) do
+      (
+        exit returning(-998)
+      )
+      case(185) do
+      (
+        exit returning(-996)
+      )
+      case(186) do
+      (
+        exit returning(-995)
+      )
+      case(187) do
+      (
+        exit returning(-993)
+      )
+      case(188) do
+      (
+        exit returning(-990)
+      )
+      case(189) do
+      (
+        exit returning(-988)
+      )
+      case(190) do
+      (
+        exit returning(-985)
+      )
+      case(191) do
+      (
+        exit returning(-982)
+      )
+      case(192) do
+      (
+        exit returning(-978)
+      )
+      case(193) do
+      (
+        exit returning(-974)
+      )
+      case(194) do
+      (
+        exit returning(-970)
+      )
+      case(195) do
+      (
+        exit returning(-966)
+      )
+      case(196) do
+      (
+        exit returning(-961)
+      )
+      case(197) do
+      (
+        exit returning(-956)
+      )
+      case(198) do
+      (
+        exit returning(-951)
+      )
+      case(199) do
+      (
+        exit returning(-946)
+      )
+    )
+  )
+  else if(angle < 220) then
+  (
+    switch(angle) do
+    (
+      case(200) do
+      (
+        exit returning(-940)
+      )
+      case(201) do
+      (
+        exit returning(-934)
+      )
+      case(202) do
+      (
+        exit returning(-927)
+      )
+      case(203) do
+      (
+        exit returning(-921)
+      )
+      case(204) do
+      (
+        exit returning(-914)
+      )
+      case(205) do
+      (
+        exit returning(-906)
+      )
+      case(206) do
+      (
+        exit returning(-899)
+      )
+      case(207) do
+      (
+        exit returning(-891)
+      )
+      case(208) do
+      (
+        exit returning(-883)
+      )
+      case(209) do
+      (
+        exit returning(-875)
+      )
+      case(210) do
+      (
+        exit returning(-866)
+      )
+      case(211) do
+      (
+        exit returning(-857)
+      )
+      case(212) do
+      (
+        exit returning(-848)
+      )
+      case(213) do
+      (
+        exit returning(-839)
+      )
+      case(214) do
+      (
+        exit returning(-829)
+      )
+      case(215) do
+      (
+        exit returning(-819)
+      )
+      case(216) do
+      (
+        exit returning(-809)
+      )
+      case(217) do
+      (
+        exit returning(-799)
+      )
+      case(218) do
+      (
+        exit returning(-788)
+      )
+      case(219) do
+      (
+        exit returning(-777)
+      )
+    )
+  )
+  else if(angle < 240) then
+  (
+    switch(angle) do
+    (
+      case(220) do
+      (
+        exit returning(-766)
+      )
+      case(221) do
+      (
+        exit returning(-755)
+      )
+      case(222) do
+      (
+        exit returning(-743)
+      )
+      case(223) do
+      (
+        exit returning(-731)
+      )
+      case(224) do
+      (
+        exit returning(-719)
+      )
+      case(225) do
+      (
+        exit returning(-707)
+      )
+      case(226) do
+      (
+        exit returning(-695)
+      )
+      case(227) do
+      (
+        exit returning(-682)
+      )
+      case(228) do
+      (
+        exit returning(-669)
+      )
+      case(229) do
+      (
+        exit returning(-656)
+      )
+      case(230) do
+      (
+        exit returning(-643)
+      )
+      case(231) do
+      (
+        exit returning(-629)
+      )
+      case(232) do
+      (
+        exit returning(-616)
+      )
+      case(233) do
+      (
+        exit returning(-602)
+      )
+      case(234) do
+      (
+        exit returning(-588)
+      )
+      case(235) do
+      (
+        exit returning(-574)
+      )
+      case(236) do
+      (
+        exit returning(-559)
+      )
+      case(237) do
+      (
+        exit returning(-545)
+      )
+      case(238) do
+      (
+        exit returning(-530)
+      )
+      case(239) do
+      (
+        exit returning(-515)
+      )
+    )
+  )
+  else if(angle < 260) then
+  (
+    switch(angle) do
+    (
+      case(240) do
+      (
+        exit returning(-500)
+      )
+      case(241) do
+      (
+        exit returning(-485)
+      )
+      case(242) do
+      (
+        exit returning(-469)
+      )
+      case(243) do
+      (
+        exit returning(-454)
+      )
+      case(244) do
+      (
+        exit returning(-438)
+      )
+      case(245) do
+      (
+        exit returning(-423)
+      )
+      case(246) do
+      (
+        exit returning(-407)
+      )
+      case(247) do
+      (
+        exit returning(-391)
+      )
+      case(248) do
+      (
+        exit returning(-375)
+      )
+      case(249) do
+      (
+        exit returning(-358)
+      )
+      case(250) do
+      (
+        exit returning(-342)
+      )
+      case(251) do
+      (
+        exit returning(-326)
+      )
+      case(252) do
+      (
+        exit returning(-309)
+      )
+      case(253) do
+      (
+        exit returning(-292)
+      )
+      case(254) do
+      (
+        exit returning(-276)
+      )
+      case(255) do
+      (
+        exit returning(-259)
+      )
+      case(256) do
+      (
+        exit returning(-242)
+      )
+      case(257) do
+      (
+        exit returning(-225)
+      )
+      case(258) do
+      (
+        exit returning(-208)
+      )
+      case(259) do
+      (
+        exit returning(-191)
+      )
+    )
+  )
+  else if(angle < 280) then
+  (
+    switch(angle) do
+    (
+      case(260) do
+      (
+        exit returning(-174)
+      )
+      case(261) do
+      (
+        exit returning(-156)
+      )
+      case(262) do
+      (
+        exit returning(-139)
+      )
+      case(263) do
+      (
+        exit returning(-122)
+      )
+      case(264) do
+      (
+        exit returning(-105)
+      )
+      case(265) do
+      (
+        exit returning(-87)
+      )
+      case(266) do
+      (
+        exit returning(-70)
+      )
+      case(267) do
+      (
+        exit returning(-52)
+      )
+      case(268) do
+      (
+        exit returning(-35)
+      )
+      case(269) do
+      (
+        exit returning(-17)
+      )
+      case(270) do
+      (
+        exit returning(0)
+      )
+      case(271) do
+      (
+        exit returning(17)
+      )
+      case(272) do
+      (
+        exit returning(35)
+      )
+      case(273) do
+      (
+        exit returning(52)
+      )
+      case(274) do
+      (
+        exit returning(70)
+      )
+      case(275) do
+      (
+        exit returning(87)
+      )
+      case(276) do
+      (
+        exit returning(105)
+      )
+      case(277) do
+      (
+        exit returning(122)
+      )
+      case(278) do
+      (
+        exit returning(139)
+      )
+      case(279) do
+      (
+        exit returning(156)
+      )
+    )
+  )
+  else if(angle < 300) then
+  (
+    switch(angle) do
+    (
+      case(280) do
+      (
+        exit returning(174)
+      )
+      case(281) do
+      (
+        exit returning(191)
+      )
+      case(282) do
+      (
+        exit returning(208)
+      )
+      case(283) do
+      (
+        exit returning(225)
+      )
+      case(284) do
+      (
+        exit returning(242)
+      )
+      case(285) do
+      (
+        exit returning(259)
+      )
+      case(286) do
+      (
+        exit returning(276)
+      )
+      case(287) do
+      (
+        exit returning(292)
+      )
+      case(288) do
+      (
+        exit returning(309)
+      )
+      case(289) do
+      (
+        exit returning(326)
+      )
+      case(290) do
+      (
+        exit returning(342)
+      )
+      case(291) do
+      (
+        exit returning(358)
+      )
+      case(292) do
+      (
+        exit returning(375)
+      )
+      case(293) do
+      (
+        exit returning(391)
+      )
+      case(294) do
+      (
+        exit returning(407)
+      )
+      case(295) do
+      (
+        exit returning(423)
+      )
+      case(296) do
+      (
+        exit returning(438)
+      )
+      case(297) do
+      (
+        exit returning(454)
+      )
+      case(298) do
+      (
+        exit returning(469)
+      )
+      case(299) do
+      (
+        exit returning(485)
+      )
+    )
+  )
+  else if(angle < 320) then
+  (
+    switch(angle) do
+    (
+      case(300) do
+      (
+        exit returning(500)
+      )
+      case(301) do
+      (
+        exit returning(515)
+      )
+      case(302) do
+      (
+        exit returning(530)
+      )
+      case(303) do
+      (
+        exit returning(545)
+      )
+      case(304) do
+      (
+        exit returning(559)
+      )
+      case(305) do
+      (
+        exit returning(574)
+      )
+      case(306) do
+      (
+        exit returning(588)
+      )
+      case(307) do
+      (
+        exit returning(602)
+      )
+      case(308) do
+      (
+        exit returning(616)
+      )
+      case(309) do
+      (
+        exit returning(629)
+      )
+      case(310) do
+      (
+        exit returning(643)
+      )
+      case(311) do
+      (
+        exit returning(656)
+      )
+      case(312) do
+      (
+        exit returning(669)
+      )
+      case(313) do
+      (
+        exit returning(682)
+      )
+      case(314) do
+      (
+        exit returning(695)
+      )
+      case(315) do
+      (
+        exit returning(707)
+      )
+      case(316) do
+      (
+        exit returning(719)
+      )
+      case(317) do
+      (
+        exit returning(731)
+      )
+      case(318) do
+      (
+        exit returning(743)
+      )
+      case(319) do
+      (
+        exit returning(755)
+      )
+    )
+  )
+  else if(angle < 340) then
+  (
+    switch(angle) do
+    (
+      case(320) do
+      (
+        exit returning(766)
+      )
+      case(321) do
+      (
+        exit returning(777)
+      )
+      case(322) do
+      (
+        exit returning(788)
+      )
+      case(323) do
+      (
+        exit returning(799)
+      )
+      case(324) do
+      (
+        exit returning(809)
+      )
+      case(325) do
+      (
+        exit returning(819)
+      )
+      case(326) do
+      (
+        exit returning(829)
+      )
+      case(327) do
+      (
+        exit returning(839)
+      )
+      case(328) do
+      (
+        exit returning(848)
+      )
+      case(329) do
+      (
+        exit returning(857)
+      )
+      case(330) do
+      (
+        exit returning(866)
+      )
+      case(331) do
+      (
+        exit returning(875)
+      )
+      case(332) do
+      (
+        exit returning(883)
+      )
+      case(333) do
+      (
+        exit returning(891)
+      )
+      case(334) do
+      (
+        exit returning(899)
+      )
+      case(335) do
+      (
+        exit returning(906)
+      )
+      case(336) do
+      (
+        exit returning(914)
+      )
+      case(337) do
+      (
+        exit returning(921)
+      )
+      case(338) do
+      (
+        exit returning(927)
+      )
+      case(339) do
+      (
+        exit returning(934)
+      )
+    )
+  )
+  else
+  (
+    switch(angle) do
+    (
+      case(340) do
+      (
+        exit returning(940)
+      )
+      case(341) do
+      (
+        exit returning(946)
+      )
+      case(342) do
+      (
+        exit returning(951)
+      )
+      case(343) do
+      (
+        exit returning(956)
+      )
+      case(344) do
+      (
+        exit returning(961)
+      )
+      case(345) do
+      (
+        exit returning(966)
+      )
+      case(346) do
+      (
+        exit returning(970)
+      )
+      case(347) do
+      (
+        exit returning(974)
+      )
+      case(348) do
+      (
+        exit returning(978)
+      )
+      case(349) do
+      (
+        exit returning(982)
+      )
+      case(350) do
+      (
+        exit returning(985)
+      )
+      case(351) do
+      (
+        exit returning(988)
+      )
+      case(352) do
+      (
+        exit returning(990)
+      )
+      case(353) do
+      (
+        exit returning(993)
+      )
+      case(354) do
+      (
+        exit returning(995)
+      )
+      case(355) do
+      (
+        exit returning(996)
+      )
+      case(356) do
+      (
+        exit returning(998)
+      )
+      case(357) do
+      (
+        exit returning(999)
+      )
+      case(358) do
+      (
+        exit returning(999)
+      )
+      case(359) do
+      (
+        exit returning(1000)
+      )
+    )
+  )
+
+  exit returning(0)
+)
+
+
+
+# This is a lookup table that get_bearing uses to get the closest integer to
+# the inverse tangent of a slope times 1000.  I don't recommend using this one
+# for other purposes, though, because it doesn't support slopes greater than 1
+# or angles greater than 45 degrees.
+script, look_up_inverse_tangent, slope
+(
+  if(slope < 167) then
+  (
+    if(slope < 9) then
+    (
+        exit returning(0)
+    )
+    else if(slope < 26) then
+    (
+        exit returning(1)
+    )
+    else if(slope < 44) then
+    (
+        exit returning(2)
+    )
+    else if(slope < 61) then
+    (
+        exit returning(3)
+    )
+    else if(slope < 79) then
+    (
+        exit returning(4)
+    )
+    else if(slope < 96) then
+    (
+        exit returning(5)
+    )
+    else if(slope < 114) then
+    (
+        exit returning(6)
+    )
+    else if(slope < 132) then
+    (
+        exit returning(7)
+    )
+    else if(slope < 149) then
+    (
+        exit returning(8)
+    )
+    else
+    (
+        exit returning(9)
+    )
+  )
+  else if(slope < 354) then
+  (
+    if(slope < 185) then
+    (
+        exit returning(10)
+    )
+    else if(slope < 203) then
+    (
+        exit returning(11)
+    )
+    else if(slope < 222) then
+    (
+        exit returning(12)
+    )
+    else if(slope < 240) then
+    (
+        exit returning(13)
+    )
+    else if(slope < 259) then
+    (
+        exit returning(14)
+    )
+    else if(slope < 277) then
+    (
+        exit returning(15)
+    )
+    else if(slope < 296) then
+    (
+        exit returning(16)
+    )
+    else if(slope < 315) then
+    (
+        exit returning(17)
+    )
+    else if(slope < 335) then
+    (
+        exit returning(18)
+    )
+    else
+    (
+        exit returning(19)
+    )
+  )
+  else if(slope < 566) then
+  (
+    if(slope < 374) then
+    (
+        exit returning(20)
+    )
+    else if(slope < 394) then
+    (
+        exit returning(21)
+    )
+    else if(slope < 414) then
+    (
+        exit returning(22)
+    )
+    else if(slope < 435) then
+    (
+        exit returning(23)
+    )
+    else if(slope < 456) then
+    (
+        exit returning(24)
+    )
+    else if(slope < 477) then
+    (
+        exit returning(25)
+    )
+    else if(slope < 499) then
+    (
+        exit returning(26)
+    )
+    else if(slope < 521) then
+    (
+        exit returning(27)
+    )
+    else if(slope < 543) then
+    (
+        exit returning(28)
+    )
+    else
+    (
+        exit returning(29)
+    )
+  )
+  else if(slope < 824) then
+  (
+    if(slope < 589) then
+    (
+        exit returning(30)
+    )
+    else if(slope < 613) then
+    (
+        exit returning(31)
+    )
+    else if(slope < 637) then
+    (
+        exit returning(32)
+    )
+    else if(slope < 662) then
+    (
+        exit returning(33)
+    )
+    else if(slope < 687) then
+    (
+        exit returning(34)
+    )
+    else if(slope < 713) then
+    (
+        exit returning(35)
+    )
+    else if(slope < 740) then
+    (
+        exit returning(36)
+    )
+    else if(slope < 767) then
+    (
+        exit returning(37)
+    )
+    else if(slope < 795) then
+    (
+        exit returning(38)
+    )
+    else
+    (
+        exit returning(39)
+    )
+  )
+  else
+  (
+    if(slope < 854) then
+    (
+        exit returning(40)
+    )
+    else if(slope < 885) then
+    (
+        exit returning(41)
+    )
+    else if(slope < 916) then
+    (
+        exit returning(42)
+    )
+    else if(slope < 949) then
+    (
+        exit returning(43)
+    )
+    else if(slope < 983) then
+    (
+        exit returning(44)
+    )
+    else
+    (
+        exit returning(45)
+    )
+  )
+)
+

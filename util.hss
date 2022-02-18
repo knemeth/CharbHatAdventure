@@ -1,0 +1,39 @@
+# util.hss
+
+# ========================================
+# MATH
+# ========================================
+
+script, clampValue, val, mn, mx, begin
+    # Takes val and constrains it to min and max
+    if(val < mn) then(exitReturning(mn))
+    elseif(val > mx) then(exitReturning(mx))
+    else(exitReturning(val))
+end
+
+script, max, x, y, begin
+    if(x >= y) then(exitReturning(x))
+    if(y > x) then(exitReturning(y))
+end
+
+script, min, x, y, begin
+    if(x <= y) then(exitReturning(x))
+    if(y < x) then(exitReturning(y))
+end
+
+# ========================================
+# SLICES
+# ========================================
+
+script, updateNPCorHeroFromSlice, sl, begin
+    variable (who)
+    
+    who := heroRankFromSlice(sl)
+    if (who > -1) then (putHero(who, sliceX(sl), sliceY(sl)))
+    who := npcReferenceFromSlice(sl)
+    if (who <> 0) then (putNPC(who, sliceX(sl), sliceY(sl)))
+end
+
+script, npcIDFromSlice, sl, begin
+    exitReturning(getNPCID(npcReferenceFromSlice(sl)))
+end

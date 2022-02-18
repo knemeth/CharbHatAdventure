@@ -1,0 +1,92 @@
+# combat.hss
+
+script, evaluateInput, begin
+    variable(valid)
+    # Check for melee attack
+    if(usePress && playerState <> state:attack) then(
+        switch(playerState) do(
+            case(state:idle) valid := true
+            case(state:walk) valid := true
+            case(else) valid := false
+        )
+
+        if(valid) then(
+            playerState := state:attack
+            playerSpriteset := player:attackSet
+            playerFrames := player:attackFrames
+            setSliceExtra(getHeroSprite(me), extra0, 0)     # Reset animation timer
+
+            # make attack hitbox visible
+            variable(attack, w, h, x, y)
+            attack := lookupSlice(sli:attack, player)
+            switch(heroDirection(me)) do(
+                case(up) w := max(sliceWidth(attack), sliceHeight(attack)), h := min(sliceWidth(attack), sliceHeight(attack)), x := 0, y := 0--sliceHeight(player)
+                case(down) w := max(sliceWidth(attack), sliceHeight(attack)), h := min(sliceWidth(attack), sliceHeight(attack)), x := 0, y := sliceHeight(player)
+                case(left) w := min(sliceWidth(attack), sliceHeight(attack)), h := max(sliceWidth(attack), sliceHeight(attack)), x := 0--sliceWidth(player), y := 0
+                case(right) w := min(sliceWidth(attack), sliceHeight(attack)), h := max(sliceWidth(attack), sliceHeight(attack)), x := sliceWidth(player), y := 0
+            )
+            setSliceSize(attack, w, h)
+            putSlice(attack, x, y)
+            setSliceVisible(attack, true)
+
+            setTimer(timer:attack, player:attackFrames * player:animSpeed, 1, @returnToIdle)
+
+            exitReturning(state:attack)
+        )
+    )
+
+    # Check for dodge roll
+    if(shiftPress && getHeroStat(me, stat:dodge) == 0 && getHeroStat(me, stat:SP) > 0) then(
+        switch(playerState) do(
+            case(state:idle) valid := true
+            case(state:walk) valid := true
+            case(else) valid := false
+        )
+
+        if(valid) then(
+            playerState := state:roll
+            playerSpriteset := player:rollSet
+            playerFrames := player:rollFrames
+            setSliceExtra(getHeroSprite(me), extra0, 0)     # Reset animation timer
+
+            setHeroStat(me, stat:dodge, player:rollDistance)
+            setHeroStat(me, stat:SP, getHeroStat(me, stat:SP) -- 1)  # Reduce stamina
+            
+            setTimer(timer:stamina, getHeroStat(me, stat:MP~), 1, @recoverStamina)
+
+            exitReturning(state:roll)
+        )
+    ) 
+    
+    # Check for block
+    if(cancelPress) then(
+        switch(playerState) do(
+            case(state:idle) valid := true
+            case(state:walk) valid := true
+            case(else) valid := false
+        )
+
+        if(valid) then(
+            playerState := state:block
+            playerSpriteset := player:blockSet
+            playerFrames := player:blockFrames
+            setSliceExtra(getHeroSprite(me), extra0, 0)     # Reset animation timer
+            # Check for perfect block here
+            # -----
+            setHeroStat(me, stat:Def, 50, maximumStat)
+            setTimer(timer:block, player:blockTime, 1, @returnToIdle)
+
+            exitReturning(state:block)
+        )
+    )
+end
+
+script, returnToIdle, begin
+    playerState := state:idle 
+    playerSpriteset := player:idleSet
+    playerSpriteset := player:idleFrames
+
+    setHeroStat(me, stat:Def, 0, maximumStat)
+    setSliceExtra(getHeroSprite(me), extra0, 0)
+    setSliceVisible(lookupSlice(sli:attack, player), false)
+end
