@@ -1,7 +1,7 @@
 # combat.hss
 
 defineConstant, begin
-    4000,player:projectileSpeed
+    8000,player:projectileSpeed
     40,player:reloadSpeed
 end
 
