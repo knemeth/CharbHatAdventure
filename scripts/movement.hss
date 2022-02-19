@@ -127,7 +127,7 @@ script, applyMove, handle, subX, subY, xv, yv, begin
     # Store subpixel position
     putSliceSubpixel(handle, sliceSubX(handle)+subX, sliceSubY(handle)+subY)
 
-    moveSliceWithWallchecking(handle, xv/1000, yv/1000, 50)
+    moveSliceWithWallchecking(handle, subX/1000, subY/1000, 50)
     updateNPCorHeroFromSlice(handle)
     # Set player or enemy's stored velocities
     setSliceXV(handle, xv)
@@ -188,25 +188,26 @@ end
 
 script, sliceSubX, handle, begin
     # Gets the subpixel X position, stored in the first child of the handle
-    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
-        exitScript() # slice is not a hero or npc
-    )
     exitReturning(sliceX(lastChild(handle)))
 end
 
 script, sliceSubY, handle, begin
     # Gets the subpixel Y position, stored in the first child of the handle
-    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
-        exitScript() # slice is not a hero or npc
-    )
     exitReturning(sliceY(lastChild(handle)))
+end
+
+script, setSliceSubX, handle, v, begin
+    # Gets the subpixel X position, stored in the first child of the handle
+    exitReturning(setSliceX(lastChild(handle), v))
+end
+
+script, setSliceSubY, handle, v, begin
+    # Gets the subpixel Y position, stored in the first child of the handle
+    exitReturning(setSliceY(lastChild(handle), v))
 end
 
 script, putSliceSubpixel, handle, subX, subY, begin
     # Sets the subpixel position, which are pixels * 1000
-    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
-        exitScript() # slice is not a hero or npc
-    )
     putSlice(lastChild(handle), subX, subY)
 end
 

@@ -8,6 +8,7 @@ globalVariable, begin
     104,usePress
     105,shiftPress
     106,cancelPress
+    107,shootPress
 end
 
 plotscript, keypressHandler, begin
@@ -16,6 +17,7 @@ plotscript, keypressHandler, begin
     if(keyIsPressed(key:up) || keyIsPressed(key:w)) then(wantUp := true)
     if(keyIsPressed(key:down) || keyIsPressed(key:s)) then(wantDown := true)
     if(keypress(key:space) || keypress(key:enter) || keypress(key:z) || mouseRelease(leftButton)) then(usePress := true)
+    if(keypress(key:c)) then(shootPress := true)
     if(keyIsPressed(key:shift)) then(shiftPress := true)
     if(keypress(key:esc) || keypress(key:x) || mouseRelease(rightButton)) then(cancelPress := true)
     #if(keypress(key:r)) then(resetGame())
@@ -29,4 +31,5 @@ script, resetInputs, begin
     usePress := false
     shiftPress := false
     cancelPress := false
+    shootPress := false
 end

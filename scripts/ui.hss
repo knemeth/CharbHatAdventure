@@ -6,5 +6,11 @@ script, updateHud, begin
 	# stamina
 	variable(staminaBar)
     staminaBar := lookupSlice(sli:stamina, hud)
-    setSliceWidth(staminaBar, getHeroStat(me, stat:SP) * (sliceWidth(sliceParent(staminaBar)) / 2))
+    setSliceWidth(staminaBar, getHeroStat(me, stat:SP) * (sliceWidth(sliceParent(staminaBar)) / getHeroStat(me, stat:SP, maximumStat)) + 1)
+  	setGridColumns(nextGridSibling(staminaBar),  getHeroStat(me, stat:SP, maximumStat))
+    # ammo
+    variable(ammoBar)
+    ammoBar := lookupSlice(sli:ammo, hud)
+    setSliceWidth(ammoBar, getHeroStat(me, stat:Hits) * (sliceWidth(sliceParent(ammoBar)) / getHeroStat(me, stat:Hits, maximumStat)) + 1)
+    setGridColumns(nextGridSibling(ammoBar),  getHeroStat(me, stat:Hits, maximumStat))
 end

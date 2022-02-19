@@ -1,0 +1,50 @@
+# projectile.hss
+
+defineConstant, begin
+    1500,projectile:speed
+    300,projectile:lifetime
+end
+
+script, createProjectile, spr, x, y, w, h, dir, spd=projectile:speed, friendly=false, begin
+    variable(projectile, sprite, sl)
+
+    projectile := createContainer(w, h)
+    setHorizAnchor(projectile, edge:center)
+    setVertAnchor(projectile, edge:middle)
+    setParent(projectile, projectileLayer)
+    sprite := loadAttackSprite(spr)
+    setParent(sprite, projectile)
+    centerSlice(sprite)
+    createAnimation(sprite, 9, 3, true)
+    sl := createContainer(0,0)      # subpixel data slice
+    setParent(sl, projectile)
+
+    putSlice(projectile, x, y)
+    putSliceSubpixel(projectile, x*1000, y*1000)
+
+    setSliceExtra(projectile, extra0, dir)
+    setSliceExtra(projectile, extra1, spd)
+    setSliceExtra(projectile, extra2, projectile:lifetime)
+end
+
+script, updateProjectiles, begin
+    variable(i, target, sl, spd, subX, subY)
+
+    for(i, childCount(projectileLayer) -- 1, 0, -1) do(
+        sl := sliceChild(projectileLayer, i)
+        # Check collision with player
+        #sl := findCollidingSlice()
+        # Tick down lifetime
+        if(getSliceExtra(sl, extra2) <= 0) then(
+            freeSlice(sl)
+            continue
+        )
+        setSliceExtra(sl, extra2, getSliceExtra(sl, extra2) -- 1)
+        # Move by speed
+        subX := get_x_subpixels(getSliceExtra(sl, extra1), getSliceExtra(sl, extra0))
+        subY := get_y_subpixels(getSliceExtra(sl, extra1), getSliceExtra(sl, extra0))
+        putSliceSubpixel(sl, sliceSubX(sl) + subX, sliceSubY(sl) + subY)
+
+        putSlice(sl, sliceSubX(sl)/1000, sliceSubY(sl)/1000)
+    )
+end

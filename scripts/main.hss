@@ -5,9 +5,10 @@ include,.\Util\array.hss
 include,.\Util\util.hss
 include,.\Util\geometry.hss
 include,.\Util\effects.hss
-include,input.hss
+include,.\Util\input.hss
 include,animate.hss
 include,combat.hss
+include,projectile.hss
 include,movement.hss
 include,ui.hss
 
@@ -16,6 +17,7 @@ globalVariable, begin
     0,animHandles
     1,particleHandles
     2,emitterHandles
+    3,projectileLayer
     # Player values
     10,player
     11,playerSpriteset
@@ -38,21 +40,25 @@ defineConstant, begin
     13,player:rollDistance
     0,player:attackSet
     3,player:attackFrames
+    0,player:shootSet
+    2,player:shootFrames
     7,player:blockSet
     2,player:blockFrames
     10,player:blockTime
 
-    9,state:idle
-    10,state:walk
-    11,state:roll
-    12,state:block
-    13,state:attack
+    0,state:idle
+    1,state:walk
+    2,state:roll
+    3,state:block
+    4,state:attack
+    5,state:shoot
 
     100,sli:attack
 
     0,timer:stamina
     1,timer:block
     2,timer:attack
+    3,timer:reload
 end
 
 plotscript, initGame, begin
@@ -75,6 +81,8 @@ plotscript, initGame, begin
     animHandles := createContainer()
     particleHandles := createContainer()
     emitterHandles := createContainer()
+    projectileLayer := createContainer()
+    setParent(projectileLayer, lookupSlice(sl:mapOverlay))
 
     while(true) do(
         primaryLoopContents()
@@ -90,6 +98,7 @@ script, primaryLoopContents, begin
     animateEffects()
     moveParticles()
     processEmitters()
+    updateProjectiles()
 
     # Player
     evaluateInput()

@@ -1,3 +1,6 @@
 *.bak
 *.saves
 autobackups/
+c_debug.txt
+c_debug_archive.txt
+g_debug.txt
