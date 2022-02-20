@@ -3,6 +3,7 @@
 defineConstant, begin
     500,player:accel
     2500,player:speed
+    0,player:friction
 end
 
 script, movePlayer, begin
@@ -22,7 +23,7 @@ script, movePlayer, begin
         horiz := get_x_subpixels(1000, bearing)
         vert := get_y_subpixels(1000, bearing)
         if(sign(horiz) <> 0 && sign(vert) <> 0) then(
-            clamp := multdiv(clamp, 3, 4)
+            clamp := multdiv(clamp, 7, 8)
         )
         xv := clamp * sign(horiz)
         yv := clamp * sign(vert)
@@ -51,7 +52,7 @@ script, movePlayer, begin
         )
 
         if(horiz <> 0 && vert <> 0) then(
-            clamp := multdiv(clamp, 4, 5)
+            #clamp := multdiv(clamp, 7, 8)
         )
 
         # xv & yv stored in hero slice extra0 and extra1
@@ -123,11 +124,28 @@ end
 script, applyMove, handle, subX, subY, xv, yv, begin
     # Called in movePlayer and moveEnemies
     # Moves a slice based on relative x and y
+    variable(x, y, w, h, hitX, hitY)
+    x := sliceX(handle)
+    y := sliceY(handle)
+    w := sliceWidth(handle)
+    h := sliceHeight(handle)
+    # check wall collision x,y by subX,subY / 1000
+    # round subX,subY down to X000 if a wall is hit
+    hitX := checkWallCollisionX(x, y, w, h, subX/1000, subY/1000, player:friction)
+    if(hitX < subX/1000) then(
+        showValue(subX)
+        subX := hitX * 1000
+    )
+    hitY := checkWallCollisionY(x, y, w, h, subX/1000, subY/1000, player:friction)
+    if(hitY < subY/1000) then(
+        showValue(subY)
+        subY := hitY * 1000
+    )
 
     # Store subpixel position
     putSliceSubpixel(handle, sliceSubX(handle)+subX, sliceSubY(handle)+subY)
 
-    moveSliceWithWallchecking(handle, subX/1000, subY/1000, 50)
+    moveSliceWithWallchecking(handle, subX/1000, subY/1000, player:friction)
     updateNPCorHeroFromSlice(handle)
     # Set player or enemy's stored velocities
     setSliceXV(handle, xv)
