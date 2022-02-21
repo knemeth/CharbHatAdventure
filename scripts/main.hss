@@ -18,11 +18,14 @@ globalVariable, begin
     1,particleHandles
     2,emitterHandles
     3,projectileLayer
+    4,playerProjectileLayer
     # Player values
     10,player
     11,playerSpriteset
     12,playerFrames
     13,playerState
+    14,joyX
+    15,joyY
     # UI
     30,hud
 end
@@ -82,7 +85,9 @@ plotscript, initGame, begin
     particleHandles := createContainer()
     emitterHandles := createContainer()
     projectileLayer := createContainer()
+    playerProjectileLayer := createContainer()
     setParent(projectileLayer, lookupSlice(sl:mapOverlay))
+    setParent(playerProjectileLayer, lookupSlice(sl:mapOverlay))
 
     while(true) do(
         primaryLoopContents()

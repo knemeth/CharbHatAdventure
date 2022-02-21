@@ -11,7 +11,8 @@ script, createProjectile, spr, x, y, w, h, dir, spd=projectile:speed, friendly=f
     projectile := createContainer(w, h)
     setHorizAnchor(projectile, edge:center)
     setVertAnchor(projectile, edge:middle)
-    setParent(projectile, projectileLayer)
+    if(friendly) then(setParent(projectile, playerProjectileLayer))
+    else(setParent(projectile, projectileLayer))
     sprite := loadAttackSprite(spr)
     setParent(sprite, projectile)
     centerSlice(sprite)
@@ -28,23 +29,69 @@ script, createProjectile, spr, x, y, w, h, dir, spd=projectile:speed, friendly=f
 end
 
 script, updateProjectiles, begin
-    variable(i, target, sl, spd, subX, subY)
+    variable(i)
 
-    for(i, childCount(projectileLayer) -- 1, 0, -1) do(
-        sl := sliceChild(projectileLayer, i)
-        # Check collision with player
-        #sl := findCollidingSlice()
+    for(i, childCount(projectileLayer)--1, 0, -1) do(
+        moveProjectile(sliceChild(projectileLayer, i), false)
+    )
+
+    for(i, childCount(playerProjectileLayer)--1, 0, -1) do(
+        moveProjectile(sliceChild(playerProjectileLayer, i), true)
+    )
+
+    subscript, moveProjectile, sl, friendly, begin
+        variable(hit, subX, subY)
+
+        # Move by speed/direction
+        subX := get_x_subpixels(getSliceExtra(sl, extra1), getSliceExtra(sl, extra0))
+        subY := get_y_subpixels(getSliceExtra(sl, extra1), getSliceExtra(sl, extra0))
+
+        # Check collision with player/enemy
+        #hit := findCollidingSlice()
+        if(friendly) then(
+            # Player's bullet
+            variable(j)
+            for(j, 0, findCollidingSlice(lookupSlice(sl:walkaboutLayer), sl, getCount)--1) do(
+                hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), sl, j)
+                if(npcReferenceFromSlice(hit)) then(
+                    # Damage enemy/npc
+                    freeSlice(sl)
+                    exitScript()
+                )
+            )
+        ) else(
+            # Enemy's bullet
+            hit := sliceCollide(player, sl)
+            if(hit) then(
+                # Damage player
+                freeSlice(sl)
+                exitScript()
+            )
+        )
+
+        # Check collision with walls
+        if(readPassBlock(sliceX(sl)/20, sliceY(sl)/20)) then(
+            freeSlice(sl)
+            exitScript()
+        ) else(
+            hit := checkWallCollisionX(sliceX(sl), sliceY(sl), sliceWidth(sl), sliceHeight(sl), subX/1000, subY/1000, 0)
+            if(hit < subX/1000) then(
+                subX := (hit * 1000) + 1000
+            )
+            hit := checkWallCollisionY(sliceX(sl), sliceY(sl), sliceWidth(sl), sliceHeight(sl), subX/1000, subY/1000, 0)
+            if(hit < subY/1000) then(
+                subY := (hit * 1000) + 1000
+            )
+        )
+
         # Tick down lifetime
         if(getSliceExtra(sl, extra2) <= 0) then(
             freeSlice(sl)
-            continue
+            exitScript()
         )
         setSliceExtra(sl, extra2, getSliceExtra(sl, extra2) -- 1)
-        # Move by speed
-        subX := get_x_subpixels(getSliceExtra(sl, extra1), getSliceExtra(sl, extra0))
-        subY := get_y_subpixels(getSliceExtra(sl, extra1), getSliceExtra(sl, extra0))
+        
         putSliceSubpixel(sl, sliceSubX(sl) + subX, sliceSubY(sl) + subY)
-
         putSlice(sl, sliceSubX(sl)/1000, sliceSubY(sl)/1000)
-    )
+    end
 end

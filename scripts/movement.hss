@@ -4,114 +4,70 @@ defineConstant, begin
     500,player:accel
     2500,player:speed
     0,player:friction
+    500,axis:deadZone
 end
 
 script, movePlayer, begin
-    variable(horiz, vert, xv, yv, subX, subY, clamp, bearing, accel)
+    variable(oldBearing, velocity, subX, subY, bearing)
 
-    clamp := player:speed
-    accel := player:accel
+    oldBearing := getSliceDir(player)
 
-    if(playerState == state:attack) then(
-        clamp := player:speed / 2
-        accel := player:accel / 10
+    joyX := joystickAxis(axis:X, player:speed)
+    joyY := joystickAxis(axis:Y, player:speed)
+    if(abs(joyX) < axis:deadZone) then(joyX := 0)
+    if(abs(joyY) < axis:deadZone) then(joyY := 0)
+
+    if(joyX == 0 && joyY == 0) then(
+        # Keyboard controls
+        if(wantLeft) then(joyX := 0--player:speed)
+        elseif(wantRight) then(joyX := player:speed)
+        if(wantUp) then(joyY := 0--player:speed)
+        elseif(wantDown) then(joyY := player:speed)
     )
 
-    if(playerState == state:roll) then(
-        clamp := player:speed * 2
-        bearing := getSliceDir(player)
-        horiz := get_x_subpixels(1000, bearing)
-        vert := get_y_subpixels(1000, bearing)
-        if(sign(horiz) <> 0 && sign(vert) <> 0) then(
-            clamp := multdiv(clamp, 7, 8)
-        )
-        xv := clamp * sign(horiz)
-        yv := clamp * sign(vert)
+    bearing := get_bearing(0, 0, joyX, joyY)
+    if(bearing <> 0 || joyX <> 0 || joyY <> 0) then(
+        # Only update direction if moving
+        setSliceDir(player, bearing)
+    )
+    
+    if(bearing > 315) then(setHeroDirection(me, up))
+    elseif(bearing > 225) then(setHeroDirection(me, left))
+    elseif(bearing > 135) then(setHeroDirection(me, down))
+    elseif(bearing > 45) then(setHeroDirection(me, right))
+    else(setHeroDirection(me, up))
+
+    velocity := clampValue(abs(joyX) + abs(joyY), 0--player:speed, player:speed)
+
+    if(playerState == state:attack) then(
+        velocity := clampValue(velocity, 0--(player:speed / 2), player:speed / 2) 
+    ) elseif(playerState == state:roll) then(
+        velocity := player:speed * 2
+        bearing := oldBearing
         setHeroStat(me, stat:dodge, getHeroStat(me, stat:dodge) -- 1)
         if(getHeroStat(me, stat:dodge) == 0) then(
             returnToIdle()
         )
-    ) else(
-        if(wantLeft) then(
-            horiz := -1
-            setHeroDirection(me, left)
-        ) elseif(wantRight) then(
-            horiz := 1
-            setHeroDirection(me, right)
-        ) else(
-            horiz := 0
-        )
-        if(wantUp) then(
-            vert := -1
-            setHeroDirection(me, up)
-        ) elseif(wantDown) then(
-            vert := 1
-            setHeroDirection(me, down)
-        ) else(
-            vert := 0
-        )
-
-        if(horiz <> 0 && vert <> 0) then(
-            #clamp := multdiv(clamp, 7, 8)
-        )
-
-        # xv & yv stored in hero slice extra0 and extra1
-        xv := getSliceXV(player) + (accel * horiz)
-        yv := getSliceYV(player) + (accel * vert)
-        xv := clampValue(xv, 0--clamp, clamp)
-        yv := clampValue(yv, 0--clamp, clamp)
-
-        bearing := get_bearing(sliceSubX(player), sliceSubY(player), sliceSubX(player)+getSliceXV(player), sliceSubY(player)+getSliceYV(player))
-        if(xv <> 0 || yv <> 0) then(
-            # only update if player is not standing still
-            setSliceDir(player, bearing)
-        )
+    ) elseif(playerState == state:block || lockPress) then(
+        velocity := 0
     )
 
-    if(playerState == state:block) then(
-        horiz := 0
-        vert := 0
-    ) 
+    if(joyX == 0 && joyY == 0) then(
+        velocity := velocity / 2        # deceleration
+    )
 
-    subX := get_x_subpixels(abs(xv), bearing) # actual value to move sprite with
-    subY := get_y_subpixels(abs(yv), bearing)
+    subX := get_x_subpixels(velocity, bearing)
+    subY := get_y_subpixels(velocity, bearing)
 
-    # Deleceration
-    if(horiz == 0) then(xv := xv/2)
-    if(vert == 0) then(yv := yv/2)
-
-    if(horiz == 0 && vert == 0 && playerState == state:idle) then(
+    if(joyX <> 0 && joyY <> 0 && playerState == state:idle) then(
         playerState := state:walk
         playerSpriteset := player:walkSet
         playerFrames := player:walkFrames
         setSliceExtra(getHeroSprite(me), extra0, 0)
     )
 
-    # Screen Edges
-    if(sliceX(player) + (xv/1000) < 0) then(
-        setSliceX(player, 0)
-        putSliceSubpixel(player, sliceX(player)*1000, sliceSubY(player))
-        subX := 0
-        xv := 0
-    ) elseif(sliceX(player) + sliceWidth(player) + (xv/1000) > mapWidth()*20) then(
-        setSliceX(player, (mapWidth()*20)--sliceWidth(player))
-        putSliceSubpixel(player, sliceX(player)*1000, sliceSubY(player))
-        subX := 0
-        xv := 0
-    )
-    if(sliceY(player) + (yv/1000) < 0) then(
-        setSliceScreenY(player, 0)
-        putSliceSubpixel(player, sliceSubX(player), sliceY(player)*1000)
-        subY := 0
-        yv := 0
-    ) elseif(sliceScreenY(player) + sliceHeight(player) + (yv/1000) > mapHeight() * 20) then(
-        setSliceScreenY(player, (mapHeight()*20)--sliceHeight(player))
-        putSliceSubpixel(player, sliceSubX(player), sliceY(player)*1000)
-        subY := 0
-        yv := 0
-    )
-
-    applyMove(player, subX, subY, xv, yv)
+    setSliceV(player, velocity)
+    applyMove(player, subX, subY)
 end
 
 script, recoverStamina, begin
@@ -121,24 +77,23 @@ script, recoverStamina, begin
     )
 end
 
-script, applyMove, handle, subX, subY, xv, yv, begin
+script, applyMove, handle, subX, subY, begin
     # Called in movePlayer and moveEnemies
     # Moves a slice based on relative x and y
     variable(x, y, w, h, hitX, hitY)
+
     x := sliceX(handle)
     y := sliceY(handle)
     w := sliceWidth(handle)
     h := sliceHeight(handle)
-    # check wall collision x,y by subX,subY / 1000
+
     # round subX,subY down to X000 if a wall is hit
     hitX := checkWallCollisionX(x, y, w, h, subX/1000, subY/1000, player:friction)
     if(hitX < subX/1000) then(
-        showValue(subX)
         subX := hitX * 1000
     )
     hitY := checkWallCollisionY(x, y, w, h, subX/1000, subY/1000, player:friction)
     if(hitY < subY/1000) then(
-        showValue(subY)
         subY := hitY * 1000
     )
 
@@ -147,29 +102,26 @@ script, applyMove, handle, subX, subY, xv, yv, begin
 
     moveSliceWithWallchecking(handle, subX/1000, subY/1000, player:friction)
     updateNPCorHeroFromSlice(handle)
-    # Set player or enemy's stored velocities
-    setSliceXV(handle, xv)
-    setSliceYV(handle, yv)
 end
 
 # ========================================
 # GETTING/SETTING MOVEMENT DATA
 # ========================================
 
-script, getSliceXV, handle, begin
-    # Sets xv by slice handle, whether hero or npc
+script, getSliceV, handle, begin
+    # Sets velocity by slice handle, whether hero or npc
     if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
         exitScript() # slice is not a hero or npc
     )
     exitReturning(getSliceExtra(handle, extra0))
 end
 
-script, getSliceYV, handle, begin
-    # Sets yv by slice handle, whether hero or npc
+script, setSliceV, handle, v, begin
+    # Sets velocity by slice handle, whether hero or npc
     if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
         exitScript() # slice is not a hero or npc
     )
-    exitReturning(getSliceExtra(handle, extra1))
+    setSliceExtra(handle, extra0, v)
 end
 
 script, getSliceDir, handle, begin
@@ -186,22 +138,6 @@ script, setSliceDir, handle, v, begin
         exitScript() # slice is not a hero or npc
     )
     setSliceExtra(handle, extra2, v)
-end
-
-script, setSliceXV, handle, v, begin
-    # Sets xv by slice handle, whether hero or npc
-    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
-        exitScript() # slice is not a hero or npc
-    )
-    setSliceExtra(handle, extra0, v)
-end
-
-script, setSliceYV, handle, v, begin
-    # Sets yv by slice handle, whether hero or npc
-    if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
-        exitScript() # slice is not a hero or npc
-    )
-    setSliceExtra(handle, extra1, v)
 end
 
 script, sliceSubX, handle, begin
@@ -231,7 +167,7 @@ end
 
 script, getSliceMoving, handle, begin
     # Checks whether the slice is moving based on their xv and yv
-    if(getSliceXV(handle) <> 0 || getSliceYV(handle) <> 0) then(exitReturning(true))
+    if(getSliceV(handle) <> 0) then(exitReturning(true))
 
     exitReturning(false)
 end
