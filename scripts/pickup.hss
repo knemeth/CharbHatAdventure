@@ -1,0 +1,87 @@
+# pickup.hss
+
+defineConstant, begin
+    10,pickup:size
+    1,pickup:picStart
+    1,pickup:picEnd
+    600,pickup:lifetime
+    180,pickup:flashPoint
+end
+
+script, createPickup, pic, effect, x, y, begin
+    # pic is a sprite id
+    # effect is a script handle
+    variable(pickup, sprite)
+
+    pickup := createContainer(pickup:size, pickup:size)
+    setParent(pickup, pickupLayer)
+    putSlice(pickup, x, y)
+
+    sprite := loadWeaponSprite(pic)
+    setParent(sprite, pickup)
+    centerSlice(sprite)
+    createAnimation(sprite, 10, 5, true)
+
+    setSliceExtra(pickup, extra0, effect)
+    setSliceExtra(pickup, extra1, pickup:lifetime)      # timer
+    
+    exitReturning(pickup)
+end
+
+script, createRandomPickup, x, y, begin
+    variable(pickup, pic, effectList, effect)
+
+    # Random effect: in the order of sprite sets that they refer to
+    effectList := initArray()
+    append(effectList, @healthPickup)
+    append(effectList, @staminaPickup)
+    append(effectList, @ammoPickup)
+
+    pic := random(0, childCount(effectList)--1) #random sprite that correlates with an effect in the effectslist
+
+    effect := ge(effectList, pic)
+
+    pickup := createPickup(pic, effect, x, y)
+    exitReturning(pickup)
+end
+
+script, pickupEachtick, begin
+    # Destroy pickups after they've been alive for too long
+    variable(i, pickup)
+
+    for(i, childCount(pickupLayer)--1, 0, -1) do(
+        pickup := sliceChild(pickupLayer, i)
+
+        if(getSliceExtra(pickup, extra1) <= 0) then(
+            freeSlice(pickup)
+            continue
+        ) elseif(getSliceExtra(pickup, extra1) <= pickup:flashPoint) then(
+            dissolveSprite(firstSpriteChild(pickup), dissolve:flicker, pickup:flashPoint+1)
+        )
+        setSliceExtra(pickup, extra1, getSliceExtra(pickup, extra1)--1)
+    )
+end
+
+# =======================================
+# Effect scripts
+# =======================================
+
+script, healthPickup, begin
+    # Heal player when picked up
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
+    # VFX HERE
+end
+
+script, staminaPickup, begin
+    # Restore all stamina when picked up
+    setHeroStat(me, stat:SP, getHeroStat(me, stat:SP, maximumStat))
+    # VFX HERE
+    stopTimer(timer:stamina)
+end
+
+script, ammoPickup, begin
+    # Instantly reload 
+    setHeroStat(me, stat:Hits, getHeroStat(me, stat:Hits, maximumStat))
+    # VFX HERE
+    stopTimer(timer:reload)
+end

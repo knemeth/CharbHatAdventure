@@ -66,6 +66,17 @@ script, movePlayer, begin
         setSliceExtra(getHeroSprite(me), extra0, 0)
     )
 
+    # Collisions
+    # ================
+    # Pickups
+    variable(num, hit)
+
+    for(num, findCollidingSlice(pickupLayer, player, getCount, false)--1, 0, -1) do(
+        hit := findCollidingSlice(pickupLayer, player, num, false)
+        runScriptByID(getSliceExtra(hit, extra0))
+        freeSlice(hit)
+    )
+
     setSliceV(player, velocity)
     applyMove(player, subX, subY)
 end

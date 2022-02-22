@@ -23,6 +23,7 @@ plotscript, keypressHandler, begin
     if(keyIsPressed(key:ctrl) || keyIsPressed(joy:L2)) then(lockPress := true)
     if(keypress(key:esc) || keypress(key:x) || mouseRelease(rightButton)) then(cancelPress := true)
     #if(keypress(key:r)) then(resetGame())
+    if(keypress(key:1)) then(createRandomPickup(mousePixelX, mousePixelY))
 end
 
 script, resetInputs, begin

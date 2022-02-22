@@ -11,6 +11,7 @@ include,combat.hss
 include,projectile.hss
 include,movement.hss
 include,ui.hss
+include,pickup.hss
 
 globalVariable, begin
     # Effects
@@ -19,6 +20,7 @@ globalVariable, begin
     2,emitterHandles
     3,projectileLayer
     4,playerProjectileLayer
+    5,pickupLayer
     # Player values
     10,player
     11,playerSpriteset
@@ -88,6 +90,7 @@ plotscript, initGame, begin
     playerProjectileLayer := createContainer()
     setParent(projectileLayer, lookupSlice(sl:mapOverlay))
     setParent(playerProjectileLayer, lookupSlice(sl:mapOverlay))
+    pickupLayer := lookupSlice(sl:mapLayer1)
 
     while(true) do(
         primaryLoopContents()
@@ -104,6 +107,7 @@ script, primaryLoopContents, begin
     moveParticles()
     processEmitters()
     updateProjectiles()
+    pickupEachtick()
 
     # Player
     evaluateInput()
