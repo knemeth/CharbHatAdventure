@@ -66,6 +66,7 @@ defineConstant, begin
     1,timer:block
     2,timer:attack
     3,timer:reload
+    4,timer:roll
 end
 
 plotscript, initGame, begin

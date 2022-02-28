@@ -43,6 +43,7 @@ script, invincibilityFlash, begin
         ) else(
             setOpacity(getHeroSprite(me), 60)
         )
+        setHeroStat(me, stat:dodge, getHeroStat(me, stat:dodge) -- 1)
     ) else(
         setOpacity(getHeroSprite(me), 100)
     )

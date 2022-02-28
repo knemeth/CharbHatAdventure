@@ -5,6 +5,7 @@ defineConstant, begin
     2500,player:speed
     0,player:friction
     500,axis:deadZone
+    20000,player:touchKnockback
 end
 
 script, movePlayer, begin
@@ -43,10 +44,6 @@ script, movePlayer, begin
     ) elseif(playerState == state:roll) then(
         velocity := player:speed * 2
         bearing := oldBearing
-        setHeroStat(me, stat:dodge, getHeroStat(me, stat:dodge) -- 1)
-        if(getHeroStat(me, stat:dodge) == 0) then(
-            returnToIdle()
-        )
     ) elseif(playerState == state:block || lockPress) then(
         velocity := 0
     )
@@ -67,13 +64,26 @@ script, movePlayer, begin
 
     # Collisions
     # ================
+    
+    variable(num, hit, x1, y1, x2, y2)
     # Pickups
-    variable(num, hit)
-
     for(num, findCollidingSlice(pickupLayer, player, getCount, false)--1, 0, -1) do(
         hit := findCollidingSlice(pickupLayer, player, num, false)
         runScriptByID(getSliceExtra(hit, extra0))
         freeSlice(hit)
+    )
+    # Enemies
+    if(getHeroStat(me, stat:dodge) == 0) then(
+        for(num, findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, getCount, false)--1, 0, -1) do(
+            hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, num, false)
+            if(getNPCPool(npcReferenceFromSlice(hit)) == pool:global) then(
+                damagePlayer(1)
+                x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
+                x2 := sliceX(player)+(sliceWidth(player)/2), y2 := sliceY(player)+(sliceHeight(player)/2)
+                pushObject(player, get_bearing(x1, y1, x2, y2), player:touchKnockback)
+                exitScript()
+            )
+        )
     )
 
     setSliceV(player, velocity)

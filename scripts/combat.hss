@@ -5,6 +5,7 @@ defineConstant, begin
     40,player:reloadSpeed
     6,player:projectileSize
     30,enemy:flashFrames
+    30,player:invisFrames
 end
 
 script, evaluateInput, begin
@@ -62,7 +63,7 @@ script, evaluateInput, begin
     )
 
     # Check for dodge roll
-    if(shiftPress && getHeroStat(me, stat:dodge) == 0 && getHeroStat(me, stat:SP) > 0) then(
+    if(shiftPress && getHeroStat(me, stat:SP) > 0) then(
         switch(playerState) do(
             case(state:idle) valid := true
             case(state:walk) valid := true
@@ -73,10 +74,13 @@ script, evaluateInput, begin
         if(valid) then(
             newState(state:roll, player:rollSet, player:rollFrames)
 
-            setHeroStat(me, stat:dodge, player:rollDistance)
+            if(getHeroStat(me, stat:dodge) < player:rollDistance) then(
+                setHeroStat(me, stat:dodge, player:rollDistance)
+            )
             setHeroStat(me, stat:SP, getHeroStat(me, stat:SP) -- 1)  # Reduce stamina
             
             setTimer(timer:stamina, getHeroStat(me, stat:MP~), 1, @recoverStamina)
+            setTimer(timer:roll, player:rollDistance, 1, @returnToIdle)
 
             exitReturning(state:roll)
         )
@@ -129,6 +133,7 @@ end
 
 script, damagePlayer, amount, begin
     setHeroStat(me, stat:HP, amount)
+    setHeroStat(me, stat:dodge, player:invisFrames)
 
     if(getHeroStat(me, stat:HP) <= 0) then(
         # Die
