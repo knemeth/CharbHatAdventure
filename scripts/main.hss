@@ -10,6 +10,7 @@ include,animate.hss
 include,combat.hss
 include,projectile.hss
 include,movement.hss
+include,enemy.hss
 include,ui.hss
 include,pickup.hss
 
@@ -21,6 +22,7 @@ globalVariable, begin
     3,projectileLayer
     4,playerProjectileLayer
     5,pickupLayer
+    6,fxLayer
     # Player values
     10,player
     11,playerSpriteset
@@ -86,9 +88,11 @@ plotscript, initGame, begin
     animHandles := createContainer()
     particleHandles := createContainer()
     emitterHandles := createContainer()
+    fxLayer := createContainer()
+    setParent(fxLayer, lookupSlice(sl:mapOverlay))
     projectileLayer := createContainer()
-    playerProjectileLayer := createContainer()
     setParent(projectileLayer, lookupSlice(sl:mapOverlay))
+    playerProjectileLayer := createContainer()
     setParent(playerProjectileLayer, lookupSlice(sl:mapOverlay))
     pickupLayer := lookupSlice(sl:mapLayer1)
 
@@ -113,6 +117,10 @@ script, primaryLoopContents, begin
     evaluateInput()
     movePlayer()
     animatePlayer()
+
+    # Enemies
+    enemyEachtick()
+    animateNPCs()
 
     # UI
     updateHud()
@@ -141,7 +149,23 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
         setSliceLookup(sl, sli:attack)
         sl := createContainer(0,0)      # stores subpixel data
         setParent(sl, handle)
+
+        sl := createContainer(0,0)      # stores animation data
+        setParent(sl, firstSpriteChild(handle))
+        setSliceExtra(sl, extra0, getSpriteSetNumber(firstSpriteChild(handle)))
     )
 
     putSliceSubpixel(handle, sliceX(handle)*1000, sliceY(handle)*1000)
+end
+
+plotscript, mapAutorun, begin
+    # Default autorun commands
+    variable(ref)
+
+    ref := nextNPCReference()
+    while(ref) do(
+        initObject(getNPCSlice(ref), getEnemyWidth(ref), getEnemyHeight(ref), getEnemyAttackWidth(ref), getEnemyAttackHeight(ref))
+        ref := nextNPCReference(ref)
+    )
+    initEnemies()
 end

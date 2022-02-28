@@ -47,3 +47,63 @@ script, invincibilityFlash, begin
         setOpacity(getHeroSprite(me), 100)
     )
 end
+
+# Enemies
+# =======================================
+
+script, animateNPCs, begin
+    variable(ref)
+
+    ref := nextNPCReference()
+    while(ref) do(
+        animateNPC(ref)
+        ref := nextNPCReference(ref)
+    )
+end
+
+script, animateNPC, ref, begin
+    variable(sl, timer, frames, originSet,set, current, dodge)
+
+    sl := getNPCSprite(ref)
+    timer := getSliceExtra(sl, extra0)
+    dodge := getSliceExtra(sl, extra1)
+    originSet := getSliceExtra(firstChild(sl), extra0)
+    frames := getEnemyFrames(ref)
+
+    if(timer <= 0) then(
+        setSliceExtra(sl, extra0, player:animSpeed)
+        current := getSpriteSetNumber(sl)
+        if(current >= originSet + frames -- 1
+        || current < originSet) then(
+            set := originSet
+        ) else(
+            set := getSpriteSetNumber(sl) + 1
+        )
+        setSpriteSetNumber(sl, set)
+    ) else(
+        setSliceExtra(sl, extra0, getSliceExtra(sl, extra0)--1)
+    )
+
+    if(dodge > 0) then(
+        setSliceExtra(sl, extra1, getSliceExtra(sl, extra1)--1)
+    )
+
+    damageFlash(sl)
+end
+
+script, damageFlash, sl, begin
+    variable(dodge, timer)
+
+    dodge := getSliceExtra(sl, extra1)
+    timer := getSliceExtra(sl, extra0) # used for animating as well
+
+    if(dodge > 0) then(
+        if(timer < player:animSpeed/2) then(
+            setOpacity(sl, 20)
+        ) else(
+            setOpacity(sl, 60)
+        )
+    ) else(
+        setOpacity(sl, 100)
+    )
+end

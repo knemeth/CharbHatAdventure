@@ -3,6 +3,8 @@
 defineConstant, begin
     8000,player:projectileSpeed
     40,player:reloadSpeed
+    6,player:projectileSize
+    30,enemy:flashFrames
 end
 
 script, evaluateInput, begin
@@ -48,7 +50,7 @@ script, evaluateInput, begin
         if(valid) then(
             newState(state:shoot, player:shootSet, player:shootFrames)
 
-            createProjectile(1, sliceX(player)+(sliceWidth(player)/2), sliceY(player)+(sliceHeight(player)/2), 2, 2, getSliceDir(player), player:projectileSpeed, true)
+            createProjectile(1, sliceX(player)+(sliceWidth(player)/2), sliceY(player)+(sliceHeight(player)/2), player:projectileSize, player:projectileSize, getSliceDir(player), player:projectileSpeed, true)
 
             setHeroStat(me, stat:Hits, getHeroStat(me, stat:Hits) -- 1)
             if(getHeroStat(me, stat:Hits) <= 0) then(
@@ -120,4 +122,46 @@ end
 
 script, reloadAmmo, begin
     setHeroStat(me, stat:Hits, getHeroStat(me, stat:Hits, maximumStat))
+end
+
+# Damage & knockback
+# ==============================
+
+script, damagePlayer, amount, begin
+    setHeroStat(me, stat:HP, amount)
+
+    if(getHeroStat(me, stat:HP) <= 0) then(
+        # Die
+        resetGame()
+    )
+end
+
+script, damageEnemy, ref, amount, begin
+    variable(sl, current)
+
+    if(getNPCID(ref) == -1) then(exitScript())
+
+    sl := getNPCSprite(ref)
+    current := getSliceExtra(sl, extra2)
+
+    setSliceExtra(sl, extra2, current -- amount)
+    setSliceExtra(sl, extra1, enemy:flashFrames)
+
+    if(getSliceExtra(sl, extra2) <= 0) then(
+        # Die
+        
+        # VFX
+        variable(vfx, sli, x, y)
+        vfx := loadHeroSprite(0)
+        setHorizAnchor(vfx, edge:center)
+        setVertAnchor(vfx, edge:middle)
+        setParent(vfx, fxLayer)
+        sli := getNPCSlice(ref)
+        x := sliceX(sli) + (sliceWidth(sli)/2)
+        y := sliceY(sli) + (sliceHeight(sli)/2)
+        putSlice(vfx, x, y)
+        createAnimation(vfx, 32, 4)
+
+        destroyNPC(ref)
+    )
 end

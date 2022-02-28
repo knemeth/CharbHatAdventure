@@ -3,6 +3,7 @@
 defineConstant, begin
     1500,projectile:speed
     300,projectile:lifetime
+    1,projectile:playerdamage
 end
 
 script, createProjectile, spr, x, y, w, h, dir, spd=projectile:speed, friendly=false, begin
@@ -55,6 +56,7 @@ script, updateProjectiles, begin
                 hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), sl, j)
                 if(npcReferenceFromSlice(hit)) then(
                     # Damage enemy/npc
+                    damageEnemy(npcReferenceFromSlice(hit), projectile:playerdamage)
                     freeSlice(sl)
                     exitScript()
                 )

@@ -1,0 +1,124 @@
+# enemy.hss
+
+defineConstant, begin
+    0,enemy:dummy
+end
+
+script, initEnemies, begin
+    # loop through npcs and apply default values
+    variable(ref)
+
+    ref := nextNPCReference()
+    while(ref) do(
+        if(getNPCPool(ref) == pool:global) then(
+            setSliceExtra(getNPCSprite(ref), extra2, getEnemyHP(ref))
+        )
+        
+        ref := nextNPCReference(ref)
+    )
+end
+
+script, enemyEachtick, begin
+    # loop through npcs and apply behaviors based on id
+    variable(ref)
+
+    ref := nextNPCReference()
+    while(ref) do(
+        if(getNPCPool(ref) == pool:global) then(
+            enemyBehavior(ref)
+        )
+        ref := nextNPCReference(ref)
+    )
+end
+
+script, enemyBehavior, ref, begin
+    # check enemy type and apply behavior based on current conditions
+
+    switch(getNPCID(ref)) do(
+        case(enemy:dummy) do(
+
+        )
+    )
+end
+
+# Getter functions
+# ====================================
+
+script, getEnemyHP, ref, begin
+    variable(id, default)
+
+    default := 1
+
+    if(getNPCPool(ref) == pool:local) then(exitReturning(default))
+
+    id := getNPCID(ref)
+
+    switch(id) do(
+        case(enemy:dummy) exitReturning(10)
+        case(else) exitReturning(default)
+    )
+end
+
+script, getEnemyWidth, ref, begin
+    variable(id, default)
+
+    default := 12
+
+    if(getNPCPool(ref) == pool:local) then(exitReturning(default))
+
+    id := getNPCID(ref)
+
+    switch(id) do(
+        case(enemy:dummy) exitReturning(10)
+        case(else) exitReturning(default)
+    )
+end
+
+script, getEnemyHeight, ref, begin
+    variable(id, default)
+
+    default := 8
+    
+    if(getNPCPool(ref) == pool:local) then(exitReturning(default))
+
+    id := getNPCID(ref)
+
+    switch(id) do(
+        case(enemy:dummy) exitReturning(10)
+        case(else) exitReturning(default)
+    )
+end
+
+script, getEnemyAttackWidth, ref, begin
+    variable(id, default)
+
+    default := 12
+
+    if(getNPCPool(ref) == pool:local) then(exitReturning(default))
+
+    id := getNPCID(ref)
+
+    switch(id) do(
+        case(enemy:dummy) exitReturning(10)
+        case(else) exitReturning(default)
+    )
+end
+
+script, getEnemyAttackHeight, ref, begin
+    variable(id, default)
+
+    default := 8
+    
+    if(getNPCPool(ref) == pool:local) then(exitReturning(default))
+
+    id := getNPCID(ref)
+
+    switch(id) do(
+        case(enemy:dummy) exitReturning(10)
+        case(else) exitReturning(default)
+    )
+end
+
+script, getEnemyFrames, ref, begin
+    exitReturning(3)
+end
