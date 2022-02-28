@@ -29,14 +29,13 @@ script, movePlayer, begin
     if(bearing <> 0 || joyX <> 0 || joyY <> 0) then(
         # Only update direction if moving
         setSliceDir(player, bearing)
-    )
+        if(bearing > 315) then(setHeroDirection(me, up))
+        elseif(bearing > 225) then(setHeroDirection(me, left))
+        elseif(bearing > 135) then(setHeroDirection(me, down))
+        elseif(bearing > 45) then(setHeroDirection(me, right))
+        else(setHeroDirection(me, up))
+    )    
     
-    if(bearing > 315) then(setHeroDirection(me, up))
-    elseif(bearing > 225) then(setHeroDirection(me, left))
-    elseif(bearing > 135) then(setHeroDirection(me, down))
-    elseif(bearing > 45) then(setHeroDirection(me, right))
-    else(setHeroDirection(me, up))
-
     velocity := clampValue(abs(joyX) + abs(joyY), 0--player:speed, player:speed)
 
     if(playerState == state:attack) then(
@@ -86,6 +85,15 @@ script, recoverStamina, begin
     if(getHeroStat(me, stat:SP) < getHeroStat(me, stat:SP, maximumStat)) then(
         setTimer(timer:stamina, getHeroStat(me, stat:MP~), 1, @recoverStamina)
     )
+end
+
+script, knockback, target, source, wt, begin
+    # target: slice being knocked back 
+    # source: slice knocking back
+    # wt: weight of knockback
+    variable(bearing, subX, subY)
+
+
 end
 
 script, applyMove, handle, subX, subY, begin
