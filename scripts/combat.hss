@@ -124,7 +124,7 @@ script, reloadAmmo, begin
     setHeroStat(me, stat:Hits, getHeroStat(me, stat:Hits, maximumStat))
 end
 
-# Damage & knockback
+# Damage
 # ==============================
 
 script, damagePlayer, amount, begin
@@ -163,5 +163,6 @@ script, damageEnemy, ref, amount, begin
         createAnimation(vfx, 32, 4)
 
         destroyNPC(ref)
+        exitScript()
     )
 end

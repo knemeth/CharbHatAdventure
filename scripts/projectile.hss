@@ -4,6 +4,7 @@ defineConstant, begin
     1500,projectile:speed
     300,projectile:lifetime
     1,projectile:playerdamage
+    4000,projectile:knockback
 end
 
 script, createProjectile, spr, x, y, w, h, dir, spd=projectile:speed, friendly=false, begin
@@ -41,11 +42,13 @@ script, updateProjectiles, begin
     )
 
     subscript, moveProjectile, sl, friendly, begin
-        variable(hit, subX, subY)
+        variable(hit, velocity, bearing, subX, subY)
 
         # Move by speed/direction
-        subX := get_x_subpixels(getSliceExtra(sl, extra1), getSliceExtra(sl, extra0))
-        subY := get_y_subpixels(getSliceExtra(sl, extra1), getSliceExtra(sl, extra0))
+        velocity := getSliceExtra(sl, extra1)
+        bearing := getSliceExtra(sl, extra0)
+        subX := get_x_subpixels(velocity, bearing)
+        subY := get_y_subpixels(velocity, bearing)
 
         # Check collision with player/enemy
         #hit := findCollidingSlice()
@@ -56,6 +59,7 @@ script, updateProjectiles, begin
                 hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), sl, j)
                 if(npcReferenceFromSlice(hit)) then(
                     # Damage enemy/npc
+                    pushObject(hit, bearing, projectile:knockback)   # from movement.hss
                     damageEnemy(npcReferenceFromSlice(hit), projectile:playerdamage)
                     freeSlice(sl)
                     exitScript()

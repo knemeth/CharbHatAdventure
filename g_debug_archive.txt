@@ -1,4 +1,3 @@
- 0.1  setvideomode zoom=2 w*h = 640,400
  0.2  gfx_sdl2 "SDL 2.0.14 (0 joysticks) Driver:windows (Drivers: windows dummy)"
  0.2  disable_native_text_input=0
  0.2  music_sdl2, SDL_Mixer 2.0.5 (44100Hz, Music decoders:WAVE,MODPLUG,MOD,MAD,MP3,OGG,NATIVEMIDI,MIDI Sample decoders:WAVE,AIFF,VOC,MOD,MP3,OGG,MID)
@@ -764,3 +763,65 @@ end_debug: no debug/error messages during startup (skipping rest of startup)
 44.6  Closing gfx backend & allmodex...
 44.6  ...done
 44.6  End.
+
+  +++|=========>  APPLY SWORD, CUT HERE (Please send whole sections)
+
+Loading C:\Users\Sam Ball\Documents\OHR\mygames\CharbHatAdventure\engine\support\CrashRpt1403.dll
+ 0.0   ----Starting OHRRPGCE Game----
+ 0.0  02-27-2022 20:32:30
+ 0.0  OHRRPGCE wip 20220225.12834 gfx_sdl2+directx+fb/music_sdl2 FreeBASIC 1.08.1 (2021-07-05) gcc 8.1.0 x86 pdb  Built on vampirecell -g -exx -gen gcc Win32 32-bit
+ 0.0  exepath: C:\Users\Sam Ball\Documents\OHR\mygames\CharbHatAdventure\engine, exe: C:\Users\Sam Ball\Documents\OHR\mygames\CharbHatAdventure\engine\game.exe
+ 0.0  orig_dir: C:\Users\Sam Ball\Documents\OHR\mygames\CharbHatAdventure
+ 0.1  curdir: C:\Users\Sam Ball\Documents\OHR\mygames\CharbHatAdventure
+ 0.1  Runtime info:   music_sdl2, SDL 2.0.16, SDL_Mixer 2.0.5  Windows 6.2.9200 (8/Server 2012 or later) , ANSI codepage: 1252
+ 0.1  config: C:\Users\Sam Ball\AppData\Roaming\OHRRPGCE\ohrrpgce_config.ini
+ 0.1  Reading commands from channel_to_Custom '\\.\pipe\ohrrpgce_lump_updates_testing_22904'
+ 0.1  Spawned from Custom
+ 0.1  Steam not initialized
+ 0.1  set_resolution 320*200
+ 0.1  Setting graphics scaling to x2 change_windowsize=-1
+ 0.1  Initialising gfx_sdl2...
+ 0.2  setvideomode zoom=2 w*h = 640,400
+ 0.2  gfx_sdl2 "SDL 2.0.16 (1 joysticks) Driver: windows (Drivers: windows dummy) Render driver: direct3d (Drivers: direct3d (hwaccel,vsync,textarget) opengl (hwaccel,vsync,textarget) opengles2 (hwaccel,vsync,textarget) software (textarget))"
+ 0.2  disable_native_text_input=0
+ 0.2  unlock_resolution(320,200)
+ 0.3  music_sdl2, SDL_Mixer 2.0.5 (44100Hz, Music decoders:WAVE,MODPLUG,MOD,MAD,MP3,OGG,NATIVEMIDI,MIDI Sample decoders:WAVE,AIFF,VOC,MOD,MP3,OGG,MID)
+ 0.3  Setting default window settings...
+ 0.3  set_resolution 320*200
+ 0.3  unlock_resolution(320,200)
+ 0.3  Setting graphics scaling to x2 change_windowsize=-1
+ 0.3  Received message from Custom: V OHRRPGCE,4,12834,OHRRPGCE wip 20220225
+ 0.3  Received message from Custom: G C:\Users\Sam Ball\Documents\OHR\mygames\CharbHatAdventure\CHA.rpg
+ 0.3  Received message from Custom: W C:\Users\Sam Ball\AppData\Roaming\OHRRPGCE\working0.tmp\
+end_debug: no debug/error messages during startup (skipping rest of startup)
+
+ 0.3   ----Loading C:\Users\Sam Ball\Documents\OHR\mygames\CharbHatAdventure\CHA.rpg----
+ 0.3  curdir: C:\Users\Sam Ball\Documents\OHR\mygames\CharbHatAdventure
+ 0.3  tmpdir: C:\Users\SAMBAL~1\AppData\Local\Temp\ohrrpgce20220227203231.20.tmp\
+ 0.3  settings_dir: C:\Users\Sam Ball\AppData\Roaming\OHRRPGCE
+ 0.3  config: C:\Users\Sam Ball\AppData\Roaming\OHRRPGCE\ohrrpgce_config.ini
+ 0.3  savedir: C:\Users\Sam Ball\Documents\OHR\mygames\CharbHatAdventure\CHA.saves
+ 0.4  Name: 
+ 1.1  plotscr.hsd version: 3U 
+ 1.6  lock_resolution()
+ 1.6  set_resolution 640*360
+ 1.6  recenter_window_hint()
+ 1.6  Desktop resolution: 1536*837
+ 1.6  automatic_scale_factor(0.8), screen size: 1536*837
+ 1.6  Setting graphics scaling to x2 change_windowsize=-1
+ 1.6  Preserving fullscreen/windowed state
+ 1.7  genRungameFullscreenIndependent: 0
+ 1.7  Joystick 0 GUID 030000004c050000e60c0000000168 instance_id 0
+ 1.7   Opened as gamecontroller PS5 Controller
+ 1.7  Opened joystick 0 PS5 Controller (id 0) -- 17 buttons 6 axes 0 hats 0 balls
+ 1.7  JOYSTICKSTATE.UPDATE_KEYBITS(0) took 17ms
+19.1  ! Scripterr(5): initgame -> primaryloopcontents -> updateprojectiles -> moveprojectile: npcreferencefromslice: slice handle 1 has already been deleted
+19.1  unlock_resolution(320,200)
+23.9  scripterr: User opted to quit
+23.9  Cleaning up and terminating 1
+23.9  Closing music backend...
+24.0  ...done
+24.0  Deleting tmpdir C:\Users\SAMBAL~1\AppData\Local\Temp\ohrrpgce20220227203231.20.tmp\
+24.1  Closing gfx backend & allmodex...
+24.1  ...done
+24.1  End.
