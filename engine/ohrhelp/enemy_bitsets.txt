@@ -1,0 +1,36 @@
+This is a list of enemy bitsets - simple OFF or ON settings. Bitsets that are turned ON are highlighted.
+
+Use the Up and Down arrow keys (or PgUp, PgDn, Home, and End) to navigate the list.
+
+Modify bitsets with Left, Right, SPACE, ENTER, or by LEFT-CLICK.
+
+
+  Appearance
+
+"Flee instead of die" - the enemy will run away instead of dissolving.
+
+"Never flinch when attacked" - normally when hit with an attack enemies (and heroes) get pushed back a few pixels.
+
+
+  Behavior
+
+"MP Idiot" enemies lose a turn whenever they randomly select an attack they don't have enough MP for. Normally enemies only attempt attacks they can actually use.
+
+"Die without boss" causes the enemy to immediately die if there are no 'Boss' enemies left alive.
+
+
+  Type
+
+The bits in this section have no direct effect on the enemy itself; they change the behaviour of other enemies or of what the heroes can do.
+
+"Ignored for "Alone" status" - enemies with this turned on aren't considered when enemies decide whether to use "Alone" attacks or whether to "Spawn when alone".
+
+"Boss" - the only effect is on other enemies with the "Die without boss" bit set.
+
+"Win battle even if alive" enemies don't need to be killed for the player to win the battle.
+
+"Untargetable by hero team & win even if alive" means the enemy can never be targeted or hit by the player/hero team (meaning heroes who aren't Turncoats and enemies who are) and also has the same effect as "Win battle even if alive".
+
+"Untargetable by enemy team" - other enemies (who aren't Turncoats, and also heroes who are) can never target or hit this one with an attack.
+
+"Give rewards even if left alive" only affects enemies which the player doesn't need to kill because one of the two bits above is on. It makes them give out their normal rewards.
