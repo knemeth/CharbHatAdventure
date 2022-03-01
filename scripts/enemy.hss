@@ -2,6 +2,9 @@
 
 defineConstant, begin
     0,enemy:dummy
+    1,enemy:melee
+    2,enemy:ranged
+    30,enemy:actDelay
 end
 
 script, initEnemies, begin
@@ -33,12 +36,68 @@ end
 
 script, enemyBehavior, ref, begin
     # check enemy type and apply behavior based on current conditions
+    variable(dist, npcSl, bearing, subX, subY)
+
+    npcSl := getNPCSlice(ref)
+
+    if(getEnemyActDelay(ref) > 0) then(
+        setEnemyActDelay(ref, getEnemyActDelay(ref)--1)
+        # Move if still moving
+        if(getSliceV(npcSl) > 0) then(
+            bearing := getSliceDir(npcSl)
+            subX := get_x_subpixels(getSliceV(npcSl), bearing)
+            subY := get_y_subpixels(getSliceV(npcSl), bearing)
+            applyMove(npcSl, subX, subY)
+        )
+        exitScript()
+    )
 
     switch(getNPCID(ref)) do(
         case(enemy:dummy) do(
-
+            # Do nothing
+        )
+        case(enemy:melee) do(
+            # If player within certain radius, move towards them
+            dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+            if(dist <= getEnemyAttackHeight(ref)) then(
+                # Attack
+                setEnemyActDelay(ref, enemy:actDelay)
+                setSliceDir(npcSl, bearing)
+                setSliceV(npcSl, 0)
+            ) elseif(dist / 20 < 10 && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
+                # Move towards player
+                bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+                setEnemyActDelay(ref, enemy:actDelay)
+                setSliceDir(npcSl, bearing)
+                setSliceV(npcSl, getEnemySpeed(ref))
+            )
+        )
+        case(enemy:ranged) do(
+            # If player within certain radius, move towards them
+            dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+            if(dist / 20 < 4  && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
+                # Run away
+                bearing := get_bearing(sliceCX(player), sliceCY(player), sliceCX(npcSl), sliceCY(npcSl))
+                setEnemyActDelay(ref, enemy:actDelay)
+                setSliceDir(npcSl, bearing)
+                setSliceV(npcSl, getEnemySpeed(ref))
+            ) elseif(dist / 20 < 10 && dist / 20 > 6 && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
+                # Move towards player
+                bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+                setEnemyActDelay(ref, enemy:actDelay)
+                setSliceDir(npcSl, bearing)
+                setSliceV(npcSl, getEnemySpeed(ref))
+            )
         )
     )
+end
+
+script, getEnemyActDelay, ref, begin
+    exitReturning(npcExtra(ref, extra0))
+end
+
+script, setEnemyActDelay, ref, v, begin
+    setNPCExtra(ref, extra0, v) 
 end
 
 # Getter functions
@@ -121,4 +180,19 @@ end
 
 script, getEnemyFrames, ref, begin
     exitReturning(3)
+end
+
+script, getEnemySpeed, ref, begin
+    variable(id, default)
+
+    default := 1500
+
+    if(getNPCPool(ref) == pool:local) then(exitReturning(default))
+
+    id := getNPCID(ref)
+
+    switch(id) do(
+        case(enemy:dummy) exitReturning(10)
+        case(else) exitReturning(default)
+    )
 end

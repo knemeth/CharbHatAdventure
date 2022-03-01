@@ -21,6 +21,10 @@ script, min, x, y, begin
     if(y < x) then(exitReturning(y))
 end
 
+script, getDistance, x1, y1, x2, y2, begin
+    exitReturning(sqrt((x2--x1)^2 + (y2--y1)^2))
+end
+
 # ========================================
 # SLICES
 # ========================================
@@ -36,4 +40,14 @@ end
 
 script, npcIDFromSlice, sl, begin
     exitReturning(getNPCID(npcReferenceFromSlice(sl)))
+end
+
+script, sliceCX, sl, begin
+    # get slice center x
+    exitReturning(sliceX(sl) + (sliceWidth(sl)/2))
+end
+
+script, sliceCY, sl, begin
+    # get slice center y
+    exitReturning(sliceY(sl) + (sliceHeight(sl)/2))
 end
