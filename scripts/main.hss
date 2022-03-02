@@ -32,25 +32,26 @@ globalVariable, begin
     15,joyY
     # UI
     30,hud
+    31,titleScreenHud
 end
 
 defineConstant, begin
-    16,player:width
-    12,player:height
-    4,player:animSpeed
-    3,player:idleSet
+    10,player:width
+    6,player:height
+    5,player:animSpeed
+    31,player:idleSet
     4,player:idleFrames
-    3,player:walkSet
+    20,player:walkSet
     4,player:walkFrames
-    7,player:rollSet
-    2,player:rollFrames
-    13,player:rollDistance
-    0,player:attackSet
+    24,player:rollSet
+    4,player:rollFrames
+    16,player:rollDistance
+    20,player:attackSet
     3,player:attackFrames
-    0,player:shootSet
+    20,player:shootSet
     2,player:shootFrames
-    7,player:blockSet
-    2,player:blockFrames
+    28,player:blockSet
+    3,player:blockFrames
     10,player:blockTime
 
     0,state:idle
@@ -78,7 +79,6 @@ plotscript, initGame, begin
     # Init player
     player := getHeroSlice(me)
     initObject(player, player:width, player:height, player:width * 2, player:height * 2)
-    setSliceSize(player, player:width, player:height)
     playerState := state:idle
     playerSpriteset := player:walkSet
     playerFrames := player:walkFrames
@@ -101,6 +101,20 @@ plotscript, initGame, begin
         primaryLoopContents()
         wait
     )
+end
+
+plotscript, titleScreen, begin
+    suspendPlayer
+    titleScreenHud := loadSliceCollection(1)
+
+    waitForKey(anyKey)
+    fadeScreenOut()
+    wait
+    freeSlice(titleScreenHud)
+    wait
+    fadeScreenIn()
+
+    initGame()
 end
 
 script, primaryLoopContents, begin
@@ -127,7 +141,6 @@ script, primaryLoopContents, begin
     updateHud()
 
     # Debug
-    showStringAt(0,0,0)
 
     resetInputs()
 end
@@ -156,6 +169,8 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
         setSliceExtra(sl, extra0, getSpriteSetNumber(firstSpriteChild(handle)))
     )
 
+    #putSlice(handle, sliceCX(handle) -- (width/2), sliceCY(handle) -- (height/2))
+    setSliceSize(handle, width, height)
     putSliceSubpixel(handle, sliceX(handle)*1000, sliceY(handle)*1000)
 end
 

@@ -8,7 +8,7 @@ script, animatePlayer, begin
     # Called from mainGameLoop
     # Loops through player:frames sprite sets every player:animSpeed ticks
     # Ticks stored in player sprite extra0
-    variable(timer, set, current)
+    variable(timer, set, current, vfx)
 
     timer := getSliceExtra(getHeroSprite(me), extra0)
 
@@ -22,6 +22,14 @@ script, animatePlayer, begin
             set := getSpriteSetNumber(getHeroSprite(me)) + 1
         )
         setSpriteSetNumber(getHeroSprite(me), set)
+        # Special FX
+        if(playerSpriteset == player:rollSet) then(
+            vfx := loadHeroSprite(3)
+            setHorizAnchor(vfx, edge:center), setVertAnchor(vfx, edge:middle)
+            setParent(vfx, fxLayer)
+            putSlice(vfx, sliceCX(player), sliceCY(player))
+            createAnimation(vfx, 32, 4, false, dissolve:fade)
+        )
     ) else(
         setSliceExtra(getHeroSprite(me), extra0, getSliceExtra(getHeroSprite(me), extra0)--1)
     )

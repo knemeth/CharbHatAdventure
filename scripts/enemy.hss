@@ -48,6 +48,12 @@ script, enemyBehavior, ref, begin
             subX := get_x_subpixels(getSliceV(npcSl), bearing)
             subY := get_y_subpixels(getSliceV(npcSl), bearing)
             applyMove(npcSl, subX, subY)
+            # Direction
+            if(bearing > 315) then(setNPCDirection(ref, up))
+            elseif(bearing > 225) then(setNPCDirection(ref, left))
+            elseif(bearing > 135) then(setNPCDirection(ref, down))
+            elseif(bearing > 45) then(setNPCDirection(ref, right))
+            else(setNPCDirection(ref, up))
         )
         exitScript()
     )
@@ -179,7 +185,7 @@ script, getEnemyAttackHeight, ref, begin
 end
 
 script, getEnemyFrames, ref, begin
-    exitReturning(3)
+    exitReturning(4)
 end
 
 script, getEnemySpeed, ref, begin

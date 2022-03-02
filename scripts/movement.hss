@@ -55,11 +55,15 @@ script, movePlayer, begin
     subX := get_x_subpixels(velocity, bearing)
     subY := get_y_subpixels(velocity, bearing)
 
-    if(joyX <> 0 && joyY <> 0 && playerState == state:idle) then(
+    if(velocity <> 0 && playerState == state:idle) then(
         playerState := state:walk
         playerSpriteset := player:walkSet
         playerFrames := player:walkFrames
         setSliceExtra(getHeroSprite(me), extra0, 0)
+    ) elseif(velocity == 0) then(
+        playerState := state:idle
+        playerSpriteset := player:idleSet
+        playerFrames := player:idleFrames
     )
 
     # Collisions
@@ -112,28 +116,36 @@ end
 script, applyMove, handle, subX, subY, begin
     # Called in movePlayer and moveEnemies
     # Moves a slice based on relative x and y
-    variable(x, y, w, h, hitX, hitY)
+    variable(x, y, w, h, hitX, hitY, newX, newY)
 
     x := sliceX(handle)
     y := sliceY(handle)
     w := sliceWidth(handle)
     h := sliceHeight(handle)
 
+    if(sliceSubX(handle) < 1000 || sliceSubY(handle) < 1000) then(
+        putSliceSubpixel(handle, sliceX(handle)*1000, sliceY(handle)*1000)
+    )
+
     # round subX,subY down to X000 if a wall is hit
     hitX := checkWallCollisionX(x, y, w, h, subX/1000, subY/1000, player:friction)
-    if(hitX < subX/1000) then(
+    if(abs(hitX) < abs(subX/1000)) then(
         subX := hitX * 1000
+        setSliceSubX(handle, (sliceSubX(handle)/1000) * 1000)
     )
     hitY := checkWallCollisionY(x, y, w, h, subX/1000, subY/1000, player:friction)
-    if(hitY < subY/1000) then(
+    if(abs(hitY) < abs(subY/1000)) then(
         subY := hitY * 1000
+        setSliceSubY(handle, (sliceSubY(handle)/1000) * 1000)
     )
 
-    # Store subpixel position
-    putSliceSubpixel(handle, sliceSubX(handle)+subX, sliceSubY(handle)+subY)
+    newX := sliceSubX(handle) + subX 
+    newY := sliceSubY(handle) + subY 
 
-    moveSliceWithWallchecking(handle, subX/1000, subY/1000, player:friction)
+    moveSliceWithWallchecking(handle, (newX -- (sliceX(handle)*1000))/1000, (newY -- (sliceY(handle)*1000))/1000, player:friction)
     updateNPCorHeroFromSlice(handle)
+    # Store subpixel position
+    putSliceSubpixel(handle, newX, newY)
 end
 
 # ========================================

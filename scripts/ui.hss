@@ -1,16 +1,22 @@
 # ui.hss
 
 script, updateHud, begin
-	variable(sl)
+    variable(sl)
 
-	# stamina
-	variable(staminaBar)
+    # HP
+    variable(hpBar)
+    hpBar := lookupSlice(sli:hpBar, hud)
+    setSliceWidth(hpBar, multdiv(sliceWidth(firstChild(hpBar)), getHeroStat(me, stat:HP), getHeroStat(me, stat:HP, maximumStat)))
+    clearString(0), appendNumber(0, getHeroStat(me, stat:hp))
+    setSliceText(lookupSlice(sli:hpCurrent, hud), 0)
+    clearString(0), appendNumber(0, getHeroStat(me, stat:hp, maximumStat))
+    setSliceText(lookupSlice(sli:hpMax, hud), 0)
+    # stamina
+    variable(staminaBar)
     staminaBar := lookupSlice(sli:stamina, hud)
-    setSliceWidth(staminaBar, getHeroStat(me, stat:SP) * (sliceWidth(sliceParent(staminaBar)) / getHeroStat(me, stat:SP, maximumStat)) + 1)
-  	setGridColumns(nextGridSibling(staminaBar),  getHeroStat(me, stat:SP, maximumStat))
+    setSpriteFrame(staminaBar, getHeroStat(me, stat:SP))
     # ammo
     variable(ammoBar)
     ammoBar := lookupSlice(sli:ammo, hud)
-    setSliceWidth(ammoBar, getHeroStat(me, stat:Hits) * (sliceWidth(sliceParent(ammoBar)) / getHeroStat(me, stat:Hits, maximumStat)) + 1)
-    setGridColumns(nextGridSibling(ammoBar),  getHeroStat(me, stat:Hits, maximumStat))
+    setSpriteFrame(ammoBar, getHeroStat(me, stat:Hits))
 end

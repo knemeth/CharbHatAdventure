@@ -3,7 +3,7 @@
 defineConstant, begin
     8000,player:projectileSpeed
     40,player:reloadSpeed
-    6,player:projectileSize
+    8,player:projectileSize
     30,enemy:flashFrames
     30,player:invisFrames
 end
@@ -51,7 +51,7 @@ script, evaluateInput, begin
         if(valid) then(
             newState(state:shoot, player:shootSet, player:shootFrames)
 
-            createProjectile(1, sliceX(player)+(sliceWidth(player)/2), sliceY(player)+(sliceHeight(player)/2), player:projectileSize, player:projectileSize, getSliceDir(player), player:projectileSpeed, true)
+            createProjectile(2, sliceX(player)+(sliceWidth(player)/2), sliceY(player)+(sliceHeight(player)/2), player:projectileSize, player:projectileSize, getSliceDir(player), player:projectileSpeed, true)
 
             setHeroStat(me, stat:Hits, getHeroStat(me, stat:Hits) -- 1)
             if(getHeroStat(me, stat:Hits) <= 0) then(
@@ -132,7 +132,7 @@ end
 # ==============================
 
 script, damagePlayer, amount, begin
-    setHeroStat(me, stat:HP, amount)
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP) -- amount)
     setHeroStat(me, stat:dodge, player:invisFrames)
 
     if(getHeroStat(me, stat:HP) <= 0) then(

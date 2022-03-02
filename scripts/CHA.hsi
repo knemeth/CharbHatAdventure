@@ -36,4 +36,7 @@ define constant, begin
 5,slot:Legs
 1,sli:stamina
 2,sli:ammo
+3,sli:hpBar
+4,sli:hpCurrent
+5,sli:hpMax
 end

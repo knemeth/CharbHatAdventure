@@ -68,7 +68,7 @@ script, updateProjectiles, begin
         ) else(
             # Enemy's bullet
             hit := sliceCollide(player, sl)
-            if(hit) then(
+            if(hit && getHeroStat(me, stat:Dodge) == 0) then(
                 # Damage player
                 freeSlice(sl)
                 exitScript()
@@ -82,11 +82,11 @@ script, updateProjectiles, begin
         ) else(
             hit := checkWallCollisionX(sliceX(sl), sliceY(sl), sliceWidth(sl), sliceHeight(sl), subX/1000, subY/1000, 0)
             if(hit < subX/1000) then(
-                subX := (hit * 1000) + 1000
+                subX := (hit * 1000) + (1000 * sign(subX))
             )
             hit := checkWallCollisionY(sliceX(sl), sliceY(sl), sliceWidth(sl), sliceHeight(sl), subX/1000, subY/1000, 0)
             if(hit < subY/1000) then(
-                subY := (hit * 1000) + 1000
+                subY := (hit * 1000) + (1000 * sign(subY))
             )
         )
 
