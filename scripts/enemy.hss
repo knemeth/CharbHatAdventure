@@ -106,6 +106,14 @@ script, setEnemyActDelay, ref, v, begin
     setNPCExtra(ref, extra0, v) 
 end
 
+script, getEnemyHit, ref, begin
+    exitReturning(npcExtra(ref, extra1))
+end
+
+script, setEnemyHit, ref, b, begin
+    setNPCExtra(ref, extra1, b)
+end
+
 # Getter functions
 # ====================================
 

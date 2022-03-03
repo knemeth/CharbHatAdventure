@@ -6,6 +6,8 @@ defineConstant, begin
     8,player:projectileSize
     30,enemy:flashFrames
     30,player:invisFrames
+    2,player:meleeDamage
+    10000,player:knockback
 end
 
 script, evaluateInput, begin
@@ -25,16 +27,17 @@ script, evaluateInput, begin
             variable(attack, w, h, x, y)
             attack := lookupSlice(sli:attack, player)
             switch(heroDirection(me)) do(
-                case(up) w := max(sliceWidth(attack), sliceHeight(attack)), h := min(sliceWidth(attack), sliceHeight(attack)), x := 0, y := 0--sliceHeight(player)
-                case(down) w := max(sliceWidth(attack), sliceHeight(attack)), h := min(sliceWidth(attack), sliceHeight(attack)), x := 0, y := sliceHeight(player)
-                case(left) w := min(sliceWidth(attack), sliceHeight(attack)), h := max(sliceWidth(attack), sliceHeight(attack)), x := 0--sliceWidth(player), y := 0
-                case(right) w := min(sliceWidth(attack), sliceHeight(attack)), h := max(sliceWidth(attack), sliceHeight(attack)), x := sliceWidth(player), y := 0
+                case(up) w := max(sliceWidth(attack), sliceHeight(attack)), h := min(sliceWidth(attack), sliceHeight(attack)), x := 0, y := 0--(sliceHeight(player)/2)--(h/2)
+                case(down) w := max(sliceWidth(attack), sliceHeight(attack)), h := min(sliceWidth(attack), sliceHeight(attack)), x := 0, y := (sliceHeight(player)/2)+(h/2)
+                case(left) w := min(sliceWidth(attack), sliceHeight(attack)), h := max(sliceWidth(attack), sliceHeight(attack)), x := 0--(sliceWidth(player)/2)--(w/2), y := 0
+                case(right) w := min(sliceWidth(attack), sliceHeight(attack)), h := max(sliceWidth(attack), sliceHeight(attack)), x := (sliceWidth(player)/2)+(w/2), y := 0
             )
             setSliceSize(attack, w, h)
             putSlice(attack, x, y)
-            setSliceVisible(attack, true)
+            #setSliceVisible(attack, true)
 
-            setTimer(timer:attack, player:attackFrames * player:animSpeed, 1, @returnToIdle)
+            setTimer(timer:attack, player:windupFrames * player:animSpeed, 1, @attackImpact)
+            setTimerArgs(timer:attack, player, player:attackFrames)
 
             exitReturning(state:attack)
         )
@@ -128,6 +131,21 @@ script, reloadAmmo, begin
     setHeroStat(me, stat:Hits, getHeroStat(me, stat:Hits, maximumStat))
 end
 
+script, attackImpact, sl, frames, begin
+    # Only functional for player
+    variable(attack, vfx)
+
+    attack := lookupSlice(sli:attack, sl)
+    setSliceVisible(attack, true)
+
+    vfx := loadHeroSprite(5)
+    setParent(vfx, attack)
+    centerSlice(vfx)
+    createAnimation(vfx, 16, 2)
+
+    setTimer(timer:attack, frames * player:animSpeed, 1, @returnToIdle)
+end
+
 # Damage
 # ==============================
 
@@ -169,5 +187,33 @@ script, damageEnemy, ref, amount, begin
 
         destroyNPC(ref)
         exitScript()
+    )
+end
+
+# Collisions
+# =================================
+
+script, meleeCollisions, begin
+    variable(i, attack, hit, ref)
+
+    # Player Melee
+    attack := lookupSlice(sli:attack, player)
+    if(getSliceVisible(attack)) then(
+        for(i, findCollidingSlice(lookupSlice(sl:walkaboutLayer), attack, getCount, false)--1, 0, -1) do(
+            hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), attack, i, false)
+            ref := npcReferenceFromSlice(hit)
+            if(ref && getNPCPool(ref) == pool:global && getEnemyHit(ref) == false) then(
+                pushObject(hit, get_bearing(sliceCX(player), sliceCY(player), sliceCX(hit), sliceCY(hit)), projectile:knockback)   # from movement.hss
+                damageEnemy(ref, player:meleeDamage)
+                setEnemyHit(ref, true)
+            )
+        )
+    ) else(
+        # Mark all enemies as not yet hit
+        ref := nextNPCReference()
+        while(ref) do(
+            setEnemyHit(ref, false)
+            ref := nextNPCReference(ref)
+        )
     )
 end

@@ -27,8 +27,8 @@ script, movePlayer, begin
     )
 
     bearing := get_bearing(0, 0, joyX, joyY)
-    if(bearing <> 0 || joyX <> 0 || joyY <> 0) then(
-        # Only update direction if moving
+    if((bearing <> 0 || joyX <> 0 || joyY <> 0) && playerState <> state:attack) then(
+        # Only update direction if moving and not attacking
         setSliceDir(player, bearing)
         if(bearing > 315) then(setHeroDirection(me, up))
         elseif(bearing > 225) then(setHeroDirection(me, left))
@@ -95,6 +95,14 @@ script, movePlayer, begin
 end
 
 script, recoverStamina, begin
+    variable(vfx)
+
+    vfx := loadHeroSprite(4)
+    setParent(vfx, getHeroSprite(me))
+    centerSlice(vfx)
+    putSlice(vfx, 0, 0)
+    createAnimation(vfx, 16, 2)
+
     setHeroStat(me, stat:SP, getHeroStat(me, stat:SP) + 1)
     if(getHeroStat(me, stat:SP) < getHeroStat(me, stat:SP, maximumStat)) then(
         setTimer(timer:stamina, getHeroStat(me, stat:MP~), 1, @recoverStamina)
@@ -132,15 +140,24 @@ script, applyMove, handle, subX, subY, begin
     if(abs(hitX) < abs(subX/1000)) then(
         subX := hitX * 1000
         setSliceSubX(handle, (sliceSubX(handle)/1000) * 1000)
+    ) elseif(checkWallCollisionX(x, y, w, h, 1*sign(subX), 1*sign(subY), 0) == 0) then(
+        subX := 0
     )
     hitY := checkWallCollisionY(x, y, w, h, subX/1000, subY/1000, player:friction)
     if(abs(hitY) < abs(subY/1000)) then(
         subY := hitY * 1000
         setSliceSubY(handle, (sliceSubY(handle)/1000) * 1000)
+    ) elseif(checkWallCollisionY(x, y, w, h, 1*sign(subX), 1*sign(subY), 0) == 0) then(
+        subY := 0
     )
 
     newX := sliceSubX(handle) + subX 
     newY := sliceSubY(handle) + subY 
+
+    if(handle == player) then(
+        clearString(1), clearString(2)
+        appendNumber(1, hitX), appendNumber(2, hitY)
+    )
 
     moveSliceWithWallchecking(handle, (newX -- (sliceX(handle)*1000))/1000, (newY -- (sliceY(handle)*1000))/1000, player:friction)
     updateNPCorHeroFromSlice(handle)

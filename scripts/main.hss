@@ -46,6 +46,7 @@ defineConstant, begin
     24,player:rollSet
     4,player:rollFrames
     16,player:rollDistance
+    2,player:windupFrames
     20,player:attackSet
     3,player:attackFrames
     20,player:shootSet
@@ -78,7 +79,7 @@ plotscript, initGame, begin
 
     # Init player
     player := getHeroSlice(me)
-    initObject(player, player:width, player:height, player:width * 2, player:height * 2)
+    initObject(player, player:width, player:height, player:width * 2, player:height * 3)
     playerState := state:idle
     playerSpriteset := player:walkSet
     playerFrames := player:walkFrames
@@ -137,10 +138,14 @@ script, primaryLoopContents, begin
     enemyEachtick()
     animateNPCs()
 
+    meleeCollisions()
+
     # UI
     updateHud()
 
     # Debug
+    showStringAt(1,0,100)
+    showStringAt(2,0,110)
 
     resetInputs()
 end
@@ -152,13 +157,15 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
 
     if(childCount(handle) == 1) then(
         # Only has a sprite child, has not been initialized
-        variable(sl)
+        variable(sl, spr)
         sl := firstChild(handle)
         setHorizAlign(sl, edge:center)
         setHorizAnchor(sl, edge:center)
         sl := createRect(atkWidth, atkHeight, -1)
         setParent(sl, handle)
         setSliceVisible(sl, false)
+        setRectBorder(sl, border:none)
+        setRectTrans(sl, trans:hollow)
         centerSlice(sl)
         setSliceLookup(sl, sli:attack)
         sl := createContainer(0,0)      # stores subpixel data
