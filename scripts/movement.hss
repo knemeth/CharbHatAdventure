@@ -73,6 +73,7 @@ script, movePlayer, begin
     # Pickups
     for(num, findCollidingSlice(pickupLayer, player, getCount, false)--1, 0, -1) do(
         hit := findCollidingSlice(pickupLayer, player, num, false)
+        playSound(sfx:pickup, false, true)
         runScriptByID(getSliceExtra(hit, extra0))
         freeSlice(hit)
     )
@@ -81,11 +82,18 @@ script, movePlayer, begin
         for(num, findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, getCount, false)--1, 0, -1) do(
             hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, num, false)
             if(getNPCPool(npcReferenceFromSlice(hit)) == pool:global) then(
-                damagePlayer(1)
-                x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
-                x2 := sliceX(player)+(sliceWidth(player)/2), y2 := sliceY(player)+(sliceHeight(player)/2)
-                pushObject(player, get_bearing(x1, y1, x2, y2), player:touchKnockback)
-                exitScript()
+                if(getHeroStat(me, stat:Def) == 0) then(
+                    damagePlayer(3)
+                    x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
+                    x2 := sliceX(player)+(sliceWidth(player)/2), y2 := sliceY(player)+(sliceHeight(player)/2)
+                    pushObject(player, get_bearing(x1, y1, x2, y2), player:touchKnockback)
+                    exitScript()
+                ) else(
+                    x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
+                    x2 := sliceX(player)+(sliceWidth(player)/2), y2 := sliceY(player)+(sliceHeight(player)/2)
+                    pushObject(hit, get_bearing(x2, y2, x1, y1), player:touchKnockback)
+                    stunEnemy(npcReferenceFromSlice(hit), player:blockStun)
+                )
             )
         )
     )
@@ -102,6 +110,8 @@ script, recoverStamina, begin
     centerSlice(vfx)
     putSlice(vfx, 0, 0)
     createAnimation(vfx, 16, 2)
+
+    playSound(sfx:SPRecover, false, true)
 
     setHeroStat(me, stat:SP, getHeroStat(me, stat:SP) + 1)
     if(getHeroStat(me, stat:SP) < getHeroStat(me, stat:SP, maximumStat)) then(

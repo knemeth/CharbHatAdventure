@@ -2,12 +2,15 @@
 
 defineConstant, begin
     8000,player:projectileSpeed
-    40,player:reloadSpeed
+    90,player:reloadSpeed
     8,player:projectileSize
     30,enemy:flashFrames
     30,player:invisFrames
     2,player:meleeDamage
     10000,player:knockback
+    30,player:meleeStun
+    10,player:rangedStun
+    25,player:blockStun
 end
 
 script, evaluateInput, begin
@@ -61,8 +64,12 @@ script, evaluateInput, begin
                 setTimer(timer:reload, player:reloadSpeed, 1, @reloadAmmo)
             )
 
+            playSound(sfx:Throw+random(0,2), false, true)
+
             setTimer(timer:attack, player:shootFrames * player:animSpeed, 1, @returnToIdle)
         )
+    ) elseif(shootPress) then(
+        playSound(sfx:NoAmmo, false, true)
     )
 
     # Check for dodge roll
@@ -81,6 +88,8 @@ script, evaluateInput, begin
                 setHeroStat(me, stat:dodge, player:rollDistance)
             )
             setHeroStat(me, stat:SP, getHeroStat(me, stat:SP) -- 1)  # Reduce stamina
+
+            playSound(sfx:Dash, false, true)
             
             setTimer(timer:stamina, getHeroStat(me, stat:MP~), 1, @recoverStamina)
             setTimer(timer:roll, player:rollDistance, 1, @returnToIdle)
@@ -103,6 +112,7 @@ script, evaluateInput, begin
             # Check for perfect block here
             # -----
             setHeroStat(me, stat:Def, 50, maximumStat)
+            setHeroStat(me, stat:Def, 50)
             setTimer(timer:block, player:blockTime, 1, @returnToIdle)
 
             exitReturning(state:block)
@@ -122,13 +132,14 @@ script, returnToIdle, begin
     playerSpriteset := player:idleSet
     playerFrames := player:idleFrames
 
-    setHeroStat(me, stat:Def, 0, maximumStat)
+    setHeroStat(me, stat:Def, 0)
     setSliceExtra(getHeroSprite(me), extra0, 0)
     setSliceVisible(lookupSlice(sli:attack, player), false)
 end
 
 script, reloadAmmo, begin
     setHeroStat(me, stat:Hits, getHeroStat(me, stat:Hits, maximumStat))
+    playSound(sfx:reload, false, true)
 end
 
 script, attackImpact, sl, frames, begin
@@ -143,15 +154,40 @@ script, attackImpact, sl, frames, begin
     centerSlice(vfx)
     createAnimation(vfx, 16, 2)
 
+    playSound(sfx:melee+random(0,2), false, true)
+
     setTimer(timer:attack, frames * player:animSpeed, 1, @returnToIdle)
+end
+
+# Combat Data
+# ===============================
+
+script, getAttackDelay, sl, begin
+    variable(child)
+
+    child := firstContainerChild(sl)
+    exitReturning(getSliceExtra(child, extra0))
+end
+
+script, setAttackDelay, sl, v, begin
+    variable(child)
+
+    child := firstContainerChild(sl)
+    setSliceExtra(child, extra0, v)
 end
 
 # Damage
 # ==============================
 
 script, damagePlayer, amount, begin
+    if(getHeroStat(me, stat:Def) > 0) then(
+        # BLOCKED
+        exitScript()
+    )
     setHeroStat(me, stat:HP, getHeroStat(me, stat:HP) -- amount)
     setHeroStat(me, stat:dodge, player:invisFrames)
+
+    playSound(sfx:hit+random(0,2), false, true)
 
     if(getHeroStat(me, stat:HP) <= 0) then(
         # Die
@@ -170,6 +206,8 @@ script, damageEnemy, ref, amount, begin
     setSliceExtra(sl, extra2, current -- amount)
     setSliceExtra(sl, extra1, enemy:flashFrames)
 
+    playSound(sfx:beast+random(0,3), false, true)
+
     if(getSliceExtra(sl, extra2) <= 0) then(
         # Die
         
@@ -184,6 +222,8 @@ script, damageEnemy, ref, amount, begin
         y := sliceY(sli) + (sliceHeight(sli)/2)
         putSlice(vfx, x, y)
         createAnimation(vfx, 32, 4)
+
+        createRandomPickup(sliceCX(sli), sliceCY(sli))
 
         destroyNPC(ref)
         exitScript()
@@ -204,8 +244,9 @@ script, meleeCollisions, begin
             ref := npcReferenceFromSlice(hit)
             if(ref && getNPCPool(ref) == pool:global && getEnemyHit(ref) == false) then(
                 pushObject(hit, get_bearing(sliceCX(player), sliceCY(player), sliceCX(hit), sliceCY(hit)), projectile:knockback)   # from movement.hss
-                damageEnemy(ref, player:meleeDamage)
                 setEnemyHit(ref, true)
+                stunEnemy(ref, player:meleeStun)
+                damageEnemy(ref, player:meleeDamage)
             )
         )
     ) else(

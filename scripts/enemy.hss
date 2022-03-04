@@ -1,5 +1,10 @@
 # enemy.hss
 
+# NPC EXTRAS
+# extra0 = Action delay
+# extra1 = Whether the npc was hit by the player's current melee attack
+# extra2 = stun duration
+
 defineConstant, begin
     0,enemy:dummy
     1,enemy:melee
@@ -39,6 +44,15 @@ script, enemyBehavior, ref, begin
     variable(dist, npcSl, bearing, subX, subY)
 
     npcSl := getNPCSlice(ref)
+
+    if(getEnemyStun(ref) > 0) then(
+        stunEnemy(ref, getEnemyStun(ref)--1)
+        exitScript()
+    )
+
+    if(getAttackDelay(npcSl) > 0) then(
+        setAttackDelay(npcSl, getAttackDelay(npcSl)--1)
+    )
 
     if(getEnemyActDelay(ref) > 0) then(
         setEnemyActDelay(ref, getEnemyActDelay(ref)--1)
@@ -93,6 +107,13 @@ script, enemyBehavior, ref, begin
                 setEnemyActDelay(ref, enemy:actDelay)
                 setSliceDir(npcSl, bearing)
                 setSliceV(npcSl, getEnemySpeed(ref))
+            ) 
+
+            if(dist / 20 < 10 && getAttackDelay(npcSl) == 0) then(
+                # Fire projectile
+                bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+                createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, bearing, projectile:speed, false)
+                setAttackDelay(npcSl, enemy:actDelay * 2)
             )
         )
     )
@@ -114,6 +135,14 @@ script, setEnemyHit, ref, b, begin
     setNPCExtra(ref, extra1, b)
 end
 
+script, stunEnemy, ref, dur, begin
+    setNPCExtra(ref, extra2, dur)
+end
+
+script, getEnemyStun, ref, begin
+    exitReturning(npcExtra(ref, extra2))
+end
+
 # Getter functions
 # ====================================
 
@@ -128,6 +157,8 @@ script, getEnemyHP, ref, begin
 
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
+        case(enemy:melee) exitReturning(4)
+        case(enemy:ranged) exitReturning(2)
         case(else) exitReturning(default)
     )
 end

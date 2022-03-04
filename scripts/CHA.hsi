@@ -1,6 +1,25 @@
 # HamsterSpeak constant definitions for CHA.rpg
 
 define constant, begin
+0,sfx:Melee
+1,sfx:Melee2
+2,sfx:Melee3
+3,sfx:PP_Small_Impact_1_5
+4,sfx:Throw
+5,sfx:Throw2
+6,sfx:Throw3
+7,sfx:Hit
+8,sfx:Hit2
+9,sfx:Hit3
+10,sfx:Dash
+11,sfx:SPRecover
+12,sfx:Reload
+13,sfx:Beast
+14,sfx:Beast 2
+15,sfx:Beast 3
+16,sfx:Beast 4
+17,sfx:Pickup
+18,sfx:NoAmmo
 0,stat:HP
 1,stat:SP
 2,stat:Atk

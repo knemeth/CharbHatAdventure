@@ -53,7 +53,7 @@ defineConstant, begin
     2,player:shootFrames
     28,player:blockSet
     3,player:blockFrames
-    10,player:blockTime
+    30,player:blockTime
 
     0,state:idle
     1,state:walk
@@ -144,6 +144,7 @@ script, primaryLoopContents, begin
     updateHud()
 
     # Debug
+    clearString(1), appendNumber(1, getHeroStat(me, stat:Def))
     showStringAt(1,0,100)
     showStringAt(2,0,110)
 
@@ -168,6 +169,8 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
         setRectTrans(sl, trans:hollow)
         centerSlice(sl)
         setSliceLookup(sl, sli:attack)
+        sl := createContainer(0,0)      # stores combat data
+        setParent(sl, handle)
         sl := createContainer(0,0)      # stores subpixel data
         setParent(sl, handle)
 

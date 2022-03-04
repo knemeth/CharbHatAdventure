@@ -18,7 +18,7 @@ script, createProjectile, spr, x, y, w, h, dir, spd=projectile:speed, friendly=f
     sprite := loadAttackSprite(spr)
     setParent(sprite, projectile)
     centerSlice(sprite)
-    createAnimation(sprite, 9, 3, true)
+    createAnimation(sprite, 15, 5, true)
     sl := createContainer(0,0)      # subpixel data slice
     setParent(sl, projectile)
 
@@ -60,6 +60,7 @@ script, updateProjectiles, begin
                 if(npcReferenceFromSlice(hit)) then(
                     # Damage enemy/npc
                     pushObject(hit, bearing, projectile:knockback)   # from movement.hss
+                    stunEnemy(npcReferenceFromSlice(hit), player:rangedStun)
                     damageEnemy(npcReferenceFromSlice(hit), projectile:playerdamage)
                     freeSlice(sl)
                     exitScript()
@@ -70,6 +71,12 @@ script, updateProjectiles, begin
             hit := sliceCollide(player, sl)
             if(hit && getHeroStat(me, stat:Dodge) == 0) then(
                 # Damage player
+                if(getHeroStat(me, stat:Def) > 0) then(
+                    pushObject(hit, bearing, projectile:knockback / 2)
+                ) else(
+                    pushObject(hit, bearing, projectile:knockback)
+                    damagePlayer(2)
+                )
                 freeSlice(sl)
                 exitScript()
             )
