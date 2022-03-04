@@ -109,11 +109,11 @@ script, enemyBehavior, ref, begin
                 setSliceV(npcSl, getEnemySpeed(ref))
             ) 
 
-            if(dist / 20 < 10 && getAttackDelay(npcSl) == 0) then(
+            if(dist / 20 < 8 && getAttackDelay(npcSl) == 0) then(
                 # Fire projectile
                 bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
                 createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, bearing, projectile:speed, false)
-                setAttackDelay(npcSl, enemy:actDelay * 2)
+                setAttackDelay(npcSl, enemy:actDelay * 3)
             )
         )
     )
