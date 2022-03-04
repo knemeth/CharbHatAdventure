@@ -120,7 +120,7 @@ end
 script, returnToIdle, begin
     playerState := state:idle 
     playerSpriteset := player:idleSet
-    playerSpriteset := player:idleFrames
+    playerFrames := player:idleFrames
 
     setHeroStat(me, stat:Def, 0, maximumStat)
     setSliceExtra(getHeroSprite(me), extra0, 0)

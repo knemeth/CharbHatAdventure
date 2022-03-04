@@ -49,7 +49,7 @@ script, movePlayer, begin
     )
 
     if(joyX == 0 && joyY == 0) then(
-        velocity := velocity / 2        # deceleration
+        #velocity := velocity / 2        # deceleration
     )
 
     subX := get_x_subpixels(velocity, bearing)
@@ -60,7 +60,7 @@ script, movePlayer, begin
         playerSpriteset := player:walkSet
         playerFrames := player:walkFrames
         setSliceExtra(getHeroSprite(me), extra0, 0)
-    ) elseif(velocity == 0) then(
+    ) elseif(velocity == 0 && playerState == state:walk) then(
         playerState := state:idle
         playerSpriteset := player:idleSet
         playerFrames := player:idleFrames
@@ -152,12 +152,7 @@ script, applyMove, handle, subX, subY, begin
     )
 
     newX := sliceSubX(handle) + subX 
-    newY := sliceSubY(handle) + subY 
-
-    if(handle == player) then(
-        clearString(1), clearString(2)
-        appendNumber(1, hitX), appendNumber(2, hitY)
-    )
+    newY := sliceSubY(handle) + subY
 
     moveSliceWithWallchecking(handle, (newX -- (sliceX(handle)*1000))/1000, (newY -- (sliceY(handle)*1000))/1000, player:friction)
     updateNPCorHeroFromSlice(handle)
