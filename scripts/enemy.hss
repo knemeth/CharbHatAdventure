@@ -16,6 +16,7 @@ defineConstant, begin
     1,ai:spray 
     2,ai:aoe
     3,ai:melee
+    4,ai:mega
 end
 
 script, initEnemies, begin
@@ -127,13 +128,13 @@ script, enemyBehavior, ref, begin
             dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
             if(dist / 20 < 8) then(
                 switch(getEnemyState(ref)) do(
-                    case(ai:idle) setEnemyActDelay(ref, enemy:actDelay), setEnemyState(ref, random(1, 2))
+                    case(ai:idle) setEnemyActDelay(ref, enemy:actDelay), setEnemyState(ref, random(1, 4))
                     case(ai:spray) do(
                         if(getEnemyPatternStep(ref) < 16) then(
                             createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getEnemyPatternStep(ref)*(360/16), projectile:speed, false)
                             setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
                         ) else(
-                            setEnemyState(ref, random(0,1)*ai:aoe)
+                            setEnemyState(ref, ai:idle)
                             setEnemyPatternStep(ref, 0)
                         )
                         
@@ -144,10 +145,36 @@ script, enemyBehavior, ref, begin
                             startAOE(sliceCX(player), sliceCY(player), 50, 50, 60, 2, 6, 6)
                             setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
                         ) else(
-                            setEnemyState(ref, random(0,1)*ai:spray)
+                            setEnemyState(ref, ai:idle)
                             setEnemyPatternStep(ref, 0)
                         )
                         setEnemyActDelay(ref, 24)
+                    )
+                    case(ai:mega) do(
+                        showValue(ai:mega)
+                        if(getEnemyPatternStep(ref) < 32) then(
+                            createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getEnemyPatternStep(ref)*(360/16), projectile:speed, false)
+                            if(getEnemyPatternStep(ref),mod,4) then(
+                                for(i, 0, 7) do(
+                                    createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, i*(360/8), multdiv(projectile:speed, 3, 5), false)
+                                )
+                            ) elseif(getEnemyPatternStep(ref),mod,6) then(
+                                startAOE(sliceCX(player), sliceCY(player), 50, 50, 60, 2, 6, 6)
+                            )
+                            setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                        ) else(
+                            setEnemyState(ref, ai:idle)
+                            setEnemyPatternStep(ref, 0)
+                        )
+                        setEnemyActDelay(ref, 8)
+                    )
+                    case(ai:melee) do(
+                        startAOE(sliceCX(npcSl)--sliceWidth(npcSl), 0, 50, 50, 60, 2, 6, 6)
+                        startAOE(sliceCX(npcSl)+sliceWidth(npcSl), 0, 50, 50, 60, 2, 6, 6)
+                        startAOE(0, sliceCY(npcSl)--sliceHeight(npcSl), 50, 50, 60, 2, 6, 6)
+                        startAOE(0, sliceCY(npcSl)+sliceHeight(npcSl), 50, 50, 60, 2, 6, 6)
+                        setEnemyActDelay(ref, 24)
+                        setEnemyState(ref, ai:idle)
                     )
                 )
             )
@@ -172,6 +199,9 @@ script, setEnemyHit, ref, b, begin
 end
 
 script, stunEnemy, ref, dur, begin
+    switch(ref) do(
+        case(enemy:testboss) exitReturning(false)   # bosses immune
+    )
     setNPCExtra(ref, extra2, dur)
 end
 
