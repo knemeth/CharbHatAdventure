@@ -9,7 +9,13 @@ defineConstant, begin
     0,enemy:dummy
     1,enemy:melee
     2,enemy:ranged
+    3,enemy:testboss
     30,enemy:actDelay
+
+    0,ai:idle
+    1,ai:spray 
+    2,ai:aoe
+    3,ai:melee
 end
 
 script, initEnemies, begin
@@ -41,7 +47,7 @@ end
 
 script, enemyBehavior, ref, begin
     # check enemy type and apply behavior based on current conditions
-    variable(dist, npcSl, bearing, subX, subY)
+    variable(dist, npcSl, bearing, subX, subY, i)
 
     npcSl := getNPCSlice(ref)
 
@@ -116,6 +122,36 @@ script, enemyBehavior, ref, begin
                 setAttackDelay(npcSl, enemy:actDelay * 3)
             )
         )
+        case(enemy:testboss) do(
+            # when player gets in range, start fucking shit up
+            dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+            if(dist / 20 < 8) then(
+                switch(getEnemyState(ref)) do(
+                    case(ai:idle) setEnemyActDelay(ref, enemy:actDelay), setEnemyState(ref, random(1, 2))
+                    case(ai:spray) do(
+                        if(getEnemyPatternStep(ref) < 16) then(
+                            createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getEnemyPatternStep(ref)*(360/16), projectile:speed, false)
+                            setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                        ) else(
+                            setEnemyState(ref, random(0,1)*ai:aoe)
+                            setEnemyPatternStep(ref, 0)
+                        )
+                        
+                        setEnemyActDelay(ref, 12)
+                    )
+                    case(ai:aoe) do(
+                        if(getEnemyPatternStep(ref) < 8) then(
+                            startAOE(sliceCX(player), sliceCY(player), 50, 50, 60, 2, 6, 6)
+                            setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                        ) else(
+                            setEnemyState(ref, random(0,1)*ai:spray)
+                            setEnemyPatternStep(ref, 0)
+                        )
+                        setEnemyActDelay(ref, 24)
+                    )
+                )
+            )
+        )
     )
 end
 
@@ -143,6 +179,101 @@ script, getEnemyStun, ref, begin
     exitReturning(npcExtra(ref, extra2))
 end
 
+script, getEnemyState, ref, begin
+    variable(sl)
+
+    sl := lookupSlice(sli:ai, getNPCSlice(ref))
+    exitReturning(getSliceExtra(sl, extra0))
+end
+
+script, setEnemyState, ref, v, begin
+    variable(sl)
+
+    sl := lookupSlice(sli:ai, getNPCSlice(ref))
+    setSliceExtra(sl, extra0, v)
+end
+
+script, getEnemyPatternStep, ref, begin
+    variable(sl)
+
+    sl := lookupSlice(sli:ai, getNPCSlice(ref))
+    exitReturning(getSliceExtra(sl, extra1))
+end
+
+script, setEnemyPatternStep, ref, v, begin
+    variable(sl)
+
+    sl := lookupSlice(sli:ai, getNPCSlice(ref))
+    setSliceExtra(sl, extra1, v)
+end
+
+# Attack Patterns
+# ===================================
+
+script, startAOE, x, y, w, h, delay=60, dmg=1, set=5, antFrames=0, begin
+    variable(sl, fill, sprite)
+
+    sl := createRect(w, h)
+    setParent(sl, aoeLayer)
+    putSlice(sl, x, y)
+    setHorizAnchor(sl, edge:center)
+    setVertAnchor(sl, edge:middle)
+    setRectOpacity(sl, 10)
+    setRectFgcol(sl, 87)
+    setRectBgcol(sl, 85)
+    setRectBorder(sl, border:line)
+
+    fill := createRect(0, 0)
+    setParent(fill, sl)
+    centerSlice(fill)
+    setRectBorder(fill, border:none)
+    setRectBgcol(fill, 87)
+    setRectOpacity(fill, 40)
+    setSliceExtra(fill, extra0, delay)
+
+    sprite := loadHeroSprite(set)
+    setParent(sprite, sl)
+    setSliceVisible(sprite, false)
+    centerSlice(sprite)
+
+    setSliceExtra(sl, extra0, delay)
+    setSliceExtra(sl, extra1, dmg)
+    setSliceExtra(sl, extra2, antFrames)
+end
+
+script, processAOE, begin
+    variable(i, sl, fill, timer, w, h, sprite, x, y)
+
+    for(i, childCount(aoeLayer)--1, 0, -1) do(
+        sl := sliceChild(aoeLayer, i)
+        timer := getSliceExtra(sl, extra0)
+        if(timer <= 0) then(
+            if(sliceCollide(sl, player)) then(
+                damagePlayer(getSliceExtra(sl, extra1))
+            )
+            freeSlice(sl)
+            continue
+        )
+
+        fill := firstRectChild(sl)
+        w := ((getSliceExtra(fill, extra0) -- timer) * sliceWidth(sl)) / getSliceExtra(fill, extra0)
+        h := ((getSliceExtra(fill, extra0) -- timer) * sliceHeight(sl)) / getSliceExtra(fill, extra0)
+        setSliceSize(fill, w, h)
+
+        if(timer == getSliceExtra(sl, extra2)) then(
+            sprite := firstSpriteChild(sl)
+            x := sliceScreenX(sprite)
+            y := sliceScreenY(sprite)
+            setParent(sprite, lookupSlice(sl:mapOverlay))
+            putSliceScreen(sprite, x, y)
+            setSliceVisible(sprite, true)
+            createAnimation(sprite, 24, 3)
+        )
+
+        setSliceExtra(sl, extra0, timer--1)
+    )
+end
+
 # Getter functions
 # ====================================
 
@@ -159,6 +290,7 @@ script, getEnemyHP, ref, begin
         case(enemy:dummy) exitReturning(10)
         case(enemy:melee) exitReturning(4)
         case(enemy:ranged) exitReturning(2)
+        case(enemy:testboss) exitReturning(100)
         case(else) exitReturning(default)
     )
 end
@@ -174,6 +306,7 @@ script, getEnemyWidth, ref, begin
 
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
+        case(enemy:testboss) exitReturning(40)
         case(else) exitReturning(default)
     )
 end
@@ -189,6 +322,7 @@ script, getEnemyHeight, ref, begin
 
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
+        case(enemy:testboss) exitReturning(15)
         case(else) exitReturning(default)
     )
 end
@@ -238,6 +372,7 @@ script, getEnemySpeed, ref, begin
 
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
+        case(enemy:testboss) exitReturning(0)
         case(else) exitReturning(default)
     )
 end

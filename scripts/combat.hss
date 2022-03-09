@@ -165,14 +165,14 @@ end
 script, getAttackDelay, sl, begin
     variable(child)
 
-    child := firstContainerChild(sl)
+    child := lookupSlice(sli:combat, sl)
     exitReturning(getSliceExtra(child, extra0))
 end
 
 script, setAttackDelay, sl, v, begin
     variable(child)
 
-    child := firstContainerChild(sl)
+    child := lookupSlice(sli:combat, sl)
     setSliceExtra(child, extra0, v)
 end
 

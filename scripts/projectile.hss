@@ -20,6 +20,7 @@ script, createProjectile, spr, x, y, w, h, dir, spd=projectile:speed, friendly=f
     centerSlice(sprite)
     createAnimation(sprite, 15, 5, true)
     sl := createContainer(0,0)      # subpixel data slice
+    setSliceLookup(sl, sli:subpixel)
     setParent(sl, projectile)
 
     putSlice(projectile, x, y)

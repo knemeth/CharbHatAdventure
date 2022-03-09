@@ -208,27 +208,27 @@ end
 
 script, sliceSubX, handle, begin
     # Gets the subpixel X position, stored in the first child of the handle
-    exitReturning(sliceX(lastChild(handle)))
+    exitReturning(sliceX(lookupSlice(sli:subpixel, handle)))
 end
 
 script, sliceSubY, handle, begin
     # Gets the subpixel Y position, stored in the first child of the handle
-    exitReturning(sliceY(lastChild(handle)))
+    exitReturning(sliceY(lookupSlice(sli:subpixel, handle)))
 end
 
 script, setSliceSubX, handle, v, begin
     # Gets the subpixel X position, stored in the first child of the handle
-    exitReturning(setSliceX(lastChild(handle), v))
+    exitReturning(setSliceX(lookupSlice(sli:subpixel, handle), v))
 end
 
 script, setSliceSubY, handle, v, begin
     # Gets the subpixel Y position, stored in the first child of the handle
-    exitReturning(setSliceY(lastChild(handle), v))
+    exitReturning(setSliceY(lookupSlice(sli:subpixel, handle), v))
 end
 
 script, putSliceSubpixel, handle, subX, subY, begin
     # Sets the subpixel position, which are pixels * 1000
-    putSlice(lastChild(handle), subX, subY)
+    putSlice(lookupSlice(sli:subpixel, handle), subX, subY)
 end
 
 script, getSliceMoving, handle, begin

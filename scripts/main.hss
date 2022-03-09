@@ -23,6 +23,7 @@ globalVariable, begin
     4,playerProjectileLayer
     5,pickupLayer
     6,fxLayer
+    7,aoeLayer
     # Player values
     10,player
     11,playerSpriteset
@@ -63,12 +64,17 @@ defineConstant, begin
     5,state:shoot
 
     100,sli:attack
+    101,sli:combat
+    102,sli:subpixel
+    103,sli:animation
+    104,sli:ai
 
     0,timer:stamina
     1,timer:block
     2,timer:attack
     3,timer:reload
     4,timer:roll
+    5,timer:bossState
 end
 
 plotscript, initGame, begin
@@ -97,6 +103,8 @@ plotscript, initGame, begin
     playerProjectileLayer := createContainer()
     setParent(playerProjectileLayer, lookupSlice(sl:mapOverlay))
     pickupLayer := lookupSlice(sl:mapLayer1)
+    aoeLayer := createContainer()
+    setParent(aoeLayer, lookupSlice(sl:mapOverlay))
 
     while(true) do(
         primaryLoopContents()
@@ -139,12 +147,12 @@ script, primaryLoopContents, begin
     animateNPCs()
 
     meleeCollisions()
+    processAOE()
 
     # UI
     updateHud()
 
     # Debug
-    clearString(1), appendNumber(1, getHeroStat(me, stat:Def))
     showStringAt(1,0,100)
     showStringAt(2,0,110)
 
@@ -171,12 +179,21 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
         setSliceLookup(sl, sli:attack)
         sl := createContainer(0,0)      # stores combat data
         setParent(sl, handle)
+        setSliceLookup(sl, sli:combat)
         sl := createContainer(0,0)      # stores subpixel data
         setParent(sl, handle)
+        setSliceLookup(sl, sli:subpixel)
 
         sl := createContainer(0,0)      # stores animation data
         setParent(sl, firstSpriteChild(handle))
+        setSliceLookup(sl, sli:animation)
         setSliceExtra(sl, extra0, getSpriteSetNumber(firstSpriteChild(handle)))
+
+        if(npcReferenceFromSlice(handle)) then(
+            sl := createContainer()
+            setParent(sl, handle)
+            setSliceLookup(sl, sli:ai)
+        )
     )
 
     #putSlice(handle, sliceCX(handle) -- (width/2), sliceCY(handle) -- (height/2))
