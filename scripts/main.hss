@@ -55,6 +55,8 @@ defineConstant, begin
     28,player:blockSet
     3,player:blockFrames
     30,player:blockTime
+    30,player:attackWidth
+    20,player:attackHeight
 
     0,state:idle
     1,state:walk
@@ -85,7 +87,7 @@ plotscript, initGame, begin
 
     # Init player
     player := getHeroSlice(me)
-    initObject(player, player:width, player:height, player:width * 2, player:height * 3)
+    initObject(player, player:width, player:height, player:attackWidth, player:attackHeight)
     playerState := state:idle
     playerSpriteset := player:walkSet
     playerFrames := player:walkFrames

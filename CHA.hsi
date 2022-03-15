@@ -35,4 +35,5 @@ define constant, begin
 4,slot:Arms
 5,slot:Legs
 1,sli:stamina
+2,sli:ammo
 end

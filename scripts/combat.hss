@@ -27,17 +27,47 @@ script, evaluateInput, begin
             newState(state:attack, player:attackSet, player:attackFrames)
 
             # make attack hitbox visible
-            variable(attack, w, h, x, y)
+            variable(attack, w, h, x, y, vfx)
             attack := lookupSlice(sli:attack, player)
             switch(heroDirection(me)) do(
-                case(up) w := max(sliceWidth(attack), sliceHeight(attack)), h := min(sliceWidth(attack), sliceHeight(attack)), x := 0, y := 0--(sliceHeight(player)/2)--(h/2)
-                case(down) w := max(sliceWidth(attack), sliceHeight(attack)), h := min(sliceWidth(attack), sliceHeight(attack)), x := 0, y := (sliceHeight(player)/2)+(h/2)
-                case(left) w := min(sliceWidth(attack), sliceHeight(attack)), h := max(sliceWidth(attack), sliceHeight(attack)), x := 0--(sliceWidth(player)/2)--(w/2), y := 0
-                case(right) w := min(sliceWidth(attack), sliceHeight(attack)), h := max(sliceWidth(attack), sliceHeight(attack)), x := (sliceWidth(player)/2)+(w/2), y := 0
+                case(up) do(
+                    w := max(sliceWidth(attack), sliceHeight(attack))
+                    h := min(sliceWidth(attack), sliceHeight(attack))
+                    x := 0
+                    y := 0--(sliceHeight(player)/2)--(h/2)
+                    vfx := loadHeroSprite(7)
+                )
+                case(down) do(
+                    w := max(sliceWidth(attack), sliceHeight(attack))
+                    h := min(sliceWidth(attack), sliceHeight(attack))
+                    x := 0
+                    y := (sliceHeight(player)/2)+(h/2)
+                    vfx := loadHeroSprite(7)
+                    vertFlipSprite(vfx, true)
+                )
+                case(left) do(
+                    w := min(sliceWidth(attack), sliceHeight(attack))
+                    h := max(sliceWidth(attack), sliceHeight(attack))
+                    x := 0--(sliceWidth(player)/2)--(w/2)
+                    y := 0
+                    vfx := loadHeroSprite(8)
+                    horizFlipSprite(vfx, true)
+                )
+                case(right) do(
+                    w := min(sliceWidth(attack), sliceHeight(attack))
+                    h := max(sliceWidth(attack), sliceHeight(attack))
+                    x := (sliceWidth(player)/2)+(w/2)
+                    y := 0
+                    vfx := loadHeroSprite(8)
+                )
             )
             setSliceSize(attack, w, h)
             putSlice(attack, x, y)
-            #setSliceVisible(attack, true)
+
+            setParent(vfx, player)
+            centerSlice(vfx)
+            putSlice(vfx, x, y)
+            createAnimation(vfx, 16, 2)
 
             setTimer(timer:attack, player:windupFrames * player:animSpeed, 1, @attackImpact)
             setTimerArgs(timer:attack, player, player:attackFrames)
@@ -148,11 +178,6 @@ script, attackImpact, sl, frames, begin
 
     attack := lookupSlice(sli:attack, sl)
     setSliceVisible(attack, true)
-
-    vfx := loadHeroSprite(5)
-    setParent(vfx, attack)
-    centerSlice(vfx)
-    createAnimation(vfx, 16, 2)
 
     playSound(sfx:melee+random(0,2), false, true)
 
