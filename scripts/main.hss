@@ -83,8 +83,6 @@ plotscript, initGame, begin
     suspendPlayer
     initMouse
 
-    wait
-
     # Init player
     player := getHeroSlice(me)
     initObject(player, player:width, player:height, player:attackWidth, player:attackHeight)
@@ -107,6 +105,11 @@ plotscript, initGame, begin
     pickupLayer := lookupSlice(sl:mapLayer1)
     aoeLayer := createContainer()
     setParent(aoeLayer, lookupSlice(sl:mapOverlay))
+end
+
+plotscript, startGame, begin
+    wait
+    fadeScreenIn()
 
     while(true) do(
         primaryLoopContents()
@@ -114,18 +117,72 @@ plotscript, initGame, begin
     )
 end
 
-plotscript, titleScreen, begin
-    suspendPlayer
-    titleScreenHud := loadSliceCollection(1)
+plotscript, quitGame, begin
+    gameOver()
+end
 
-    waitForKey(anyKey)
+plotscript, titleScreen, begin
+    initGame()
+
+    titleScreenHud := loadSliceCollection(2)
+    
+    variable(menu, flash, flashTimer, flashDuration, clouds, i, j, cloud, portrait, newPortrait, portraitTimer)
+    menu := openMenu(1)
+    flash := lookupSlice(sli:titleBg)
+    flashDuration := 100
+    clouds := lookupSlice(sli:clouds)
+
+    while(menuIsOpen(menu)) do(
+        # lightning
+        flashTimer += 1
+        if(flashTimer > flashDuration) then(
+            if(getSliceVisible(flash)) then(
+                setSliceVisible(flash, false)
+                flashDuration := random(100, 300)
+            ) else(
+                setSliceVisible(flash, true)
+                flashDuration := random(8, 24)
+                dissolveSprite(flash, dissolve:flicker, flashDuration)
+            )
+            flashTimer := 0
+        )
+        # clouds
+        for(i, 0, childCount(clouds)--1) do(
+            for(j, 0, childCount(sliceChild(clouds, i))--1) do(
+                cloud := sliceChild(sliceChild(clouds, i), j)
+                if(sliceX(cloud) >= 400) then(
+                    setSliceX(cloud, -400 + sliceX(sliceChild(sliceChild(clouds, i), (j+1),mod,2)))
+                    if(j == 0) then(
+                        setSliceX(cloud, sliceX(cloud)+getSliceExtra(cloud, extra0))
+                    )
+                ) else(
+                    setSliceX(cloud, sliceX(cloud)+getSliceExtra(cloud, extra0))
+                )
+            )
+        )
+        # portrait
+        portraitTimer += 1
+        if(portraitTimer > 200) then(
+            portrait := lookupSlice(sli:portrait)
+            newPortrait := cloneSlice(portrait)
+            if(getSpriteSetNumber(newPortrait) == 4) then(
+                setSpriteSetNumber(newPortrait, 1)
+            ) else(
+                setSpriteSetNumber(newPortrait, getSpriteSetNumber(newPortrait)+1)
+            )
+            createParticle(portrait, 30, 2000, 90, 10, false, dissolve:fade)
+            dissolveSprite(newPortrait, dissolve:fade, 60, 0, true)
+            portraitTimer := 0
+        )
+        primaryLoopContents()
+        wait(1)
+    )
+
     fadeScreenOut()
     wait
     freeSlice(titleScreenHud)
-    wait
-    fadeScreenIn()
-
-    initGame()
+    
+    startGame()
 end
 
 script, primaryLoopContents, begin
