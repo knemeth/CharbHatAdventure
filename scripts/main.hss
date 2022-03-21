@@ -79,9 +79,11 @@ defineConstant, begin
     5,timer:bossState
 end
 
-plotscript, initGame, begin
+script, initGame, begin
     suspendPlayer
     initMouse
+
+    wait
 
     # Init player
     player := getHeroSlice(me)
@@ -107,7 +109,7 @@ plotscript, initGame, begin
     setParent(aoeLayer, lookupSlice(sl:mapOverlay))
 end
 
-plotscript, startGame, begin
+script, startGame, begin
     wait
     fadeScreenIn()
 
@@ -122,9 +124,11 @@ plotscript, quitGame, begin
 end
 
 plotscript, titleScreen, begin
+    titleScreenHud := loadSliceCollection(2)
+    
     initGame()
 
-    titleScreenHud := loadSliceCollection(2)
+    sliceToFront(titleScreenHud)
     
     variable(menu, flash, flashTimer, flashDuration, clouds, i, j, cloud, portrait, newPortrait, portraitTimer)
     menu := openMenu(1)
