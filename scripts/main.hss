@@ -31,6 +31,7 @@ globalVariable, begin
     13,playerState
     14,joyX
     15,joyY
+    16,playerAnimSpeed
     # UI
     30,hud
     31,titleScreenHud
@@ -45,14 +46,14 @@ defineConstant, begin
     20,player:walkSet
     4,player:walkFrames
     24,player:rollSet
-    4,player:rollFrames
-    16,player:rollDistance
+    6,player:rollFrames
+    18,player:rollDistance
     2,player:windupFrames
-    20,player:attackSet
-    3,player:attackFrames
+    36,player:attackSet
+    6,player:attackFrames
     20,player:shootSet
     2,player:shootFrames
-    28,player:blockSet
+    42,player:blockSet
     3,player:blockFrames
     30,player:blockTime
     30,player:attackWidth
@@ -91,6 +92,7 @@ script, initGame, begin
     playerState := state:idle
     playerSpriteset := player:walkSet
     playerFrames := player:walkFrames
+    playerAnimSpeed := player:animSpeed
 
     # hud
     hud := loadSliceCollection(0)

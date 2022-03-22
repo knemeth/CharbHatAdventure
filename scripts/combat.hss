@@ -16,7 +16,7 @@ end
 script, evaluateInput, begin
     variable(valid)
     # Check for melee attack
-    if(usePress && playerState <> state:attack) then(
+    if(usePress) then(
         switch(playerState) do(
             case(state:idle) valid := true
             case(state:walk) valid := true
@@ -61,16 +61,19 @@ script, evaluateInput, begin
                     vfx := loadHeroSprite(8)
                 )
             )
+
+            playerAnimSpeed := 2
+
             setSliceSize(attack, w, h)
             putSlice(attack, x, y)
 
             setParent(vfx, player)
             centerSlice(vfx)
             putSlice(vfx, x, y)
-            createAnimation(vfx, 16, 2)
+            createAnimation(vfx, playerAnimSpeed*6, playerAnimSpeed)
 
-            setTimer(timer:attack, player:windupFrames * player:animSpeed, 1, @attackImpact)
-            setTimerArgs(timer:attack, player, player:attackFrames)
+            setTimer(timer:attack, player:windupFrames * playerAnimSpeed, 1, @attackImpact)
+            setTimerArgs(timer:attack, player, player:attackFrames -- 2)
 
             exitReturning(state:attack)
         )
@@ -96,7 +99,7 @@ script, evaluateInput, begin
 
             playSound(sfx:Throw+random(0,2), false, true)
 
-            setTimer(timer:attack, player:shootFrames * player:animSpeed, 1, @returnToIdle)
+            setTimer(timer:attack, player:shootFrames * playerAnimSpeed, 1, @returnToIdle)
         )
     ) elseif(shootPress) then(
         playSound(sfx:NoAmmo, false, true)
@@ -113,6 +116,8 @@ script, evaluateInput, begin
 
         if(valid) then(
             newState(state:roll, player:rollSet, player:rollFrames)
+
+            playerAnimSpeed := 3
 
             if(getHeroStat(me, stat:dodge) < player:rollDistance) then(
                 setHeroStat(me, stat:dodge, player:rollDistance)
@@ -153,11 +158,13 @@ script, evaluateInput, begin
         playerState := state
         playerSpriteset := set
         playerFrames := frames
+        setSpriteSetNumber(getHeroSprite(me), set)
         setSliceExtra(getHeroSprite(me), extra0, 0)     # Reset animation timer
     end
 end
 
 script, returnToIdle, begin
+    playerAnimSpeed := player:animSpeed
     playerState := state:idle 
     playerSpriteset := player:idleSet
     playerFrames := player:idleFrames
@@ -181,7 +188,7 @@ script, attackImpact, sl, frames, begin
 
     playSound(sfx:melee+random(0,2), false, true)
 
-    setTimer(timer:attack, frames * player:animSpeed, 1, @returnToIdle)
+    setTimer(timer:attack, frames * playerAnimSpeed, 1, @returnToIdle)
 end
 
 # Combat Data
