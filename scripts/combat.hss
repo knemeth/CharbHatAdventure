@@ -64,9 +64,6 @@ script, evaluateInput, begin
 
             playerAnimSpeed := 2
 
-            setSliceSize(attack, w, h)
-            putSlice(attack, x, y)
-
             setParent(vfx, player)
             centerSlice(vfx)
             putSlice(vfx, x, y)

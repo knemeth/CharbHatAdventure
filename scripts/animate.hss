@@ -35,6 +35,41 @@ script, animatePlayer, begin
     )
 
     invincibilityFlash()
+    repositionAttackSlice()
+end
+
+script, repositionAttackSlice, begin
+    variable(attack, w, h, x, y)
+    attack := lookupSlice(sli:attack, player)
+    switch(heroDirection(me)) do(
+        case(up) do(
+            w := max(sliceWidth(attack), sliceHeight(attack))
+            h := min(sliceWidth(attack), sliceHeight(attack))
+            x := 0
+            y := 0--(sliceHeight(player)/2)--(h/2)
+        )
+        case(down) do(
+            w := max(sliceWidth(attack), sliceHeight(attack))
+            h := min(sliceWidth(attack), sliceHeight(attack))
+            x := 0
+            y := (sliceHeight(player)/2)+(h/2)
+        )
+        case(left) do(
+            w := min(sliceWidth(attack), sliceHeight(attack))
+            h := max(sliceWidth(attack), sliceHeight(attack))
+            x := 0--(sliceWidth(player)/2)--(w/2)
+            y := 0
+        )
+        case(right) do(
+            w := min(sliceWidth(attack), sliceHeight(attack))
+            h := max(sliceWidth(attack), sliceHeight(attack))
+            x := (sliceWidth(player)/2)+(w/2)
+            y := 0
+        )
+    )
+
+    setSliceSize(attack, w, h)
+    putSlice(attack, x, y)
 end
 
 script, invincibilityFlash, begin
@@ -65,7 +100,16 @@ script, animateNPCs, begin
 
     ref := nextNPCReference()
     while(ref) do(
-        animateNPC(ref)
+        # Exclamation point for talkable npcs
+        if(getNPCPool(ref) == pool:local) then(
+            if(sliceCollide(lookupSlice(sli:attack, player), getNPCSlice(ref))) then(
+                setSliceVisible(lookupSlice(sli:exclamation, getNPCSlice(ref)), true)
+            ) else(
+                setSliceVisible(lookupSlice(sli:exclamation, getNPCSlice(ref)), false)
+            )
+        ) else(
+            animateNPC(ref)
+        )
         ref := nextNPCReference(ref)
     )
 end

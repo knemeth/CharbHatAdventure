@@ -71,6 +71,7 @@ defineConstant, begin
     102,sli:subpixel
     103,sli:animation
     104,sli:ai
+    105,sli:exclamation
 
     0,timer:stamina
     1,timer:block
@@ -109,6 +110,24 @@ script, initGame, begin
     pickupLayer := lookupSlice(sl:mapLayer1)
     aoeLayer := createContainer()
     setParent(aoeLayer, lookupSlice(sl:mapOverlay))
+
+    # NPCs
+    variable(ref, npcSl, sl)
+
+    ref := nextNPCReference()
+    while(ref) do(
+        # Exclamation point for talkable npcs
+        if(getNPCPool(ref) == pool:local) then(
+            npcSl := getNPCSlice(ref)
+            sl := loadHeroSprite(9)
+            setSliceLookup(sl, sli:exclamation)
+            setParent(sl, npcSl)
+            realignSlice(sl, edge:center, edge:top, edge:middle, edge:bottom)
+            setSliceVisible(sl, false)
+            createAnimation(sl, 40, 5, true)
+        )
+        ref := nextNPCReference(ref)
+    )
 end
 
 script, startGame, begin
@@ -268,11 +287,14 @@ end
 
 plotscript, mapAutorun, begin
     # Default autorun commands
-    variable(ref)
+    variable(ref, npcSl, sl)
 
     ref := nextNPCReference()
     while(ref) do(
-        initObject(getNPCSlice(ref), getEnemyWidth(ref), getEnemyHeight(ref), getEnemyAttackWidth(ref), getEnemyAttackHeight(ref))
+        if(getNPCPool(ref) == pool:global) then(
+            initObject(getNPCSlice(ref), getEnemyWidth(ref), getEnemyHeight(ref), getEnemyAttackWidth(ref), getEnemyAttackHeight(ref))
+        )
+        
         ref := nextNPCReference(ref)
     )
     initEnemies()

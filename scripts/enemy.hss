@@ -388,7 +388,11 @@ script, getEnemyAttackHeight, ref, begin
 end
 
 script, getEnemyFrames, ref, begin
-    exitReturning(4)
+    if(getNPCPool(ref) == pool:global) then(
+        exitReturning(4)
+    ) else(
+        exitReturning(1)
+    )
 end
 
 script, getEnemySpeed, ref, begin
