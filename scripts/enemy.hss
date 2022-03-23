@@ -44,6 +44,8 @@ script, enemyEachtick, begin
     while(ref) do(
         if(getNPCPool(ref) == pool:global) then(
             enemyBehavior(ref)
+        ) else(
+            if(getEnemyActDelay(ref) > 0) then(setEnemyActDelay(ref, getEnemyActDelay(ref) -- 1))
         )
         ref := nextNPCReference(ref)
     )
@@ -319,16 +321,16 @@ script, startAOE, x, y, w, h, delay=60, dmg=1, set=5, antFrames=0, begin
     setHorizAnchor(sl, edge:center)
     setVertAnchor(sl, edge:middle)
     setRectOpacity(sl, 10)
-    setRectFgcol(sl, 87)
-    setRectBgcol(sl, 85)
+    setRectFgcol(sl, 19)
+    setRectBgcol(sl, 15)
     setRectBorder(sl, border:line)
 
     fill := createRect(0, 0)
     setParent(fill, sl)
     centerSlice(fill)
     setRectBorder(fill, border:none)
-    setRectBgcol(fill, 87)
-    setRectOpacity(fill, 40)
+    setRectBgcol(fill, 15)
+    setRectOpacity(fill, 50)
     setSliceExtra(fill, extra0, delay)
 
     sprite := loadHeroSprite(set)
@@ -371,6 +373,14 @@ script, processAOE, begin
         )
 
         setSliceExtra(sl, extra0, timer--1)
+    )
+end
+
+plotscript, harmTileStepon, size, ref, begin
+    traceValue(size, ref)
+    if(getEnemyActDelay(ref) == 0) then(
+        startAOE(sliceCX(getNPCSlice(ref)), sliceCY(getNPCSlice(ref)), size, size, 30, 1, 5, 1)
+        setEnemyActDelay(ref, 40)
     )
 end
 

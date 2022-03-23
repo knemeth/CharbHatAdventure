@@ -15,6 +15,10 @@ end
 
 script, evaluateInput, begin
     variable(valid)
+
+    if(controlsSuspended) then(
+        exitScript()
+    )
     # Check for melee attack
     if(usePress) then(
         switch(playerState) do(

@@ -1,6 +1,8 @@
 # HamsterSpeak constant definitions for CHA.rpg
 
 define constant, begin
+2,tag:charvileStart
+3,tag:chadbileStart
 0,sfx:Melee
 1,sfx:Melee2
 2,sfx:Melee3

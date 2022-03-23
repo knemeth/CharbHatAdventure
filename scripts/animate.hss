@@ -102,10 +102,12 @@ script, animateNPCs, begin
     while(ref) do(
         # Exclamation point for talkable npcs
         if(getNPCPool(ref) == pool:local) then(
-            if(sliceCollide(lookupSlice(sli:attack, player), getNPCSlice(ref))) then(
-                setSliceVisible(lookupSlice(sli:exclamation, getNPCSlice(ref)), true)
-            ) else(
-                setSliceVisible(lookupSlice(sli:exclamation, getNPCSlice(ref)), false)
+            if(readNPC(ref, npcStat:activation) == npcActivation:use) then(
+                if(sliceCollide(lookupSlice(sli:attack, player), getNPCSlice(ref))) then(
+                    setSliceVisible(lookupSlice(sli:exclamation, getNPCSlice(ref)), true)
+                ) else(
+                    setSliceVisible(lookupSlice(sli:exclamation, getNPCSlice(ref)), false)
+                )
             )
         ) else(
             animateNPC(ref)

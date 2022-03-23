@@ -1,7 +1,33 @@
 # npc.hss
 
-script, startCharvile, begin
-	variable()
+plotscript, charvile, begin
+    variable()
 
-	setTag(tag:charvileStart, on)
+    setTag(tag:charvileStart, on)
+    controlsSuspended := true
+    showTextbox(17)
+
+    setTimer(timer:beat, )
+    setTimer(timer:cutscene, 1, 0, @cutsceneEnd)
+    setTimerArgs(timer:cutscene, @startCharvileFight)
+end
+
+script, startCharvileFight, begin
+    setEnemyState(globalNPCReference(enemy:charvile), state:idle)
+end
+
+script, nextBeat, tb=false, runId=0, begin
+    if(tb) then(
+        showTextbox(tb)
+    )
+    if(runID) then(
+        runScriptByID(runID)
+    )
+end
+
+script, cutsceneEnd, runID, begin
+    if(currentTextbox == -1) then(
+        controlsSuspended := false
+        runScriptByID(runID)
+    )
 end

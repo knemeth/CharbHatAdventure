@@ -13,6 +13,7 @@ include,movement.hss
 include,enemy.hss
 include,ui.hss
 include,pickup.hss
+include,npc.hss
 
 globalVariable, begin
     # Effects
@@ -32,6 +33,7 @@ globalVariable, begin
     14,joyX
     15,joyY
     16,playerAnimSpeed
+    17,controlsSuspended
     # UI
     30,hud
     31,titleScreenHud
@@ -78,7 +80,8 @@ defineConstant, begin
     2,timer:attack
     3,timer:reload
     4,timer:roll
-    5,timer:bossState
+    5,timer:beat
+    6,timer:cutscene
 end
 
 script, initGame, begin
