@@ -23,6 +23,21 @@ script, evaluateInput, begin
             case(else) valid := false
         )
 
+        if(currentTextbox <> -1) then(
+            advanceTextbox()
+            exitScript()
+        )
+        variable(ref)
+        ref := nextNPCReference()
+        while(ref) do(
+            if(getNPCPool(ref) == pool:local && sliceCollide(getNPCSlice(ref), lookupSlice(sli:attack, player))) then(
+                useNPC(ref)
+                valid := false
+                break
+            )
+            ref := nextNPCReference(ref)
+        )
+
         if(valid) then(
             newState(state:attack, player:attackSet, player:attackFrames)
 

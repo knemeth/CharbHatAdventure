@@ -2,7 +2,7 @@
 
 defineConstant, begin
     1500,projectile:speed
-    300,projectile:lifetime
+    300000,projectile:lifetime
     1,projectile:playerdamage
     4000,projectile:knockback
 end
@@ -28,7 +28,7 @@ script, createProjectile, spr, x, y, w, h, dir, spd=projectile:speed, friendly=f
 
     setSliceExtra(projectile, extra0, dir)
     setSliceExtra(projectile, extra1, spd)
-    setSliceExtra(projectile, extra2, projectile:lifetime)
+    setSliceExtra(projectile, extra2, projectile:lifetime / spd)
 end
 
 script, updateProjectiles, begin
@@ -52,13 +52,12 @@ script, updateProjectiles, begin
         subY := get_y_subpixels(velocity, bearing)
 
         # Check collision with player/enemy
-        #hit := findCollidingSlice()
         if(friendly) then(
             # Player's bullet
             variable(j)
             for(j, 0, findCollidingSlice(lookupSlice(sl:walkaboutLayer), sl, getCount)--1) do(
                 hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), sl, j)
-                if(npcReferenceFromSlice(hit)) then(
+                if(npcReferenceFromSlice(hit) && getNPCPool(npcReferenceFromSlice(hit)) == pool:global) then(
                     # Damage enemy/npc
                     pushObject(hit, bearing, projectile:knockback)   # from movement.hss
                     stunEnemy(npcReferenceFromSlice(hit), player:rangedStun)

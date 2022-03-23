@@ -1,0 +1,7 @@
+# npc.hss
+
+script, startCharvile, begin
+	variable()
+
+	setTag(tag:charvileStart, on)
+end

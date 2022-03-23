@@ -117,7 +117,7 @@ script, initGame, begin
     ref := nextNPCReference()
     while(ref) do(
         # Exclamation point for talkable npcs
-        if(getNPCPool(ref) == pool:local) then(
+        if(getNPCPool(ref) == pool:local && readNPC(ref, npcStat:activation) == npcActivation:use) then(
             npcSl := getNPCSlice(ref)
             sl := loadHeroSprite(9)
             setSliceLookup(sl, sli:exclamation)

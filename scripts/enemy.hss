@@ -10,6 +10,7 @@ defineConstant, begin
     1,enemy:melee
     2,enemy:ranged
     3,enemy:testboss
+    4,enemy:charvile
     30,enemy:actDelay
 
     0,ai:idle
@@ -17,6 +18,7 @@ defineConstant, begin
     2,ai:aoe
     3,ai:melee
     4,ai:mega
+    5,ai:wait
 end
 
 script, initEnemies, begin
@@ -27,6 +29,7 @@ script, initEnemies, begin
     while(ref) do(
         if(getNPCPool(ref) == pool:global) then(
             setSliceExtra(getNPCSprite(ref), extra2, getEnemyHP(ref))
+            setEnemyState(ref, ai:wait)
         )
         
         ref := nextNPCReference(ref)
@@ -151,7 +154,6 @@ script, enemyBehavior, ref, begin
                         setEnemyActDelay(ref, 24)
                     )
                     case(ai:mega) do(
-                        showValue(ai:mega)
                         if(getEnemyPatternStep(ref) < 32) then(
                             createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getEnemyPatternStep(ref)*(360/16), projectile:speed, false)
                             if(getEnemyPatternStep(ref),mod,4) then(
@@ -179,6 +181,74 @@ script, enemyBehavior, ref, begin
                 )
             )
         )
+        case(enemy:charvile) do(
+            if(getEnemyState(ref) == ai:wait) then(break)   # fight hasn't started yet
+
+            dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+            if(dist / 20 > 8) then(
+                # move toward player
+                bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+                setSliceDir(npcSl, bearing)
+                setSliceV(npcSl, getEnemySpeed(ref))
+            )
+            switch(getEnemyState(ref)) do(
+                case(ai:idle) do(
+                    if(dist < 40) then(
+                        setEnemyActDelay(ref, 12)
+                        setEnemyState(ref, ai:melee)
+                    ) else(
+                        setEnemyActDelay(ref, enemy:actDelay)
+                        setEnemyState(ref, random(1, 4))
+                    )
+                )
+                case(ai:spray) do(
+                    if(getEnemyPatternStep(ref) < 16) then(
+                        createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getEnemyPatternStep(ref)*(360/16), projectile:speed, false)
+                        setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                    ) else(
+                        setEnemyState(ref, ai:idle)
+                        setEnemyPatternStep(ref, 0)
+                    )
+                    
+                    setEnemyActDelay(ref, 12)
+                )
+                case(ai:aoe) do(
+                    if(getEnemyPatternStep(ref) < 8) then(
+                        startAOE(sliceCX(player), sliceCY(player), 50, 50, 60, 2, 6, 6)
+                        setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                    ) else(
+                        setEnemyState(ref, ai:idle)
+                        setEnemyPatternStep(ref, 0)
+                    )
+                    setEnemyActDelay(ref, 24)
+                )
+                case(ai:mega) do(
+                    if(getEnemyPatternStep(ref) < 32) then(
+                        createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getEnemyPatternStep(ref)*(360/16), projectile:speed, false)
+                        if(getEnemyPatternStep(ref),mod,4) then(
+                            for(i, 0, 7) do(
+                                createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, i*(360/8), multdiv(projectile:speed, 3, 5), false)
+                            )
+                        ) elseif(getEnemyPatternStep(ref),mod,6) then(
+                            startAOE(sliceCX(player), sliceCY(player), 50, 50, 60, 2, 6, 6)
+                        )
+                        setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                    ) else(
+                        setEnemyState(ref, ai:idle)
+                        setEnemyPatternStep(ref, 0)
+                    )
+                    setEnemyActDelay(ref, 8)
+                )
+                case(ai:melee) do(
+                    startAOE(sliceCX(npcSl)--sliceWidth(npcSl), 0, 50, 50, 60, 2, 6, 6)
+                    startAOE(sliceCX(npcSl)+sliceWidth(npcSl), 0, 50, 50, 60, 2, 6, 6)
+                    startAOE(0, sliceCY(npcSl)--sliceHeight(npcSl), 50, 50, 60, 2, 6, 6)
+                    startAOE(0, sliceCY(npcSl)+sliceHeight(npcSl), 50, 50, 60, 2, 6, 6)
+                    setEnemyActDelay(ref, 24)
+                    setEnemyState(ref, ai:idle)
+                )
+            )
+        )
     )
 end
 
@@ -199,7 +269,7 @@ script, setEnemyHit, ref, b, begin
 end
 
 script, stunEnemy, ref, dur, begin
-    switch(ref) do(
+    switch(getNPCID(ref)) do(
         case(enemy:testboss) exitReturning(false)   # bosses immune
     )
     setNPCExtra(ref, extra2, dur)
@@ -388,8 +458,17 @@ script, getEnemyAttackHeight, ref, begin
 end
 
 script, getEnemyFrames, ref, begin
+    variable(id)
+
     if(getNPCPool(ref) == pool:global) then(
-        exitReturning(4)
+        id := getNPCID(ref)
+
+        switch(id) do(
+            case(enemy:dummy) exitReturning(4)
+            case(enemy:testboss) exitReturning(1)
+            case(enemy:charvile) exitReturning(1)
+            case(else) exitReturning(4)
+        )
     ) else(
         exitReturning(1)
     )
@@ -406,7 +485,7 @@ script, getEnemySpeed, ref, begin
 
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
-        case(enemy:testboss) exitReturning(0)
+        case(enemy:testboss) exitReturning(500)
         case(else) exitReturning(default)
     )
 end
