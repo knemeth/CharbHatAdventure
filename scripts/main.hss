@@ -82,6 +82,8 @@ defineConstant, begin
     4,timer:roll
     5,timer:beat
     6,timer:cutscene
+    7,timer:charvileUndulate
+    8,timer:boss
 end
 
 script, initGame, begin
@@ -296,6 +298,9 @@ plotscript, mapAutorun, begin
     while(ref) do(
         if(getNPCPool(ref) == pool:global) then(
             initObject(getNPCSlice(ref), getEnemyWidth(ref), getEnemyHeight(ref), getEnemyAttackWidth(ref), getEnemyAttackHeight(ref))
+            if(getNPCID(ref) == enemy:charvile) then(
+                setSliceVisible(getNPCSlice(ref), false)
+            )
         )
         
         ref := nextNPCReference(ref)

@@ -74,7 +74,7 @@ script, movePlayer, begin
     # Collisions
     # ================
     
-    variable(num, hit, x1, y1, x2, y2)
+    variable(num, hit, ref, x1, y1, x2, y2)
     # Pickups
     for(num, findCollidingSlice(pickupLayer, player, getCount, false)--1, 0, -1) do(
         hit := findCollidingSlice(pickupLayer, player, num, false)
@@ -105,8 +105,9 @@ script, movePlayer, begin
     # Stepon
     for(num, findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, getCount, false)--1, 0, -1) do(
         hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, num, false)
-        if(readNPC(npcReferenceFromSlice(hit), npcStat:Activation) == npcActivation:stepon) then(
-            runScriptByID(readNPC(npcReferenceFromSlice(hit), npcStat:script), readNPC(npcReferenceFromSlice(hit), npcStat:scriptArgument))
+        ref := npcReferenceFromSlice(hit)
+        if(readNPC(ref, npcStat:Activation) == npcActivation:stepon) then(
+            runScriptByID(readNPC(ref, npcStat:script), readNPC(ref, npcStat:scriptArgument), ref)
             #useNPC(npcReferenceFromSlice(hit))
         )
     )

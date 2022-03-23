@@ -5,29 +5,49 @@ plotscript, charvile, begin
 
     setTag(tag:charvileStart, on)
     controlsSuspended := true
+
+    focusCamera(84, 68, 2)
+    waitForCamera()
+
     showTextbox(17)
+    waitForTextbox()
 
-    setTimer(timer:beat, )
-    setTimer(timer:cutscene, 1, 0, @cutsceneEnd)
-    setTimerArgs(timer:cutscene, @startCharvileFight)
-end
+    variable(sl, spr)
+    sl := getNPCSlice(globalNPCReference(enemy:charvile, 0))
+    spr := lookupSlice(sl:walkaboutSpriteComponent, sl)
 
-script, startCharvileFight, begin
+    setSliceVisible(sl, true)
+    dissolveSprite(spr, dissolve:melt, 120, 0, true)
+    waitForDissolve(spr)
+    wait(4)
+    charvileUndulate()
+
+    showTextbox(6)
+    waitForTextbox()
+
+    wait(10)
+
+    variable(x, y)
+    for(x, 0, mapWidth()--1) do(
+        for(y, 0, mapHeight()--1) do(
+            if(readZone(1, x, y)) then(
+                writePassBlock(x, y, northwall+southwall+eastwall+westwall)
+                writeMapBlock(x, y, 133, 1)
+            )
+        )
+    )
+
+    cameraFollowsHero(me)
+    controlsSuspended := false
+    setEnemyActDelay(globalNPCReference(enemy:charvile), 30)
     setEnemyState(globalNPCReference(enemy:charvile), state:idle)
 end
 
-script, nextBeat, tb=false, runId=0, begin
-    if(tb) then(
-        showTextbox(tb)
-    )
-    if(runID) then(
-        runScriptByID(runID)
-    )
-end
-
-script, cutsceneEnd, runID, begin
-    if(currentTextbox == -1) then(
-        controlsSuspended := false
-        runScriptByID(runID)
-    )
+script, charvileUndulate, reverse=false, begin
+    variable(tick)
+    if(reverse) then(tick := 180) 
+    else(tick := 0)
+    dissolveSprite(getNPCSprite(globalNPCReference(enemy:charvile)), dissolve:melt, 240, tick, reverse)
+    setTimer(timer:charvileUndulate, 60, 1, @charvileUndulate)
+    setTimerArgs(timer:charvileUndulate, (reverse+1),mod,2)
 end

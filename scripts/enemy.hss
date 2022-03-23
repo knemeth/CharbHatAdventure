@@ -187,19 +187,21 @@ script, enemyBehavior, ref, begin
             if(getEnemyState(ref) == ai:wait) then(break)   # fight hasn't started yet
 
             dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
-            if(dist / 20 > 8) then(
+            if(dist / 20 > 7) then(
                 # move toward player
                 bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
                 setSliceDir(npcSl, bearing)
                 setSliceV(npcSl, getEnemySpeed(ref))
+            ) else(
+                setSliceV(npcSl, 0)
             )
             switch(getEnemyState(ref)) do(
                 case(ai:idle) do(
-                    if(dist < 40) then(
+                    if(dist / 20 < 5 && readTimer(timer:boss) <= 0) then(
                         setEnemyActDelay(ref, 12)
                         setEnemyState(ref, ai:melee)
                     ) else(
-                        setEnemyActDelay(ref, enemy:actDelay)
+                        setEnemyActDelay(ref, 50)
                         setEnemyState(ref, random(1, 4))
                     )
                 )
@@ -236,18 +238,20 @@ script, enemyBehavior, ref, begin
                         )
                         setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
                     ) else(
+                        setEnemyActDelay(ref, 80)
                         setEnemyState(ref, ai:idle)
                         setEnemyPatternStep(ref, 0)
                     )
                     setEnemyActDelay(ref, 8)
                 )
                 case(ai:melee) do(
-                    startAOE(sliceCX(npcSl)--sliceWidth(npcSl), 0, 50, 50, 60, 2, 6, 6)
-                    startAOE(sliceCX(npcSl)+sliceWidth(npcSl), 0, 50, 50, 60, 2, 6, 6)
-                    startAOE(0, sliceCY(npcSl)--sliceHeight(npcSl), 50, 50, 60, 2, 6, 6)
-                    startAOE(0, sliceCY(npcSl)+sliceHeight(npcSl), 50, 50, 60, 2, 6, 6)
+                    startAOE(sliceCX(npcSl)--sliceWidth(npcSl), sliceCY(npcSl), 50, 50, 60, 2, 6, 6)
+                    startAOE(sliceCX(npcSl)+sliceWidth(npcSl), sliceCY(npcSl), 50, 50, 60, 2, 6, 6)
+                    startAOE(sliceCX(npcSl), sliceCY(npcSl)--sliceHeight(npcSl), 50, 50, 60, 2, 6, 6)
+                    startAOE(sliceCX(npcSl), sliceCY(npcSl)+sliceHeight(npcSl), 50, 50, 60, 2, 6, 6)
                     setEnemyActDelay(ref, 24)
                     setEnemyState(ref, ai:idle)
+                    setTimer(timer:boss, 160, 1)    # don't melee again immediately
                 )
             )
         )
@@ -321,7 +325,7 @@ script, startAOE, x, y, w, h, delay=60, dmg=1, set=5, antFrames=0, begin
     setHorizAnchor(sl, edge:center)
     setVertAnchor(sl, edge:middle)
     setRectOpacity(sl, 10)
-    setRectFgcol(sl, 19)
+    setRectFgcol(sl, 16)
     setRectBgcol(sl, 15)
     setRectBorder(sl, border:line)
 
@@ -379,7 +383,7 @@ end
 plotscript, harmTileStepon, size, ref, begin
     traceValue(size, ref)
     if(getEnemyActDelay(ref) == 0) then(
-        startAOE(sliceCX(getNPCSlice(ref)), sliceCY(getNPCSlice(ref)), size, size, 30, 1, 5, 1)
+        startAOE(sliceCX(getNPCSlice(ref)), sliceCY(getNPCSlice(ref)), size, size, 30, 1, 10, 1)
         setEnemyActDelay(ref, 40)
     )
 end
@@ -401,6 +405,7 @@ script, getEnemyHP, ref, begin
         case(enemy:melee) exitReturning(4)
         case(enemy:ranged) exitReturning(2)
         case(enemy:testboss) exitReturning(100)
+        case(enemy:charvile) exitReturning(99)
         case(else) exitReturning(default)
     )
 end
@@ -417,6 +422,7 @@ script, getEnemyWidth, ref, begin
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
         case(enemy:testboss) exitReturning(40)
+        case(enemy:charvile) exitReturning(40)
         case(else) exitReturning(default)
     )
 end
@@ -433,6 +439,7 @@ script, getEnemyHeight, ref, begin
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
         case(enemy:testboss) exitReturning(15)
+        case(enemy:charvile) exitReturning(15)
         case(else) exitReturning(default)
     )
 end
@@ -495,7 +502,7 @@ script, getEnemySpeed, ref, begin
 
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
-        case(enemy:testboss) exitReturning(500)
+        case(enemy:testboss) exitReturning(250)
         case(else) exitReturning(default)
     )
 end
