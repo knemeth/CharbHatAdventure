@@ -34,7 +34,10 @@ script, evaluateInput, begin
         variable(ref)
         ref := nextNPCReference()
         while(ref) do(
-            if(getNPCPool(ref) == pool:local && sliceCollide(getNPCSlice(ref), lookupSlice(sli:attack, player))) then(
+            if(getNPCPool(ref) == pool:local 
+            && readNPC(ref, npcStat:activation) == npcActivation:use
+            && sliceCollide(getNPCSlice(ref), lookupSlice(sli:attack, player))) 
+            then(
                 useNPC(ref)
                 valid := false
                 break

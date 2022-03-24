@@ -6,6 +6,8 @@ plotscript, charvile, begin
     setTag(tag:charvileStart, on)
     controlsSuspended := true
 
+    toggleCutsceneBars(true)
+
     focusCamera(84, 68, 2)
     waitForCamera()
 
@@ -37,6 +39,7 @@ plotscript, charvile, begin
         )
     )
 
+    toggleCutsceneBars(false)
     cameraFollowsHero(me)
     controlsSuspended := false
     setEnemyActDelay(globalNPCReference(enemy:charvile), 30)

@@ -20,3 +20,36 @@ script, updateHud, begin
     ammoBar := lookupSlice(sli:ammo, hud)
     setSpriteFrame(ammoBar, getHeroStat(me, stat:Hits))
 end
+
+script, toggleCutsceneBars, state=false, begin
+    variable(parent, child)
+
+    parent := lookupSlice(sli:cutsceneBars, hud)
+    setSliceExtra(parent, extra0, state)
+    setSliceExtra(parent, extra1, 0)
+
+    setTimer(timer:cutsceneBars, 0, 1, @cutsceneBarTick)
+end
+
+script, cutsceneBarTick, begin
+    variable(parent, child, val)
+
+    parent := lookupSlice(sli:cutsceneBars, hud)
+    if(getSliceExtra(parent, extra0)) then(
+        val := 1
+    ) else(
+        val := -1
+    )
+
+    setSliceExtra(parent, extra1, getSliceExtra(parent, extra1)+val)
+
+    child := firstChild(parent)
+    while(child) do(
+        setSliceHeight(child, sliceHeight(child)+val)
+        child := nextSibling(child)
+    )
+
+    if(getSliceExtra(parent, extra1) < 40) then(
+        setTimer(timer:cutsceneBars, 0, 1, @cutsceneBarTick)
+    )
+end

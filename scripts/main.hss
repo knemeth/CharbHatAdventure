@@ -84,6 +84,7 @@ defineConstant, begin
     6,timer:cutscene
     7,timer:charvileUndulate
     8,timer:boss
+    9,timer:cutsceneBars
 end
 
 script, initGame, begin

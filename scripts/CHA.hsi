@@ -63,4 +63,5 @@ define constant, begin
 6,sli:titleBg
 7,sli:clouds
 8,sli:portrait
+9,sli:cutsceneBars
 end

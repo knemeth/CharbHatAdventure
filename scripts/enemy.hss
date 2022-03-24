@@ -11,6 +11,7 @@ defineConstant, begin
     2,enemy:ranged
     3,enemy:testboss
     4,enemy:charvile
+    5,enemy:slime
     30,enemy:actDelay
 
     0,ai:idle
@@ -19,6 +20,7 @@ defineConstant, begin
     3,ai:melee
     4,ai:mega
     5,ai:wait
+    6,ai:slimetime
 end
 
 script, initEnemies, begin
@@ -53,7 +55,7 @@ end
 
 script, enemyBehavior, ref, begin
     # check enemy type and apply behavior based on current conditions
-    variable(dist, npcSl, bearing, subX, subY, i)
+    variable(dist, npcSl, bearing, subX, subY, i, spawn)
 
     npcSl := getNPCSlice(ref)
 
@@ -183,7 +185,29 @@ script, enemyBehavior, ref, begin
                 )
             )
         )
+        case(enemy:slime) do(
+            # If player within certain radius, move towards them
+            dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+            if(dist <= 64) then(
+                # Move towards player
+                bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+                setEnemyActDelay(ref, enemy:actDelay)
+                setSliceDir(npcSl, bearing)
+                setSliceV(npcSl, getEnemySpeed(ref))
+            ) else(
+                # Move in random direction
+                bearing := random(0, 359)
+                setEnemyActDelay(ref, random(16, 64))
+                setSliceDir(npcSl, bearing)
+                if(random(1,10) <= 2) then(
+                    setSliceV(npcSl, 0)
+                ) else(
+                    setSliceV(npcSl, getEnemySpeed(ref))
+                )
+            )
+        )
         case(enemy:charvile) do(
+            showValue(getEnemySequenceStep(ref))
             if(getEnemyState(ref) == ai:wait) then(break)   # fight hasn't started yet
 
             dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
@@ -197,23 +221,49 @@ script, enemyBehavior, ref, begin
             )
             switch(getEnemyState(ref)) do(
                 case(ai:idle) do(
-                    if(dist / 20 < 5 && readTimer(timer:boss) <= 0) then(
-                        setEnemyActDelay(ref, 12)
+                    if(getEnemySequenceStep(ref) == 1) then(
+                        setEnemyActDelay(ref, 50)
+                        setEnemyState(ref, ai:aoe)
+                    ) elseif(getEnemySequenceStep(ref) == 2) then(
+                        setEnemyActDelay(ref, 50)
+                        setEnemyState(ref, ai:spray)
+                    ) elseif(getEnemySequenceStep(ref) == 7) then(
+                        # spawn lil bois
+                        for(i, 0, npcCopyCount(4)--1) do(
+                            spawn := createGlobalNPC(enemy:slime, npcX(npcReference(4, i)), npcY(npcReference(4, i)))
+                            initObject(getNPCSlice(spawn), getEnemyWidth(spawn), getEnemyHeight(spawn), 0, 0)
+                            dissolveSprite(getNPCSprite(spawn), dissolve:melt, 60, 0, true)
+                        )
+                        setEnemyActDelay(ref, 120)
+                        setEnemySequenceStep(ref, 8)
+                    ) elseif(getEnemySequenceStep(ref) == 11) then(
+                        setEnemySequenceStep(ref, 0)
+                        dissolveSprite(getNPCSprite(ref), dissolve:melt, 120, false)
+                        setEnemyActDelay(ref, 120)
+                        setEnemyState(ref, ai:slimetime)
+                    ) elseif(dist < 24 && readTimer(timer:boss) <= 0) then(
+                        setEnemyActDelay(ref, 60)
                         setEnemyState(ref, ai:melee)
                     ) else(
-                        setEnemyActDelay(ref, 50)
-                        setEnemyState(ref, random(1, 4))
+                        setEnemySequenceStep(ref, getEnemySequenceStep(ref)+1)
+                        if(getEnemySequenceStep(ref) > 2 && getEnemySequenceStep(ref),mod,2 == 0 && random(1,2) == 1) then(
+                            telegraphFX()
+                            setEnemyActDelay(ref, 100)
+                            setEnemyState(ref, ai:mega)
+                        ) else(
+                            setEnemyActDelay(ref, 50)
+                            setEnemyState(ref, random(1, 2))
+                        )
                     )
                 )
                 case(ai:spray) do(
                     if(getEnemyPatternStep(ref) < 16) then(
-                        createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getEnemyPatternStep(ref)*(360/16), projectile:speed, false)
+                        createProjectile(3, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getEnemyPatternStep(ref)*(360/16), projectile:speed, false)
                         setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
                     ) else(
                         setEnemyState(ref, ai:idle)
                         setEnemyPatternStep(ref, 0)
                     )
-                    
                     setEnemyActDelay(ref, 12)
                 )
                 case(ai:aoe) do(
@@ -228,10 +278,10 @@ script, enemyBehavior, ref, begin
                 )
                 case(ai:mega) do(
                     if(getEnemyPatternStep(ref) < 32) then(
-                        createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getEnemyPatternStep(ref)*(360/16), projectile:speed, false)
+                        createProjectile(3, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getEnemyPatternStep(ref)*(360/16), projectile:speed, false)
                         if(getEnemyPatternStep(ref),mod,4) then(
                             for(i, 0, 7) do(
-                                createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, i*(360/8), multdiv(projectile:speed, 3, 5), false)
+                                createProjectile(4, sliceCX(npcSl), sliceCY(npcSl), 10, 10, i*(360/8), multdiv(projectile:speed, 3, 5), false)
                             )
                         ) elseif(getEnemyPatternStep(ref),mod,6) then(
                             startAOE(sliceCX(player), sliceCY(player), 50, 50, 60, 2, 6, 6)
@@ -249,13 +299,51 @@ script, enemyBehavior, ref, begin
                     startAOE(sliceCX(npcSl)+sliceWidth(npcSl), sliceCY(npcSl), 50, 50, 60, 2, 6, 6)
                     startAOE(sliceCX(npcSl), sliceCY(npcSl)--sliceHeight(npcSl), 50, 50, 60, 2, 6, 6)
                     startAOE(sliceCX(npcSl), sliceCY(npcSl)+sliceHeight(npcSl), 50, 50, 60, 2, 6, 6)
-                    setEnemyActDelay(ref, 24)
+                    setEnemyActDelay(ref, 80)
                     setEnemyState(ref, ai:idle)
                     setTimer(timer:boss, 160, 1)    # don't melee again immediately
+                )
+                case(ai:slimetime) do(
+                    setSliceVisible(npcSl, false)
+                    for(i, 0, npcCopyCount(4)--1) do(
+                        if(getEnemySequenceStep(ref) == 0) then(
+                            if(i,mod,2) then(continue)
+                        ) elseif(i,mod,2 == false) then(
+                            continue
+                        )
+                        startAOE(sliceCX(getNPCSlice(npcReference(4, i))), sliceCY(getNPCSlice(npcReference(4, i))), 50, 50, 60, 2, 6, 6)
+                        if(random(1,10) == 1) then(
+                            spawn := createGlobalNPC(enemy:slime, npcX(npcReference(4, i)), npcY(npcReference(4, i)))
+                            initObject(getNPCSlice(spawn), getEnemyWidth(spawn), getEnemyHeight(spawn), 0, 0)
+                            dissolveSprite(getNPCSprite(spawn), dissolve:melt, 60, 0, true)
+                        )
+                    )
+
+                    for(i, 0, 360, 20) do(
+                        createProjectile(4, sliceCX(npcSl), sliceCY(npcSl), 10, 10, i, multdiv(projectile:speed, 3, 5), false)
+                    )
+                    
+                    if(getEnemySequenceStep(ref) == 5) then(
+                        setSliceVisible(npcSl, true)
+                        setEnemyActDelay(ref, 240)
+                        setEnemyState(ref, ai:idle)
+                    ) else(
+                        setEnemyActDelay(ref, 60)
+                        setEnemySequenceStep(ref, getEnemySequenceStep(ref)+1)
+                    )
                 )
             )
         )
     )
+
+    subscript, telegraphFX, begin
+        variable(vfx)
+        vfx := loadHeroSprite(4)
+        centerSlice(vfx)
+        setParent(vfx, fxLayer)
+        putSlice(vfx, sliceCX(npcSl), sliceCY(npcSl))
+        createAnimation(vfx, 40, 5, false, dissolve:puff)
+    end
 end
 
 script, getEnemyActDelay, ref, begin
@@ -275,8 +363,10 @@ script, setEnemyHit, ref, b, begin
 end
 
 script, stunEnemy, ref, dur, begin
-    switch(getNPCID(ref)) do(
-        case(enemy:testboss) exitReturning(false)   # bosses immune
+    if(getNPCID(ref) == enemy:testboss
+    || getNPCID(ref) == enemy:charvile)
+    then(
+        exitReturning(false)
     )
     setNPCExtra(ref, extra2, dur)
 end
@@ -311,6 +401,20 @@ script, setEnemyPatternStep, ref, v, begin
 
     sl := lookupSlice(sli:ai, getNPCSlice(ref))
     setSliceExtra(sl, extra1, v)
+end
+
+script, getEnemySequenceStep, ref, begin
+    variable(sl)
+
+    sl := lookupSlice(sli:ai, getNPCSlice(ref))
+    exitReturning(getSliceExtra(sl, extra2))
+end
+
+script, setEnemySequenceStep, ref, v, begin
+    variable(sl)
+
+    sl := lookupSlice(sli:ai, getNPCSlice(ref))
+    setSliceExtra(sl, extra2, v)
 end
 
 # Attack Patterns
@@ -405,6 +509,7 @@ script, getEnemyHP, ref, begin
         case(enemy:melee) exitReturning(4)
         case(enemy:ranged) exitReturning(2)
         case(enemy:testboss) exitReturning(100)
+        case(enemy:slime) exitReturning(5)
         case(enemy:charvile) exitReturning(99)
         case(else) exitReturning(default)
     )
@@ -422,6 +527,7 @@ script, getEnemyWidth, ref, begin
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
         case(enemy:testboss) exitReturning(40)
+        case(enemy:slime) exitReturning(18)
         case(enemy:charvile) exitReturning(40)
         case(else) exitReturning(default)
     )
@@ -439,6 +545,7 @@ script, getEnemyHeight, ref, begin
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
         case(enemy:testboss) exitReturning(15)
+        case(enemy:slime) exitReturning(8)
         case(enemy:charvile) exitReturning(15)
         case(else) exitReturning(default)
     )
@@ -483,6 +590,7 @@ script, getEnemyFrames, ref, begin
         switch(id) do(
             case(enemy:dummy) exitReturning(4)
             case(enemy:testboss) exitReturning(1)
+            case(enemy:slime) exitReturning(2)
             case(enemy:charvile) exitReturning(1)
             case(else) exitReturning(4)
         )
@@ -502,6 +610,7 @@ script, getEnemySpeed, ref, begin
 
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
+        case(enemy:slime) exitReturning(250)
         case(enemy:testboss) exitReturning(250)
         case(else) exitReturning(default)
     )
