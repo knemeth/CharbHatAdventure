@@ -150,6 +150,10 @@ plotscript, quitGame, begin
     gameOver()
 end
 
+plotscript, closeMainMenu, begin
+    controlsSuspended := false
+end
+
 plotscript, titleScreen, begin
     titleScreenHud := loadSliceCollection(2)
     
@@ -220,15 +224,15 @@ script, primaryLoopContents, begin
     # These are commands that should be run at all times, regardless of game state
     # Run at the beginning of any continuous while loop
 
-    # Effects
-    animateEffects()
-    moveParticles()
-    processEmitters()
-    updateProjectiles()
-    pickupEachtick()
+    # UI
+    updateHud()
 
     # Player
     evaluateInput()
+    if(controlsSuspended) then(
+        resetInputs()
+        exitScript()
+    )
     movePlayer()
     animatePlayer()
 
@@ -239,8 +243,12 @@ script, primaryLoopContents, begin
     meleeCollisions()
     processAOE()
 
-    # UI
-    updateHud()
+    # Effects
+    animateEffects()
+    moveParticles()
+    processEmitters()
+    updateProjectiles()
+    pickupEachtick()
 
     # Debug
     showStringAt(1,0,100)

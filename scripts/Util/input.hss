@@ -10,6 +10,7 @@ globalVariable, begin
     106,cancelPress
     107,shootPress
     108,lockPress
+    109,escPress
 end
 
 plotscript, keypressHandler, begin
@@ -21,7 +22,8 @@ plotscript, keypressHandler, begin
     if(keypress(key:c) || keypress(joy:Square)) then(shootPress := true)
     if(keyIsPressed(key:shift) || keypress(joy:R2)) then(shiftPress := true)
     if(keyIsPressed(key:ctrl) || keyIsPressed(joy:L2)) then(lockPress := true)
-    if(keypress(key:esc) || keypress(key:x) || mouseRelease(rightButton)) then(cancelPress := true)
+    if(keypress(key:x) || mouseRelease(rightButton)) then(cancelPress := true)
+    if(newKeypress(key:esc)) then(escPress := true)
     # DEBUG KEYS
     if(keypress(key:r)) then(resetGame())
     if(keypress(key:1)) then(startAOE(mousePixelX+cameraPixelX, mousePixelY+cameraPixelY, 50, 50, 60, 1, 6, 6))
@@ -37,4 +39,5 @@ script, resetInputs, begin
     cancelPress := false
     shootPress := false
     lockPress := false
+    escPress := false
 end

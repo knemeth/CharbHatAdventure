@@ -17,7 +17,15 @@ script, evaluateInput, begin
     variable(valid)
 
     if(controlsSuspended) then(
+        if(escPress && topMenu) then(
+            closeMenu(topMenu, true)
+        )
         exitScript()
+    )
+
+    if(escPress && topMenu == false) then(
+        controlsSuspended := true
+        openMenu(0)
     )
     # Check for melee attack
     if(usePress) then(

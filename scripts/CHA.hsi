@@ -3,6 +3,8 @@
 define constant, begin
 2,tag:charvileStart
 3,tag:chadbileStart
+0,song:Adventure
+1,song:Battle Ready
 0,sfx:Melee
 1,sfx:Melee2
 2,sfx:Melee3

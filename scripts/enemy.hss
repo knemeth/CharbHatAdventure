@@ -207,7 +207,6 @@ script, enemyBehavior, ref, begin
             )
         )
         case(enemy:charvile) do(
-            showValue(getEnemySequenceStep(ref))
             if(getEnemyState(ref) == ai:wait) then(break)   # fight hasn't started yet
 
             dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
@@ -223,13 +222,16 @@ script, enemyBehavior, ref, begin
                 case(ai:idle) do(
                     if(getEnemySequenceStep(ref) == 1) then(
                         setEnemyActDelay(ref, 50)
+                        setEnemySequenceStep(ref, 2)
                         setEnemyState(ref, ai:aoe)
                     ) elseif(getEnemySequenceStep(ref) == 2) then(
                         setEnemyActDelay(ref, 50)
+                        setEnemySequenceStep(ref, 3)
                         setEnemyState(ref, ai:spray)
                     ) elseif(getEnemySequenceStep(ref) == 7) then(
                         # spawn lil bois
                         for(i, 0, npcCopyCount(4)--1) do(
+                            if(random(1,10) < 5) then(continue)
                             spawn := createGlobalNPC(enemy:slime, npcX(npcReference(4, i)), npcY(npcReference(4, i)))
                             initObject(getNPCSlice(spawn), getEnemyWidth(spawn), getEnemyHeight(spawn), 0, 0)
                             dissolveSprite(getNPCSprite(spawn), dissolve:melt, 60, 0, true)
@@ -343,6 +345,7 @@ script, enemyBehavior, ref, begin
         setParent(vfx, fxLayer)
         putSlice(vfx, sliceCX(npcSl), sliceCY(npcSl))
         createAnimation(vfx, 40, 5, false, dissolve:puff)
+        playSound(sfx:Beast4, false, true)
     end
 end
 
