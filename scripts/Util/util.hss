@@ -51,3 +51,7 @@ script, sliceCY, sl, begin
     # get slice center y
     exitReturning(sliceY(sl) + (sliceHeight(sl)/2))
 end
+
+script, setVisibility, sl, val, begin
+    setSliceVisible(sl, val)
+end

@@ -3,7 +3,7 @@
 defineConstant, begin
     1500,projectile:speed
     300000,projectile:lifetime
-    1,projectile:playerdamage
+    5,projectile:playerdamage
     4000,projectile:knockback
 end
 
@@ -61,7 +61,7 @@ script, updateProjectiles, begin
                     # Damage enemy/npc
                     pushObject(hit, bearing, projectile:knockback)   # from movement.hss
                     stunEnemy(npcReferenceFromSlice(hit), player:rangedStun)
-                    damageEnemy(npcReferenceFromSlice(hit), projectile:playerdamage)
+                    damageEnemy(npcReferenceFromSlice(hit), projectile:playerdamage + random(-1,1))
                     freeSlice(sl)
                     exitScript()
                 )

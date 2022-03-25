@@ -29,7 +29,7 @@ plotscript, charvile, begin
     charvileUndulate()
     suspendObstruction()
     walkNPC(ref, down, 9)
-    focusCamera(84, 78, 2)
+    focusCamera(84, 78, 1)
 
 
     showTextbox(6)

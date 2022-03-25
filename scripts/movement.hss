@@ -86,7 +86,7 @@ script, movePlayer, begin
     if(getHeroStat(me, stat:dodge) == 0) then(
         for(num, findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, getCount, false)--1, 0, -1) do(
             hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, num, false)
-            if(getNPCPool(npcReferenceFromSlice(hit)) == pool:global) then(
+            if(hit && getNPCPool(npcReferenceFromSlice(hit)) == pool:global) then(
                 if(getHeroStat(me, stat:Def) == 0) then(
                     damagePlayer(3)
                     x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
@@ -105,6 +105,7 @@ script, movePlayer, begin
     # Stepon
     for(num, findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, getCount, false)--1, 0, -1) do(
         hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, num, false)
+        if(hit == false) then(continue)
         ref := npcReferenceFromSlice(hit)
         if(readNPC(ref, npcStat:Activation) == npcActivation:stepon) then(
             runScriptByID(readNPC(ref, npcStat:script), readNPC(ref, npcStat:scriptArgument), ref)

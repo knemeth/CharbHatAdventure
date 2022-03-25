@@ -306,7 +306,10 @@ script, enemyBehavior, ref, begin
                     setTimer(timer:boss, 160, 1)    # don't melee again immediately
                 )
                 case(ai:slimetime) do(
-                    setSliceVisible(npcSl, false)
+                    stopTimer(timer:charvileUndulate)
+                    dissolveSprite(getNPCSprite(ref), dissolve:melt, 60)
+                    setTimer(timer:boss, 60, 1, @setVisibility)
+                    setTimerArgs(timer:boss, npcSl, false)
                     for(i, 0, npcCopyCount(4)--1) do(
                         if(getEnemySequenceStep(ref) == 0) then(
                             if(i,mod,2) then(continue)
@@ -327,6 +330,8 @@ script, enemyBehavior, ref, begin
                     
                     if(getEnemySequenceStep(ref) == 5) then(
                         setSliceVisible(npcSl, true)
+                        dissolveSprite(getNPCSprite(ref), dissolve:melt, 60, 1, true)
+                        setTimer(timer:boss, 60, 1, @charvileUndulate)
                         setEnemyActDelay(ref, 240)
                         setEnemyState(ref, ai:idle)
                     ) else(

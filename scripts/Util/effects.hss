@@ -119,11 +119,11 @@ script, moveParticles, purge=false, begin
             continue
         )
         # Offscreen culling
-        if(sliceX(sl) < 0--100 || sliceX(sl) > getScreenWidth+100
-        || sliceY(sl) < 0--100 || sliceY(sl) > getScreenHeight+100) then(
-            #pop(particleHandles, i)
-            #freeSlice(sl)
-            #continue
+        if(sliceScreenX(sl) < 0--100 || sliceScreenX(sl) > getScreenWidth+100
+        || sliceScreenY(sl) < 0--100 || sliceScreenY(sl) > getScreenHeight+100) then(
+            pop(particleHandles, i)
+            freeSlice(sl)
+            continue
         )
         # Duration
         setParticleDuration(sl, getParticleDuration(sl)--1)

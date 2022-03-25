@@ -305,7 +305,7 @@ script, meleeCollisions, begin
                 pushObject(hit, get_bearing(sliceCX(player), sliceCY(player), sliceCX(hit), sliceCY(hit)), projectile:knockback)   # from movement.hss
                 setEnemyHit(ref, true)
                 stunEnemy(ref, player:meleeStun)
-                damageEnemy(ref, player:meleeDamage)
+                damageEnemy(ref, player:meleeDamage + random(-1,1))
             )
         )
     ) else(
