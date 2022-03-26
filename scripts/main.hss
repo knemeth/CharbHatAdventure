@@ -37,6 +37,8 @@ globalVariable, begin
     # UI
     30,hud
     31,titleScreenHud
+    # gameplay
+    50,minionCount
 end
 
 defineConstant, begin
@@ -113,7 +115,7 @@ script, initGame, begin
     setParent(projectileLayer, lookupSlice(sl:mapOverlay))
     playerProjectileLayer := createContainer()
     setParent(playerProjectileLayer, lookupSlice(sl:mapOverlay))
-    pickupLayer := lookupSlice(sl:mapLayer1)
+    pickupLayer := lookupSlice(sl:mapLayer3)
     aoeLayer := createContainer()
     setParent(aoeLayer, lookupSlice(sl:mapOverlay))
 

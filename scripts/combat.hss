@@ -259,6 +259,18 @@ script, damageEnemy, ref, amount, begin
 
     if(getNPCID(ref) == -1) then(exitScript())
 
+    sl := getNPCSlice(ref)
+    vfx := createText()
+    setParent(vfx, fxLayer)
+    clearString(3)
+    appendNumber(3, amount)
+    setSliceText(vfx, 3)
+    setTextColor(vfx, 13)
+    setOutline(vfx, true)
+    centerSlice(vfx)
+    putSlice(vfx, sliceCX(sl), sliceCY(sl) -- 10)
+    createParticle(vfx, 16, 2000, 340 + random(0, 60), 10, true)
+
     sl := getNPCSprite(ref)
     current := getSliceExtra(sl, extra2)
 
@@ -284,6 +296,11 @@ script, damageEnemy, ref, amount, begin
 
         createRandomPickup(sliceCX(sli), sliceCY(sli))
 
+        switch(getNPCID(ref)) do(
+            case(enemy:slime) minionCount -= 1
+            case(enemy:charvile) charvileKilled()
+        )
+
         destroyNPC(ref)
         exitScript()
     )
@@ -298,8 +315,8 @@ script, meleeCollisions, begin
     # Player Melee
     attack := lookupSlice(sli:attack, player)
     if(getSliceVisible(attack)) then(
-        for(i, findCollidingSlice(lookupSlice(sl:walkaboutLayer), attack, getCount, false)--1, 0, -1) do(
-            hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), attack, i, false)
+        for(i, findCollidingSlice(lookupSlice(sl:walkaboutLayer), attack, getCount, false, true)--1, 0, -1) do(
+            hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), attack, i, false, true)
             ref := npcReferenceFromSlice(hit)
             if(ref && getNPCPool(ref) == pool:global && getEnemyHit(ref) == false) then(
                 pushObject(hit, get_bearing(sliceCX(player), sliceCY(player), sliceCX(hit), sliceCY(hit)), projectile:knockback)   # from movement.hss

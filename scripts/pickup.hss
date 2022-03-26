@@ -68,7 +68,10 @@ end
 
 script, healthPickup, begin
     # Heal player when picked up
-    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP) + 5)
+    if(getHeroStat(me, stat:HP) > getHeroStat(me, stat:HP, maximumStat)) then(
+        setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
+    )
     # VFX HERE
 end
 

@@ -54,6 +54,8 @@ plotscript, charvile, begin
     setEnemyState(globalNPCReference(enemy:charvile), state:idle)
     resumeObstruction()
     playSong(1)
+
+    minionCount := 0
 end
 
 script, charvileUndulate, reverse=false, begin
@@ -63,4 +65,20 @@ script, charvileUndulate, reverse=false, begin
     dissolveSprite(getNPCSprite(globalNPCReference(enemy:charvile)), dissolve:melt, 240, tick, reverse)
     setTimer(timer:charvileUndulate, 60, 1, @charvileUndulate)
     setTimerArgs(timer:charvileUndulate, (reverse+1),mod,2)
+end
+
+script, charvileKilled, begin
+    variable(c)
+
+    toggleCutsceneBars(true)
+
+    for(c, npcCopyCount(enemy:slime, pool:global)--1, 0, -1) do(
+        destroyNPC(globalNPCReference(enemy:slime, c))
+    )
+
+    showTextbox(20)
+    waitForTextbox()
+
+    toggleCutsceneBars(false)
+    playSong(0)
 end
