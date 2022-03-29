@@ -239,7 +239,7 @@ end
 # ==============================
 
 script, damagePlayer, amount, begin
-    if(getHeroStat(me, stat:Def) > 0) then(
+    if(getHeroStat(me, stat:Def) > 0 || controlsSuspended) then(
         # BLOCKED
         exitScript()
     )
@@ -249,8 +249,44 @@ script, damagePlayer, amount, begin
     playSound(sfx:hit+random(0,2), false, true)
 
     if(getHeroStat(me, stat:HP) <= 0) then(
+        variable(i, sl, vfx, ref)
         # Die
-        resetGame()
+        for(i, 0, childCount(lookupSlice(sl:maproot))--1) do(
+            sl := sliceChild(lookupSlice(sl:maproot), i)
+            if(sliceIsMapLayer(sl)) then(
+                setSliceVisible(sl, false)
+            )
+        )
+        setSliceVisible(pickupLayer, false)
+        setSliceVisible(aoeLayer, false)
+        setSliceVisible(projectileLayer, false)
+        ref := nextNPCReference()
+        while(ref) do(
+            destroyNPC(ref)
+            ref := nextNPCReference(ref)
+        )
+        controlsSuspended := true 
+        playerSpriteset := player:deadSet
+        playerFrames := player:deadFrames
+        setSpriteSetNumber(getHeroSprite(me), player:deadSet)
+        playSound(sfx:Death, false, true)
+        stopSong()
+        wait(60)
+        showTextbox(23)
+        waitForTextbox()
+
+        setSliceVisible(getHeroSprite(me), false)
+
+        playSound(sfx:DeathEcho, false, true)
+        for(i, 0, 7) do(
+            vfx := loadAttackSprite(5)
+            setParent(vfx, fxLayer)
+            centerSlice(vfx)
+            putSlice(vfx, sliceCX(player), sliceCY(player))
+            createParticle(vfx, 240, 4000, i*(360/8), 10)
+        )
+        
+        setTimer(timer:cutscene, 120, 1, @death)
     )
 end
 

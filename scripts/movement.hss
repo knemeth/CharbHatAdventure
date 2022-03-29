@@ -73,43 +73,46 @@ script, movePlayer, begin
 
     # Collisions
     # ================
+
+    if(controlsSuspended == false) then(
     
-    variable(num, hit, ref, x1, y1, x2, y2)
-    # Pickups
-    for(num, findCollidingSlice(pickupLayer, player, getCount, false)--1, 0, -1) do(
-        hit := findCollidingSlice(pickupLayer, player, num, false)
-        playSound(sfx:pickup, false, true)
-        runScriptByID(getSliceExtra(hit, extra0))
-        freeSlice(hit)
-    )
-    # Enemies
-    if(getHeroStat(me, stat:dodge) == 0) then(
-        for(num, findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, getCount, false, true)--1, 0, -1) do(
-            hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, num, false, true)
-            if(hit && getNPCPool(npcReferenceFromSlice(hit)) == pool:global) then(
-                if(getHeroStat(me, stat:Def) == 0) then(
-                    damagePlayer(3)
-                    x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
-                    x2 := sliceX(player)+(sliceWidth(player)/2), y2 := sliceY(player)+(sliceHeight(player)/2)
-                    pushObject(player, get_bearing(x1, y1, x2, y2), player:touchKnockback)
-                    exitScript()
-                ) else(
-                    x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
-                    x2 := sliceX(player)+(sliceWidth(player)/2), y2 := sliceY(player)+(sliceHeight(player)/2)
-                    pushObject(hit, get_bearing(x2, y2, x1, y1), player:touchKnockback)
-                    stunEnemy(npcReferenceFromSlice(hit), player:blockStun)
+        variable(num, hit, ref, x1, y1, x2, y2)
+        # Pickups
+        for(num, findCollidingSlice(pickupLayer, player, getCount, false)--1, 0, -1) do(
+            hit := findCollidingSlice(pickupLayer, player, num, false)
+            playSound(sfx:pickup, false, true)
+            runScriptByID(getSliceExtra(hit, extra0))
+            freeSlice(hit)
+        )
+        # Enemies
+        if(getHeroStat(me, stat:dodge) == 0) then(
+            for(num, findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, getCount, false, true)--1, 0, -1) do(
+                hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, num, false, true)
+                if(hit && getNPCPool(npcReferenceFromSlice(hit)) == pool:global) then(
+                    if(getHeroStat(me, stat:Def) == 0) then(
+                        damagePlayer(3)
+                        x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
+                        x2 := sliceX(player)+(sliceWidth(player)/2), y2 := sliceY(player)+(sliceHeight(player)/2)
+                        pushObject(player, get_bearing(x1, y1, x2, y2), player:touchKnockback)
+                        exitScript()
+                    ) else(
+                        x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
+                        x2 := sliceX(player)+(sliceWidth(player)/2), y2 := sliceY(player)+(sliceHeight(player)/2)
+                        pushObject(hit, get_bearing(x2, y2, x1, y1), player:touchKnockback)
+                        stunEnemy(npcReferenceFromSlice(hit), player:blockStun)
+                    )
                 )
             )
         )
-    )
-    # Stepon
-    for(num, findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, getCount, false)--1, 0, -1) do(
-        hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, num, false)
-        if(hit == false) then(continue)
-        ref := npcReferenceFromSlice(hit)
-        if(readNPC(ref, npcStat:Activation) == npcActivation:stepon) then(
-            runScriptByID(readNPC(ref, npcStat:script), readNPC(ref, npcStat:scriptArgument), ref)
-            #useNPC(npcReferenceFromSlice(hit))
+        # Stepon
+        for(num, findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, getCount, false)--1, 0, -1) do(
+            hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, num, false)
+            if(hit == false) then(continue)
+            ref := npcReferenceFromSlice(hit)
+            if(readNPC(ref, npcStat:Activation) == npcActivation:stepon) then(
+                runScriptByID(readNPC(ref, npcStat:script), readNPC(ref, npcStat:scriptArgument), ref)
+                #useNPC(npcReferenceFromSlice(hit))
+            )
         )
     )
 

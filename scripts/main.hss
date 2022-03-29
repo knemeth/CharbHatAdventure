@@ -39,6 +39,7 @@ globalVariable, begin
     31,titleScreenHud
     # gameplay
     50,minionCount
+    51,gamePaused
 end
 
 defineConstant, begin
@@ -60,6 +61,8 @@ defineConstant, begin
     42,player:blockSet
     3,player:blockFrames
     30,player:blockTime
+    30,player:deadSet
+    1,player:deadFrames
     30,player:attackWidth
     20,player:attackHeight
 
@@ -152,6 +155,12 @@ plotscript, quitGame, begin
     gameOver()
 end
 
+plotscript, death, begin
+    fadeScreenOut()
+    wait(10)
+    resetGame()
+end
+
 plotscript, closeMainMenu, begin
     controlsSuspended := false
 end
@@ -231,7 +240,7 @@ script, primaryLoopContents, begin
 
     # Player
     evaluateInput()
-    if(controlsSuspended) then(
+    if(gamePaused) then(
         resetInputs()
         exitScript()
     )

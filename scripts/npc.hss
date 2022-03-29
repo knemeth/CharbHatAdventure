@@ -4,6 +4,7 @@ plotscript, charvile, begin
     variable()
 
     setTag(tag:charvileStart, on)
+    gamePaused := true
     controlsSuspended := true
 
     toggleCutsceneBars(true)
@@ -49,6 +50,7 @@ plotscript, charvile, begin
 
     toggleCutsceneBars(false)
     cameraFollowsHero(me)
+    gamePaused := false
     controlsSuspended := false
     setEnemyActDelay(globalNPCReference(enemy:charvile), 30)
     setEnemyState(globalNPCReference(enemy:charvile), state:idle)
@@ -59,6 +61,8 @@ plotscript, charvile, begin
 end
 
 script, charvileUndulate, reverse=false, begin
+    if(globalNPCReference(enemy:charvile) == false) then(exitScript())
+    
     variable(tick)
     if(reverse) then(tick := 180) 
     else(tick := 0)
@@ -70,6 +74,7 @@ end
 script, charvileKilled, begin
     variable(c)
 
+    setTag(tag:charvileDefeated, on)
     toggleCutsceneBars(true)
 
     for(c, npcCopyCount(enemy:slime, pool:global)--1, 0, -1) do(

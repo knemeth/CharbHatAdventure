@@ -3,6 +3,7 @@
 define constant, begin
 2,tag:charvileStart
 3,tag:chadbileStart
+4,tag:charvileDefeated
 0,song:Adventure
 1,song:Battle Ready
 0,sfx:Melee
@@ -24,6 +25,8 @@ define constant, begin
 16,sfx:Beast 4
 17,sfx:Pickup
 18,sfx:NoAmmo
+19,sfx:Death
+20,sfx:DeathEcho
 0,stat:HP
 1,stat:SP
 2,stat:Atk
