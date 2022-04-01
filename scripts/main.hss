@@ -79,6 +79,8 @@ defineConstant, begin
     103,sli:animation
     104,sli:ai
     105,sli:exclamation
+    106,sli:charmileBody
+    107,sli:charmileButt
 
     0,timer:stamina
     1,timer:block
@@ -139,6 +141,7 @@ script, initGame, begin
         )
         ref := nextNPCReference(ref)
     )
+    charmileInit()
 end
 
 script, startGame, begin
@@ -260,6 +263,7 @@ script, primaryLoopContents, begin
     processEmitters()
     updateProjectiles()
     pickupEachtick()
+    charmileUpdate()
 
     # Debug
     showStringAt(1,0,100)
@@ -275,7 +279,7 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
 
     if(childCount(handle) == 1) then(
         # Only has a sprite child, has not been initialized
-        variable(sl, spr)
+        variable(sl)
         sl := firstChild(handle)
         setHorizAlign(sl, edge:center)
         setHorizAnchor(sl, edge:center)
@@ -325,5 +329,6 @@ plotscript, mapAutorun, begin
         
         ref := nextNPCReference(ref)
     )
+
     initEnemies()
 end

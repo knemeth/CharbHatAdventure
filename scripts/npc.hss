@@ -1,5 +1,8 @@
 # npc.hss
 
+# Charvile
+# =======================
+
 plotscript, charvile, begin
     variable()
 
@@ -86,4 +89,74 @@ script, charvileKilled, begin
 
     toggleCutsceneBars(false)
     playSong(0)
+end
+
+# Charmile
+# ===========================
+
+defineConstant(6, npc:charmile)
+
+script, charmileInit, begin
+    variable(sl, body, butt, i)
+
+    sl := getNPCSprite(npc:charmile)
+    butt := loadWalkaboutSprite(49)
+    
+    setSliceLookup(butt, sli:charmileButt)
+    #createAnimation(butt, player:animSpeed*8, player:animSpeed, true)
+    body := createContainer()
+    setParent(body, sl)
+    putSlice(body, 16, 10)
+    setSliceLookup(body, sli:charmileBody)
+    setSliceExtra(body, extra0, 16)     # body x
+    setSliceExtra(body, extra1, 0)      # body y
+
+    setParent(butt, sl)
+
+    putSlice(butt, getSliceExtra(body, extra0) + sliceWidth(sl), getSliceExtra(body, extra1))
+
+    for(i, 0, 9) do(
+        sl := createLine(getSliceExtra(body, extra0), getSliceExtra(body, extra1))
+        switch(i) do(
+            case(0, 9) setLineColor(sl, 0)
+            case(7, 8) setLineColor(sl, 10)
+            case(else) setLineColor(sl, 17)
+        )
+        setParent(sl, body)
+        setSliceY(sl, i)
+    )
+end
+
+script, charmileUpdate, begin
+    variable(sl, butt, body)
+
+    sl := getNPCSprite(npc:charmile)
+    butt := lookupSlice(sli:charmileButt, sl)
+    body := lookupSlice(sli:charmileBody, sl)
+
+    putSlice(butt, getSliceExtra(body, extra0) + sliceWidth(sl), getSliceExtra(body, extra1))
+
+    sl := firstChild(body)
+    while(sl) do(
+        setSliceSize(sl, getSliceExtra(body, extra0), getSliceExtra(body, extra1))
+        sl := nextSibling(sl)
+    )
+end
+
+script, charmileWidth, val, begin
+    variable(sl, body)
+
+    sl := getNPCSprite(npc:charmile)
+    body := lookupSlice(sli:charmileBody, sl)
+
+    setSliceExtra(body, extra0, getSliceExtra(body, extra0) + val)
+end
+
+script, charmileHeight, val, begin
+    variable(sl, body)
+
+    sl := getNPCSprite(npc:charmile)
+    body := lookupSlice(sli:charmileBody, sl)
+
+    setSliceExtra(body, extra1, getSliceExtra(body, extra1) + val)
 end
