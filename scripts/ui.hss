@@ -19,6 +19,8 @@ script, updateHud, begin
     variable(ammoBar)
     ammoBar := lookupSlice(sli:ammo, hud)
     setSpriteFrame(ammoBar, getHeroStat(me, stat:Hits))
+    # Boss hp bar
+    bossBarTick()
 end
 
 script, toggleCutsceneBars, state=false, begin
@@ -53,3 +55,31 @@ script, cutsceneBarTick, begin
         setTimer(timer:cutsceneBars, 0, 1, @cutsceneBarTick)
     )
 end
+
+script, toggleBossBar, state=false, name=-1, begin
+    variable(sl, bar, text)
+
+    sl := lookupSlice(sli:bossBar, hud)
+    setSliceVisible(sl, state)
+
+    bar := firstRectChild(firstRectChild(sl))
+    setSliceWidth(bar, sliceWidth(sliceParent(bar))--2)
+
+    if(name > -1) then(
+        text := firstTextChild(sl)
+        setSliceText(text, name)
+    )
+end
+
+script, bossBarTick, begin
+    variable(sl, bar, npcSl)
+
+    sl := lookupSlice(sli:bossBar, hud)
+
+    if(getSliceVisible(sl) == false) then(exitScript())
+
+    npcSl := getNPCSprite(globalNPCReference(currentBoss, 0))
+
+    bar := firstRectChild(firstRectChild(sl))
+    setSliceWidth(bar, multdiv(sliceWidth(sliceParent(bar))--2, getSliceExtra(npcSl, extra2), getEnemyHP(globalNPCReference(currentBoss, 0))))
+end 

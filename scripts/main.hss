@@ -37,9 +37,15 @@ globalVariable, begin
     # UI
     30,hud
     31,titleScreenHud
+    32,currentBoss
     # gameplay
     50,minionCount
     51,gamePaused
+    52,tbSource
+    53,palShift
+    54,rShift
+    55,gShift
+    56,bShift
 end
 
 defineConstant, begin
@@ -81,6 +87,7 @@ defineConstant, begin
     105,sli:exclamation
     106,sli:charmileBody
     107,sli:charmileButt
+    108,sli:emitter
 
     0,timer:stamina
     1,timer:block
@@ -92,6 +99,11 @@ defineConstant, begin
     7,timer:charvileUndulate
     8,timer:boss
     9,timer:cutsceneBars
+    10,timer:fade
+
+    0,pal:default
+    1,pal:charvile
+    2,pal:starbile
 end
 
 script, initGame, begin
@@ -138,6 +150,18 @@ script, initGame, begin
             realignSlice(sl, edge:center, edge:top, edge:middle, edge:bottom)
             setSliceVisible(sl, false)
             createAnimation(sl, 40, 5, true)
+        ) elseif(getNPCPool(ref) == pool:local && getNPCID(ref) == 10) then(
+            npcSl := getNPCSlice(ref)
+            sl := createContainer()
+            setParent(sl, npcSl)
+            putSlice(sl, sliceWidth(npcSl)/2, sliceHeight(npcSl)/2)
+            setSliceLookup(sl, sli:emitter)
+            createEmitter(sl, 120, -1, 2, lookupSlice(sl:mapLayer2))
+            sl := loadHeroSprite(12)
+            setOpacity(sl, 50)
+            createParticle(sl, 240, 300, 270, 0, false, dissolve:fade)
+            remove(particleHandles, sl)
+            setParent(sl, lookupSlice(sli:emitter, npcSl))
         )
         ref := nextNPCReference(ref)
     )
@@ -264,6 +288,7 @@ script, primaryLoopContents, begin
     updateProjectiles()
     pickupEachtick()
     charmileUpdate()
+    tbDistance()
 
     # Debug
     showStringAt(1,0,100)
@@ -324,6 +349,10 @@ plotscript, mapAutorun, begin
             initObject(getNPCSlice(ref), getEnemyWidth(ref), getEnemyHeight(ref), getEnemyAttackWidth(ref), getEnemyAttackHeight(ref))
             if(getNPCID(ref) == enemy:charvile) then(
                 setSliceVisible(getNPCSlice(ref), false)
+            )
+        ) else(
+            if(getNPCID(ref) == npc:charmile) then(
+                initObject(getNPCSlice(ref), 20, 24, 0, 0)
             )
         )
         

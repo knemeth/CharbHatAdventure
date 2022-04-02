@@ -1,5 +1,23 @@
 # npc.hss
 
+defineConstant(60, npc:deactDist)
+
+script, tbDistance, begin
+    if(currentTextbox == -1 || tbSource == 0) then(
+        tbSource := 0
+        exitScript()
+    )
+
+    variable(dist)
+
+    dist := getDistance(sliceCX(player), sliceCY(player), sliceCX(getNPCSlice(tbSource)), sliceCY(getNPCSlice(tbSource)))
+    if(dist > npc:deactDist) then(
+        showTextbox()
+        advanceTextbox
+        tbSource := 0
+    )
+end
+
 # Charvile
 # =======================
 
@@ -51,6 +69,11 @@ plotscript, charvile, begin
         )
     )
 
+    $1="Charvile"
+    toggleBossBar(true, 1)
+    clearString(1)
+    currentBoss := enemy:charvile
+
     toggleCutsceneBars(false)
     cameraFollowsHero(me)
     gamePaused := false
@@ -84,11 +107,74 @@ script, charvileKilled, begin
         destroyNPC(globalNPCReference(enemy:slime, c))
     )
 
+    variable(x, y)
+    for(x, 0, mapWidth()--1) do(
+        for(y, 0, mapHeight()--1) do(
+            if(readZone(1, x, y)) then(
+                writePassBlock(x, y, 0)
+                writeMapBlock(x, y, 0, 1)
+            )
+        )
+    )
+
+    toggleBossBar(false)
+
     showTextbox(20)
     waitForTextbox()
 
     toggleCutsceneBars(false)
     playSong(0)
+end
+
+plotscript, charvilePalShift, begin
+    if(palShift == pal:charvile) then(exitScript())
+
+    palShift := pal:charvile
+
+    palShiftTick(-10, -1, -2)
+end
+
+plotscript, resetPalShift, begin
+    if(palShift == pal:default) then(exitScript())
+
+    palShift := pal:default
+
+    palShiftTick(0, 0, 0)
+end
+
+script, palShiftTick, r, g, b, begin
+    # r g b are target values
+    traceValue(r, g, b, rShift, gShift, bShift)
+
+    if(r == rShift && g == gShift && b == bShift) then(
+        exitScript()
+    )
+
+    if(rShift > r) then(
+        rShift -= 1
+        tweakPalette(-1, 0, 0, 1, 255)
+    ) elseif(rShift < r) then(
+        rShift += 1
+        tweakPalette(1, 0, 0, 1, 255)
+    )
+    if(gShift > g) then(
+        gShift -= 1
+        tweakPalette(0, -1, 0, 1, 255)
+    ) elseif(gShift < g) then(
+        gShift += 1
+        tweakPalette(0, 1, 0, 1, 255)
+    )
+    if(bShift > b) then(
+        bShift -= 1
+        tweakPalette(0, 0, -1, 1, 255)
+    ) elseif(bShift < b) then(
+        bShift += 1
+        tweakPalette(0, 0, 1, 1, 255)
+    )
+    updatePalette()
+
+    setTimer(timer:fade, 1, 2, @palShiftTick)
+    setTimerArgs(timer:fade, r, g, b)
 end
 
 # Charmile
@@ -103,12 +189,12 @@ script, charmileInit, begin
     butt := loadWalkaboutSprite(49)
     
     setSliceLookup(butt, sli:charmileButt)
-    #createAnimation(butt, player:animSpeed*8, player:animSpeed, true)
+    createAnimation(butt, player:animSpeed*8, player:animSpeed, true)
     body := createContainer()
     setParent(body, sl)
     putSlice(body, 16, 10)
     setSliceLookup(body, sli:charmileBody)
-    setSliceExtra(body, extra0, 16)     # body x
+    setSliceExtra(body, extra0, 50)     # body x
     setSliceExtra(body, extra1, 0)      # body y
 
     setParent(butt, sl)
@@ -134,11 +220,30 @@ script, charmileUpdate, begin
     butt := lookupSlice(sli:charmileButt, sl)
     body := lookupSlice(sli:charmileBody, sl)
 
+    if(getSliceExtra(body, extra2) > 0) then(
+        if(getSliceExtra(body, extra2) > 120) then(
+            charmileFrontMove(-1, -2)
+        ) else(
+            charmileWidth(-1)
+            charmileHeight(-2)
+        )
+        
+        setSliceExtra(body, extra2, getSliceExtra(body, extra2)--1)
+    ) elseif(getSliceExtra(body, extra2) < 0) then(
+        charmileWidth(1)
+        setSliceExtra(body, extra2, getSliceExtra(body, extra2)+1)
+    )
+
+    # Match player y along bridge
+    if(sliceY(player)/20 == 12) then(
+        putNPC(npc:charmile, npcPixelX(npc:charmile), sliceY(player)--10)
+    )
+
     putSlice(butt, getSliceExtra(body, extra0) + sliceWidth(sl), getSliceExtra(body, extra1))
 
     sl := firstChild(body)
     while(sl) do(
-        setSliceSize(sl, getSliceExtra(body, extra0), getSliceExtra(body, extra1))
+        setSliceSize(sl, sliceX(butt)--sliceWidth(butt), sliceY(butt))
         sl := nextSibling(sl)
     )
 end
@@ -159,4 +264,76 @@ script, charmileHeight, val, begin
     body := lookupSlice(sli:charmileBody, sl)
 
     setSliceExtra(body, extra1, getSliceExtra(body, extra1) + val)
+end
+
+script, charmileFrontMove, relX, relY, begin
+    variable(sl, x, y)
+
+    sl := getNPCSlice(npc:charmile)
+
+    x := sliceX(sl) + relX
+    y := sliceY(sl) + relY
+
+    putSlice(sl, x, y)
+    charmileWidth(-1 * relX)
+    charmileHeight(-1 * relY)
+    updateNPCorHeroFromSlice(sl)
+end
+
+plotscript, charmileTalk, begin
+    tbSource := 0
+    controlsSuspended := true
+    showTextbox(25)
+    timerWaitForTextbox()
+end
+
+plotscript, charmileLeave, begin
+    controlsSuspended := true 
+
+    variable(sl, body, i)
+    sl := getNPCSprite(npc:charmile)
+    body := lookupSlice(sli:charmileBody, sl)
+
+    setSliceExtra(body, extra2, 240)
+
+    setTimer(timer:beat, 240, 1, @endCharmileScene)
+end
+
+script, endCharmileScene, tb, begin
+    variable(i)
+
+    for(i, 46, 49) do(
+        writePassBlock(i, 81, 0)
+    )
+    putNPC(npc:charmile, 37*20, (12*20)--6)
+    showTextbox(40)
+    
+    timerWaitForTextbox()
+end
+
+plotscript, charmileStretch, begin
+    variable(sl, body, i)
+
+    sl := getNPCSprite(npc:charmile)
+    body := lookupSlice(sli:charmileBody, sl)
+
+    setSliceExtra(body, extra2, -420)
+
+    for(i, 39, 59) do(
+        writePassBlock(i, 12, 0)
+    )
+
+    timerWaitForTextbox()
+
+    showTextbox(42)
+
+    timerWaitForTextbox()
+end
+
+script, timerWaitForTextbox, begin
+    if(currentTextbox <> -1 || getSliceExtra(lookupSlice(sli:charmileBody, getNPCSprite(npc:charmile)), extra2) <> 0) then(
+        setTimer(timer:cutscene, 0, 1, @timerWaitForTextbox)
+    ) else(
+        controlsSuspended := false
+    )
 end

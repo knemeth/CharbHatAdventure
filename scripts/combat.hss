@@ -47,6 +47,7 @@ script, evaluateInput, begin
             && sliceCollide(getNPCSlice(ref), lookupSlice(sli:attack, player))) 
             then(
                 useNPC(ref)
+                tbSource := ref
                 valid := false
                 break
             )

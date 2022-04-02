@@ -616,7 +616,11 @@ script, getEnemyFrames, ref, begin
             case(else) exitReturning(4)
         )
     ) else(
-        exitReturning(1)
+        id := getNPCID(ref)
+        switch(id) do(
+            case(npc:charmile) exitReturning(4)
+            case(else) exitReturning(1)
+        )
     )
 end
 

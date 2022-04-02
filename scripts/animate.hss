@@ -109,6 +109,9 @@ script, animateNPCs, begin
                     setSliceVisible(lookupSlice(sli:exclamation, getNPCSlice(ref)), false)
                 )
             )
+            if(getNPCID(ref) == npc:charmile) then(
+                animateNPC(ref)
+            )
         ) else(
             animateNPC(ref)
         )

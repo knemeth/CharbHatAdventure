@@ -272,7 +272,7 @@ script, processEmitters, purge=false, begin
             # Spew your particle load, baby
             p := cloneSlice(sliceChild(sl, random(0,childCount(sl)--1)))
             setParent(p, getEmitterParent(sl))
-            putSliceScreen(p, sliceScreenX(sl)+sliceX(p), sliceScreenY(sl)+sliceY(p))
+            putSliceScreen(p, sliceScreenX(sl)+sliceX(p)+random(-1 * getEmitterNoise(sl) * 20, getEmitterNoise(sl) * 20), sliceScreenY(sl)+sliceY(p)+random(-1 * getEmitterNoise(sl) * 20, getEmitterNoise(sl) * 20))
             dr := getParticleDuration(p)+random(0--getEmitterNoise(sl), getEmitterNoise(sl))
             sp := getParticleSpeed(p)+random(0--getEmitterNoise(sl)*10, getEmitterNoise(sl)*10)
             br := getParticleBearing(p)+random(0--getEmitterNoise(sl)*10, getEmitterNoise(sl)*10)
@@ -281,7 +281,7 @@ script, processEmitters, purge=false, begin
             freeSliceChildren(p)
             createParticle(p, dr, sp, br, wt, gr, getEmitterDissolve(sl))
             # Reset cooldown
-            setEmitterCooldown(sl, getEmitterRate(sl))
+            setEmitterCooldown(sl, getEmitterRate(sl) + random(-1 * getEmitterNoise(sl) * 60, getEmitterNoise(sl) * 60))
         )
     )
 end

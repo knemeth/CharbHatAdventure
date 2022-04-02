@@ -4,6 +4,9 @@ define constant, begin
 2,tag:charvileStart
 3,tag:chadbileStart
 4,tag:charvileDefeated
+5,tag:charmileFirst
+6,tag:charmileMoved
+7,tag:charmileStretched
 0,song:Adventure
 1,song:Battle Ready
 0,sfx:Melee
@@ -69,4 +72,5 @@ define constant, begin
 7,sli:clouds
 8,sli:portrait
 9,sli:cutsceneBars
+10,sli:bossBar
 end
