@@ -62,6 +62,12 @@ WHAT IS NEW?
       debugger/editor [Ralph]
     * "get/set turn based battle mode" and "get/set active time battle mode"
       [James]
+    * Slice extra data are now variable length arrays defaulting to length 3.
+      Maximum length is 1,000,000.
+      Added "resize slice extra", "slice extra length", "append slice extra".
+      Also you can use Python-style negative indexing to read from the back of
+      the extra array: "get slice extra(sl, -1)" is the last value, -2 is the
+      second last, etc. [Ralph]
 
   *** Changes
     * Removed support for optional prefixes on .ini config settings (e.g.
@@ -105,6 +111,17 @@ WHAT IS NEW?
     * Random spell lists now respect attack costs, but for old games you
       must enable this fix in the backcompat bits to avoid breaking games
       that relied on it. [James]
+    * In games wider than 320px, in the Items menu the Left key would go
+      up-left to Exit or Sort [Ralph]
+    * Item and hero autoset tags didn't update immediately (until something
+      else did so) due to:
+      -using items (including attacks and item consumption) outside of battle
+      -the "use item" command (also, "use item in slot" updated tags but
+       didn't update visible NPCs)
+      -gaining/losing items from a textbox, until the textbox chain ended
+      [Ralph]
+    * Crash reporting on Windows stopped working for a while, aside from the
+      manual email fallback [Ralph]
 
   *** Stuff Only Developers Will Notice
     * Source code license has been changed to Dual GPLv2+ & MIT license

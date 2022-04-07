@@ -18,12 +18,18 @@ script, tbDistance, begin
     )
 end
 
+script, timerWaitForTextbox, begin
+    if(currentTextbox <> -1 || getSliceExtra(lookupSlice(sli:charmileBody, getNPCSprite(npc:charmile)), extra2) <> 0) then(
+        setTimer(timer:cutscene, 0, 1, @timerWaitForTextbox)
+    ) else(
+        controlsSuspended := false
+    )
+end
+
 # Charvile
 # =======================
 
 plotscript, charvile, begin
-    variable()
-
     setTag(tag:charvileStart, on)
     gamePaused := true
     controlsSuspended := true
@@ -306,6 +312,7 @@ script, endCharmileScene, tb, begin
         writePassBlock(i, 81, 0)
     )
     putNPC(npc:charmile, 37*20, (12*20)--6)
+    charmileWidth(-50)
     showTextbox(40)
     
     timerWaitForTextbox()
@@ -317,7 +324,7 @@ plotscript, charmileStretch, begin
     sl := getNPCSprite(npc:charmile)
     body := lookupSlice(sli:charmileBody, sl)
 
-    setSliceExtra(body, extra2, -420)
+    setSliceExtra(body, extra2, -450)
 
     for(i, 39, 59) do(
         writePassBlock(i, 12, 0)
@@ -330,10 +337,13 @@ plotscript, charmileStretch, begin
     timerWaitForTextbox()
 end
 
-script, timerWaitForTextbox, begin
-    if(currentTextbox <> -1 || getSliceExtra(lookupSlice(sli:charmileBody, getNPCSprite(npc:charmile)), extra2) <> 0) then(
-        setTimer(timer:cutscene, 0, 1, @timerWaitForTextbox)
-    ) else(
-        controlsSuspended := false
-    )
+# Chadbile
+# ===============================================
+
+plotscript, chadbile, begin
+    setTag(tag:chadbileStart, on)
+    gamePaused := true
+    controlsSuspended := true
+
+    toggleCutsceneBars(true)
 end
