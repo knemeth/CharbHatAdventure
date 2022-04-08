@@ -2,6 +2,11 @@
 
 defineConstant(60, npc:deactDist)
 
+script, delayedTb, tb, begin
+    showTextbox(tb)
+    timerWaitForTextbox()
+end
+
 script, tbDistance, begin
     if(currentTextbox == -1 || tbSource == 0) then(
         tbSource := 0
@@ -70,7 +75,7 @@ plotscript, charvile, begin
         for(y, 0, mapHeight()--1) do(
             if(readZone(1, x, y)) then(
                 writePassBlock(x, y, northwall+southwall+eastwall+westwall)
-                writeMapBlock(x, y, 133, 1)
+                writeMapBlock(x, y, 133, 3)
             )
         )
     )
@@ -104,10 +109,14 @@ script, charvileUndulate, reverse=false, begin
 end
 
 script, charvileKilled, begin
-    variable(c)
+    variable(c, i, vfx, sl)
+
+    controlsSuspended := true
 
     setTag(tag:charvileDefeated, on)
     toggleCutsceneBars(true)
+
+    wait(10)
 
     for(c, npcCopyCount(enemy:slime, pool:global)--1, 0, -1) do(
         destroyNPC(globalNPCReference(enemy:slime, c))
@@ -118,7 +127,7 @@ script, charvileKilled, begin
         for(y, 0, mapHeight()--1) do(
             if(readZone(1, x, y)) then(
                 writePassBlock(x, y, 0)
-                writeMapBlock(x, y, 0, 1)
+                writeMapBlock(x, y, 0, 3)
             )
         )
     )
@@ -128,8 +137,25 @@ script, charvileKilled, begin
     showTextbox(20)
     waitForTextbox()
 
+    sl := getNPCSlice(globalNPC(enemy:charvile))
+    playSound(sfx:DeathEcho, false, true)
+    for(i, 0, 7) do(
+        vfx := loadAttackSprite(5)
+        setParent(vfx, fxLayer)
+        centerSlice(vfx)
+        putSlice(vfx, sliceCX(sl), sliceCY(sl))
+        createParticle(vfx, 50, 4000, i*(360/8), 20)
+    )
+
+    createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
+    createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
+    createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
+
     toggleCutsceneBars(false)
     playSong(0)
+
+    setTimer(timer:cutscene, 30, 1, @delayedTb)
+    setTimerArgs(timer:cutscene, 22)
 end
 
 plotscript, charvilePalShift, begin
@@ -241,7 +267,7 @@ script, charmileUpdate, begin
     )
 
     # Match player y along bridge
-    if(sliceY(player)/20 == 12) then(
+    if(sliceY(player)/20 == 12 && checkTag(tag:charvileDefeated)) then(
         putNPC(npc:charmile, npcPixelX(npc:charmile), sliceY(player)--10)
     )
 
@@ -342,11 +368,95 @@ end
 
 plotscript, chadbile, begin
     setTag(tag:chadbileStart, on)
-    #gamePaused := true
-    #controlsSuspended := true
+    gamePaused := true
+    controlsSuspended := true
 
-    #toggleCutsceneBars(true)
+    toggleCutsceneBars(true)
 
-    setEnemyActDelay(globalNPCReference(enemy:chadbile), 30)
+    focusCamera(18, 30, 2)
+    waitForCamera()
+
+    setHeroPosition(me, 19, 33)
+    putSliceSubpixel(player, heroPixelX(me)*1000, heroPixelY(me)*1000)
+
+    showTextbox(44)
+    waitForTextbox()
+
+    wait(10)
+
+    variable(x, y)
+    for(x, 0, mapWidth()--1) do(
+        for(y, 0, mapHeight()--1) do(
+            if(readZone(1, x, y)) then(
+                writePassBlock(x, y, northwall+southwall+eastwall+westwall)
+                writeMapBlock(x, y, 133, 3)
+            )
+        )
+    )
+
+    $1="Chadbile"
+    toggleBossBar(true, 1)
+    clearString(1)
+    currentBoss := enemy:charvile
+
+    toggleCutsceneBars(false)
+    cameraFollowsHero(me)
+    gamePaused := false
+    controlsSuspended := false
+    setEnemyActDelay(globalNPCReference(enemy:chadbile), 45)
     setEnemyState(globalNPCReference(enemy:chadbile), state:idle)
+    playSong(1)
+
+    minionCount := 0
+end
+
+script, chadbileKilled, begin
+    variable(c, i, vfx, sl)
+
+    controlsSuspended := true
+
+    setTag(tag:chadbileDefeated, on)
+    toggleCutsceneBars(true)
+
+    wait(30)
+
+    for(c, npcCopyCount(enemy:fan, pool:global)--1, 0, -1) do(
+        destroyNPC(globalNPCReference(enemy:fan, c))
+    )
+
+    variable(x, y)
+    for(x, 0, mapWidth()--1) do(
+        for(y, 0, mapHeight()--1) do(
+            if(readZone(1, x, y)) then(
+                writePassBlock(x, y, 0)
+                writeMapBlock(x, y, 0, 3)
+            )
+        )
+    )
+
+    toggleBossBar(false)
+
+    showTextbox(58)
+    waitForTextbox()
+
+    playSound(sfx:DeathEcho, false, true)
+
+    sl := getNPCSlice(globalNPC(enemy:chadbile))
+    for(i, 0, 7) do(
+        vfx := loadAttackSprite(5)
+        setParent(vfx, fxLayer)
+        centerSlice(vfx)
+        putSlice(vfx, sliceCX(sl), sliceCY(sl))
+        createParticle(vfx, 50, 4000, i*(360/8), 20)
+    )
+
+    createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
+    createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
+    createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
+
+    toggleCutsceneBars(false)
+    playSong(0)
+
+    setTimer(timer:cutscene, 30, 1, @delayedTb)
+    setTimerArgs(timer:cutscene, 59)
 end

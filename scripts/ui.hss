@@ -78,6 +78,12 @@ script, bossBarTick, begin
 
     if(getSliceVisible(sl) == false) then(exitScript())
 
+    if(globalNPCReference(currentBoss, 0) == false) then(
+        currentBoss := 0
+        toggleBossBar(false)
+        exitScript()
+    )
+
     npcSl := getNPCSprite(globalNPCReference(currentBoss, 0))
 
     bar := firstRectChild(firstRectChild(sl))
