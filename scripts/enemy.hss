@@ -15,6 +15,7 @@ defineConstant, begin
     6,enemy:chadbile
     7,enemy:fan
     8,enemy:flame
+    9,enemy:starbile
     30,enemy:actDelay
 
     0,ai:idle
@@ -772,6 +773,7 @@ script, getEnemyHP, ref, begin
         case(enemy:slime) exitReturning(5)
         case(enemy:charvile) exitReturning(266)
         case(enemy:chadbile) exitReturning(266)
+        case(enemy:starbile) exitReturning(300)
         case(enemy:fan) exitReturning(2)
         case(enemy:flame) exitReturning(1)
         case(else) exitReturning(default)
@@ -794,6 +796,7 @@ script, getEnemyWidth, ref, begin
         case(enemy:charvile) exitReturning(40)
         case(enemy:chadbile) exitReturning(36)
         case(enemy:flame) exitReturning(16)
+        case(enemy:starbile) exitReturning(16)
         case(else) exitReturning(default)
     )
 end
@@ -814,6 +817,7 @@ script, getEnemyHeight, ref, begin
         case(enemy:charvile) exitReturning(15)
         case(enemy:chadbile) exitReturning(16)
         case(enemy:flame) exitReturning(12)
+        case(enemy:starbile) exitReturning(16)
         case(else) exitReturning(default)
     )
 end
@@ -863,6 +867,7 @@ script, getEnemyFrames, ref, begin
             case(enemy:charvile) exitReturning(1)
             case(enemy:chadbile) exitReturning(2)
             case(enemy:flame) exitReturning(5)
+            case(enemy:starbile) exitReturning(6)
             case(else) exitReturning(4)
         )
     ) else(
