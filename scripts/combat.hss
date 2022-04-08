@@ -339,6 +339,7 @@ script, damageEnemy, ref, amount, begin
 
         switch(getNPCID(ref)) do(
             case(enemy:slime) minionCount -= 1
+            case(enemy:fan) minionCount -= 1
             case(enemy:charvile) charvileKilled()
         )
 

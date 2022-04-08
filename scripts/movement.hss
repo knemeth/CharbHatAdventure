@@ -90,10 +90,10 @@ script, movePlayer, begin
                 hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), player, num, false, true)
                 if(hit && getNPCPool(npcReferenceFromSlice(hit)) == pool:global) then(
                     if(getHeroStat(me, stat:Def) == 0) then(
-                        damagePlayer(3)
                         x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
                         x2 := sliceX(player)+(sliceWidth(player)/2), y2 := sliceY(player)+(sliceHeight(player)/2)
                         pushObject(player, get_bearing(x1, y1, x2, y2), player:touchKnockback)
+                        damagePlayer(3)
                         exitScript()
                     ) else(
                         x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)

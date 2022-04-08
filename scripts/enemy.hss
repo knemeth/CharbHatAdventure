@@ -54,7 +54,7 @@ script, createEnemy, id, x, y, begin
         setEnemyPatternStep(ref, random(3, 4))
     ) elseif(id == enemy:flame) then(
         setEnemyPatternStep(ref, random(0, 240))
-        dissolveSprite(getNPCSprite(ref), dissolve:fade, 500)
+        dissolveSprite(getNPCSprite(ref), dissolve:fade, 600)
     )
 
     exitReturning(ref)
@@ -77,7 +77,7 @@ end
 
 script, enemyBehavior, ref, begin
     # check enemy type and apply behavior based on current conditions
-    variable(dist, npcSl, bearing, subX, subY, i, spawn)
+    variable(dist, npcSl, bearing, subX, subY, i, spawn, x, y)
 
     npcSl := getNPCSlice(ref)
 
@@ -375,6 +375,24 @@ script, enemyBehavior, ref, begin
                     if(getSliceExtra(firstChild(getNPCSprite(ref)), extra0) <> 50) then(
                         newSet(50)
                     )
+                    setEnemyMelee(ref, false)
+                    for(i, 0, npcCopyCount(12)--1) do(
+                        if(getEnemySequenceStep(ref) > 0) then(
+                            continue
+                        )
+                        if(minionCount < 8) then(
+                            spawn := createEnemy(enemy:fan, npcX(npcReference(12, i)), npcY(npcReference(12, i)))
+                            minionCount += 1
+                        )
+                    )
+                    # put up fences
+                    for(x, 12, 25, 13) do(
+                        for(y, 33, 34) do(
+                            writePassBlock(x, y, northwall+southwall+eastwall+westwall)
+                            writeMapBlock(x, y, 133, 3)
+                        )
+                    )
+
                     dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
                     if(dist / 20 > 4 && getSliceV(npcSl) == 0) then(
                         # move toward player
@@ -385,18 +403,27 @@ script, enemyBehavior, ref, begin
                         setSliceDir(npcSl, -1)
                         setSliceV(npcSl, 0)
                     )
-                    setEnemyMelee(ref, false)
                     
                     if(dist < 58 && readTimer(timer:boss) <= 0) then(
-                        setEnemyActDelay(ref, 60)
+                        setEnemyActDelay(ref, 10)
                         setEnemyState(ref, ai:melee)
+                    ) elseif(getEnemySequenceStep(ref) == 2) then(
+                        newSet(55)
+                        setEnemyActDelay(ref, 20)
+                        setEnemyState(ref, ai:charge)
+                        setEnemySequenceStep(ref, getEnemySequenceStep(ref)+1)
                     ) elseif(getEnemySequenceStep(ref) == 3) then(
                         newSet(55)
                         setEnemySequenceStep(ref, 0)
                         setEnemyActDelay(ref, 20)
-                        setEnemyState(ref, ai:charge)
-                    ) else(
+                        setEnemyState(ref, ai:mega)
+                    ) elseif(getEnemySequenceStep(ref) == 6) then(
+                        newSet(55)
+                        setEnemySequenceStep(ref, 0)
                         setEnemyActDelay(ref, 50)
+                        setEnemyState(ref, ai:spin)
+                    ) else(
+                        setEnemyActDelay(ref, 10)
                         setEnemyState(ref, ai:melee)
                         setEnemySequenceStep(ref, getEnemySequenceStep(ref)+1)
                     )
@@ -419,7 +446,7 @@ script, enemyBehavior, ref, begin
                     newSet(55)
                     setEnemyActDelay(ref, 30)
                     setEnemyState(ref, ai:spin)
-                    setEnemyPatternStep(ref, 8)
+                    setEnemyPatternStep(ref, 28)
                     setTimer(timer:boss, 90, 1)    # don't melee again immediately
                 )
                 case(ai:spin) do(
@@ -431,7 +458,7 @@ script, enemyBehavior, ref, begin
                     bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
                     setSliceDir(npcSl, bearing)
                     setSliceV(npcSl, getEnemySpeed(ref))
-                    if(getEnemyPatternStep(ref) < 10) then(
+                    if(getEnemyPatternStep(ref) < 30) then(
                         setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
                     ) else(
                         setEnemyState(ref, ai:idle)
@@ -460,21 +487,45 @@ script, enemyBehavior, ref, begin
                     setEnemyActDelay(ref, 8)
                 )
                 case(ai:mega) do(
-                    for(i, 0, npcCopyCount(12)--1) do(
-                        if(getEnemySequenceStep(ref) > 0) then(
-                            continue
-                        )
-                        if(minionCount < 12) then(
-                            spawn := createEnemy(enemy:fan, npcX(npcReference(12, i)), npcY(npcReference(12, i)))
-                            minionCount += 1
+                    # remove fences
+                    for(x, 12, 25, 13) do(
+                        for(y, 33, 34) do(
+                            writePassBlock(x, y, 0)
+                            writeMapBlock(x, y, 0, 3)
                         )
                     )
+
+                    if(getSliceVisible(npcSl) == false) then(
+                        # Drop down
+                        startAOE(sliceCX(player), sliceCY(player), getEnemyAttackWidth(ref)+12, getEnemyAttackHeight(ref)*2, 40, 3)
+                        vfx := loadWalkaboutSprite(55)      # fake chadbile
+                        setParent(vfx, lookupSlice(sl:mapLayer4))
+                        putSlice(npcSl, sliceCX(player)--(sliceWidth(npcSl)/2), sliceCY(player)--(sliceHeight(npcSl)/2))
+                        updateNPCorHeroFromSlice(npcSl)
+                        putSlice(vfx, sliceCX(npcSl)--(sliceWidth(vfx)/2), sliceCY(npcSl)--(getScreenHeight()/2)--sliceHeight(vfx))
+                        
+                        createParticle(vfx, 40, 3000, 180, 0, false, dissolve:blip, true)
+                        setTimer(timer:boss, 39, 1, @setVisibility)
+                        setTimerArgs(timer:boss, npcSl, true)
+                    ) else(
+                        # Jump up
+                        setSliceVisible(npcSl, false)
+                        vfx := loadWalkaboutSprite(55)      # fake chadbile
+                        setParent(vfx, lookupSlice(sl:mapLayer4))
+                        putSlice(vfx, sliceCX(npcSl)--(sliceWidth(vfx)/2), sliceCY(npcSl)--(sliceHeight(vfx)))
+                        createParticle(vfx, 40, 4000, 0, 0, false, dissolve:blip)
+                        vfx := loadHeroSprite(15)       # shadow
+                        setParent(vfx, lookupSlice(sl:mapLayer4))
+                        setHorizAnchor(vfx, edge:center), setVertAnchor(vfx, edge:middle)
+                        putSlice(vfx, sliceCX(npcSl), sliceCY(npcSl))
+                        createAnimation(vfx, 40, 5, false, dissolve:fade)
+                    )
                     
-                    if(getEnemySequenceStep(ref) == 5) then(
+                    if(getEnemySequenceStep(ref) >= 6 && getSliceVisible(npcSl)) then(
                         setEnemyActDelay(ref, 240)
                         setEnemyState(ref, ai:idle)
                     ) else(
-                        setEnemyActDelay(ref, 60)
+                        setEnemyActDelay(ref, 120)
                         setEnemySequenceStep(ref, getEnemySequenceStep(ref)+1)
                     )
                 )
@@ -491,11 +542,10 @@ script, enemyBehavior, ref, begin
                 setVertAnchor(vfx, edge:bottom)
                 createParticle(vfx, 80, 400, random(270, 360))
             )
-            # If player within certain radius, move towards them
-            dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
-            if(dist / 20 < 4  && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
-                # Run away
-                bearing := get_bearing(sliceCX(player), sliceCY(player), sliceCX(npcSl), sliceCY(npcSl))
+            dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(getNPCSlice(globalNPC(enemy:chadbile))), sliceCY(getNPCSlice(globalNPC(enemy:chadbile))))
+            if(dist / 20 > 2  && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
+                # Move toward chadbile
+                bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(getNPCSlice(globalNPC(enemy:chadbile))), sliceCY(getNPCSlice(globalNPC(enemy:chadbile))))
                 setEnemyActDelay(ref, enemy:actDelay)
                 setSliceDir(npcSl, bearing)
                 setSliceV(npcSl, getEnemySpeed(ref))
@@ -509,11 +559,11 @@ script, enemyBehavior, ref, begin
                 setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
             )
 
-            if(dist / 20 < 8 && getAttackDelay(npcSl) == 0) then(
+            if(dist / 20 < 7 && getAttackDelay(npcSl) == 0) then(
                 # Fire projectile
                 bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
-                createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, bearing, projectile:speed, false)
-                setAttackDelay(npcSl, random(90, 180))
+                createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, bearing+random(-10,10), projectile:speed, false)
+                setAttackDelay(npcSl, random(180, 360))
                 setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
             )
         )
@@ -717,6 +767,9 @@ script, getEnemyHP, ref, begin
         case(enemy:testboss) exitReturning(100)
         case(enemy:slime) exitReturning(5)
         case(enemy:charvile) exitReturning(266)
+        case(enemy:chadbile) exitReturning(266)
+        case(enemy:fan) exitReturning(2)
+        case(enemy:flame) exitReturning(1)
         case(else) exitReturning(default)
     )
 end

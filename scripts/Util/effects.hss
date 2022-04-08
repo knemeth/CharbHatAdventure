@@ -8,7 +8,7 @@ end
 # ANIMATING SPRITES
 # ==========================
 
-script, createAnimation, handle, duration, spd=1, repeat=0, dissolve=false, begin
+script, createAnimation, handle, duration, spd=1, repeat=0, dissolve=false, dissolveBackwards=false, begin
     # takes an existing Slice and converts it into an animating sprite
     # spd is tickcount: higher is slower
     # repeat: true or false
@@ -22,7 +22,7 @@ script, createAnimation, handle, duration, spd=1, repeat=0, dissolve=false, begi
     )
     if(dissolve) then(
         setTopPadding(handle, dissolve)
-        dissolveSprite(handle, dissolve, duration)
+        dissolveSprite(handle, dissolve, duration, 0, dissolveBackwards)
     )
     # store handle in array
     append(animHandles, handle)
@@ -75,7 +75,7 @@ end
 # PARTICLES
 # ==========================
 
-script, createParticle, handle, dur, spd, bearing, weight=0, gravity=false, dissolve=0, begin
+script, createParticle, handle, dur, spd, bearing, weight=0, gravity=false, dissolve=0, dissolveBackwards=false, begin
     # Takes an existing slice handle and makes it a particle
     # This particle will move every frame based on the stats given
     # dur = duration in ticks, will delete itself after this duration
@@ -103,7 +103,7 @@ script, createParticle, handle, dur, spd, bearing, weight=0, gravity=false, diss
     # store handle in array
     append(particleHandles, handle)
     if(dissolve <> false && sliceIsSprite(handle)) then(
-        dissolveSprite(handle, dissolve, dur)
+        dissolveSprite(handle, dissolve, dur, 0, dissolveBackwards)
     )
     if(sliceIsSprite(handle)) then(setParticleAnimSpd(handle, dur/spriteFrameCount(handle)))
 end
