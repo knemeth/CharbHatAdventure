@@ -7,7 +7,7 @@ script, updateHud, begin
     variable(hpBar)
     hpBar := lookupSlice(sli:hpBar, hud)
     setSliceWidth(hpBar, multdiv(sliceWidth(firstChild(hpBar)), getHeroStat(me, stat:HP), getHeroStat(me, stat:HP, maximumStat)))
-    clearString(0), appendNumber(0, getHeroStat(me, stat:hp))
+    clearString(0), appendNumber(0, max(getHeroStat(me, stat:hp), 0))
     setSliceText(lookupSlice(sli:hpCurrent, hud), 0)
     clearString(0), appendNumber(0, getHeroStat(me, stat:hp, maximumStat))
     setSliceText(lookupSlice(sli:hpMax, hud), 0)

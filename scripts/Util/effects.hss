@@ -13,6 +13,8 @@ script, createAnimation, handle, duration, spd=1, repeat=0, dissolve=false, begi
     # spd is tickcount: higher is slower
     # repeat: true or false
     #realignSlice(handle, edge:left, edge:top, edge:center, edge:center)
+    remove(animHandles, handle)     # Reset animation if already existing
+
     setSliceExtra(handle, extra0, duration)
     setSliceExtra(handle, extra1, spd)
     if(repeat) then(

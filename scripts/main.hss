@@ -34,6 +34,7 @@ globalVariable, begin
     15,joyY
     16,playerAnimSpeed
     17,controlsSuspended
+    18,enemiesSuspended
     # UI
     30,hud
     31,titleScreenHud
@@ -172,6 +173,10 @@ script, startGame, begin
     wait
     fadeScreenIn()
 
+    enemiesSuspended := false
+    controlsSuspended := false
+    gamePaused := false
+
     while(true) do(
         primaryLoopContents()
         wait
@@ -204,6 +209,9 @@ plotscript, titleScreen, begin
     flash := lookupSlice(sli:titleBg)
     flashDuration := 100
     clouds := lookupSlice(sli:clouds)
+
+    enemiesSuspended := true
+    controlsSuspended := true
 
     while(menuIsOpen(menu)) do(
         # lightning
@@ -275,7 +283,9 @@ script, primaryLoopContents, begin
     animatePlayer()
 
     # Enemies
-    enemyEachtick()
+    if(enemiesSuspended == false) then(
+        enemyEachtick()    
+    )
     animateNPCs()
 
     meleeCollisions()
@@ -301,10 +311,15 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
     if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
         exitScript() # slice is not a hero or npc
     )
+    variable(isNPC)
+
+    if(npcReferenceFromSlice(handle)) then(
+        isNPC := true
+    )
 
     if(childCount(handle) == 1) then(
         # Only has a sprite child, has not been initialized
-        variable(sl)
+        variable(sl, spr)
         sl := firstChild(handle)
         setHorizAlign(sl, edge:center)
         setHorizAnchor(sl, edge:center)
@@ -314,7 +329,13 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
         setRectBorder(sl, border:none)
         setRectTrans(sl, trans:hollow)
         centerSlice(sl)
+        moveSliceBelow(sl, lookupSlice(sl:walkaboutSpritecomponent, handle))
         setSliceLookup(sl, sli:attack)
+        if(isNPC) then(
+            spr := loadHeroSprite(13)
+            setParent(spr, sl)
+            centerSlice(spr) 
+        )
         sl := createContainer(0,0)      # stores combat data
         setParent(sl, handle)
         setSliceLookup(sl, sli:combat)

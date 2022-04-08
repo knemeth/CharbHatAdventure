@@ -252,6 +252,8 @@ script, damagePlayer, amount, begin
     if(getHeroStat(me, stat:HP) <= 0) then(
         variable(i, sl, vfx, ref)
         # Die
+        updateHud()
+        
         for(i, 0, childCount(lookupSlice(sl:maproot))--1) do(
             sl := sliceChild(lookupSlice(sl:maproot), i)
             if(sliceIsMapLayer(sl)) then(
@@ -263,10 +265,12 @@ script, damagePlayer, amount, begin
         setSliceVisible(projectileLayer, false)
         ref := nextNPCReference()
         while(ref) do(
-            destroyNPC(ref)
+            if(getNPCPool(ref) == pool:global) then(
+                destroyNPC(ref)
+            )
             ref := nextNPCReference(ref)
         )
-        controlsSuspended := true 
+        controlsSuspended := true
         playerSpriteset := player:deadSet
         playerFrames := player:deadFrames
         setSpriteSetNumber(getHeroSprite(me), player:deadSet)
@@ -284,10 +288,10 @@ script, damagePlayer, amount, begin
             setParent(vfx, fxLayer)
             centerSlice(vfx)
             putSlice(vfx, sliceCX(player), sliceCY(player))
-            createParticle(vfx, 240, 4000, i*(360/8), 10)
+            createParticle(vfx, 50, 4000, i*(360/8), 20)
         )
         
-        setTimer(timer:cutscene, 120, 1, @death)
+        setTimer(timer:cutscene, 180, 1, @death)
     )
 end
 
@@ -347,7 +351,7 @@ end
 # =================================
 
 script, meleeCollisions, begin
-    variable(i, attack, hit, ref)
+    variable(i, attack, hit, ref, sl)
 
     # Player Melee
     attack := lookupSlice(sli:attack, player)
@@ -369,5 +373,17 @@ script, meleeCollisions, begin
             setEnemyHit(ref, false)
             ref := nextNPCReference(ref)
         )
+    )
+
+    # Enemy melee
+    ref := nextNPCReference()
+    while(ref) do(
+        if(getNPCPool(ref) == pool:global) then(
+            sl := lookupSlice(sli:attack, getNPCSlice(ref))
+            if(getSliceVisible(sl) && getHeroStat(me, stat:dodge) == 0 && sliceCollide(sl, player)) then(
+                damagePlayer(3)
+            )
+        )
+        ref := nextNPCReference(ref)
     )
 end

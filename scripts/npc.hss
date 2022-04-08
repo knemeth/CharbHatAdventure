@@ -342,8 +342,11 @@ end
 
 plotscript, chadbile, begin
     setTag(tag:chadbileStart, on)
-    gamePaused := true
-    controlsSuspended := true
+    #gamePaused := true
+    #controlsSuspended := true
 
-    toggleCutsceneBars(true)
+    #toggleCutsceneBars(true)
+
+    setEnemyActDelay(globalNPCReference(enemy:chadbile), 30)
+    setEnemyState(globalNPCReference(enemy:chadbile), state:idle)
 end

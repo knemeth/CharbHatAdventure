@@ -110,7 +110,9 @@ script, movePlayer, begin
             if(hit == false) then(continue)
             ref := npcReferenceFromSlice(hit)
             if(readNPC(ref, npcStat:Activation) == npcActivation:stepon) then(
-                runScriptByID(readNPC(ref, npcStat:script), readNPC(ref, npcStat:scriptArgument), ref)
+                if(readNPC(ref, npcStat:script)) then(
+                    runScriptByID(readNPC(ref, npcStat:script), readNPC(ref, npcStat:scriptArgument), ref)
+                )
                 #useNPC(npcReferenceFromSlice(hit))
             )
         )
@@ -153,6 +155,8 @@ script, applyMove, handle, subX, subY, begin
     # Called in movePlayer and moveEnemies
     # Moves a slice based on relative x and y
     variable(x, y, w, h, hitX, hitY, newX, newY)
+
+    if(handle == false || sliceIsValid(handle) == false) then(exitScript)
 
     x := sliceX(handle)
     y := sliceY(handle)
