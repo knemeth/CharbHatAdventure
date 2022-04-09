@@ -22,7 +22,7 @@ script, createAnimation, handle, duration, spd=1, repeat=0, dissolve=false, diss
     )
     if(dissolve) then(
         setTopPadding(handle, dissolve)
-        dissolveSprite(handle, dissolve, duration, 0, dissolveBackwards)
+        dissolveSprite(handle, dissolve, duration+1, 0, dissolveBackwards)
     )
     # store handle in array
     append(animHandles, handle)
@@ -103,7 +103,7 @@ script, createParticle, handle, dur, spd, bearing, weight=0, gravity=false, diss
     # store handle in array
     append(particleHandles, handle)
     if(dissolve <> false && sliceIsSprite(handle)) then(
-        dissolveSprite(handle, dissolve, dur, 0, dissolveBackwards)
+        dissolveSprite(handle, dissolve, dur+1, 0, dissolveBackwards)
     )
     if(sliceIsSprite(handle)) then(setParticleAnimSpd(handle, dur/spriteFrameCount(handle)))
 end

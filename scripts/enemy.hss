@@ -16,6 +16,7 @@ defineConstant, begin
     7,enemy:fan
     8,enemy:flame
     9,enemy:starbile
+    10,enemy:speaker
     30,enemy:actDelay
 
     0,ai:idle
@@ -577,6 +578,173 @@ script, enemyBehavior, ref, begin
                 destroyNPC(ref)
             )
         )
+        case(enemy:starbile) do(
+            if(getEnemyState(ref) == ai:wait) then(break)   # fight hasn't started yet
+            
+            switch(getEnemyState(ref)) do(
+                case(ai:idle) do(
+                    if(getSliceExtra(firstChild(getNPCSprite(ref)), extra0) <> 50) then(
+                        newSet(50)
+                    )
+                    setEnemyMelee(ref, false)
+                    for(i, 0, npcCopyCount(12)--1) do(
+                        if(getEnemySequenceStep(ref) > 0) then(
+                            continue
+                        )
+                        if(minionCount < 8) then(
+                            spawn := createEnemy(enemy:fan, npcX(npcReference(12, i)), npcY(npcReference(12, i)))
+                            minionCount += 1
+                        )
+                    )
+                    # put up fences
+                    for(x, 12, 25, 13) do(
+                        for(y, 33, 34) do(
+                            writePassBlock(x, y, northwall+southwall+eastwall+westwall)
+                            writeMapBlock(x, y, 133, 3)
+                        )
+                    )
+
+                    dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+                    if(dist / 20 > 4 && getSliceV(npcSl) == 0) then(
+                        # move toward player
+                        bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+                        setSliceDir(npcSl, bearing)
+                        setSliceV(npcSl, getEnemySpeed(ref))
+                    ) else(
+                        setSliceDir(npcSl, -1)
+                        setSliceV(npcSl, 0)
+                    )
+
+                    seq := getEnemySequenceStep(ref)
+                    
+                    if(dist < 58 && readTimer(timer:boss) <= 0) then(
+                        setEnemyActDelay(ref, 10)
+                        setEnemyState(ref, ai:melee)
+                    ) elseif(seq == 2 || seq == 3) then(
+                        newSet(55)
+                        setEnemyActDelay(ref, 20)
+                        setEnemyState(ref, ai:charge)
+                        setEnemySequenceStep(ref, seq+random(0,1))
+                    ) elseif(seq == 4) then(
+                        newSet(55)
+                        setEnemySequenceStep(ref, 0)
+                        setEnemyActDelay(ref, 20)
+                        setEnemyState(ref, ai:mega)
+                    ) elseif(seq == 6) then(
+                        newSet(55)
+                        setEnemySequenceStep(ref, 0)
+                        setEnemyActDelay(ref, 50)
+                        setEnemyState(ref, ai:spin)
+                    ) else(
+                        setEnemyActDelay(ref, 10)
+                        setEnemyState(ref, ai:melee)
+                        setEnemySequenceStep(ref, getEnemySequenceStep(ref)+1)
+                    )
+                )
+                case(ai:aoe) do(
+                    if(getEnemyPatternStep(ref) < 8) then(
+                        startAOE(sliceCX(player), sliceCY(player), 50, 50, 60, 2, 6, 6)
+                        setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                    ) else(
+                        setEnemyState(ref, ai:idle)
+                        setEnemyPatternStep(ref, 0)
+                    )
+                    setEnemyActDelay(ref, 24)
+                )
+                case(ai:melee) do(
+                    # move toward player
+                    bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+                    setSliceDir(npcSl, bearing)
+                    setSliceV(npcSl, getEnemySpeed(ref))
+                    newSet(55)
+                    setEnemyActDelay(ref, 30)
+                    setEnemyState(ref, ai:spin)
+                    setEnemyPatternStep(ref, 58)
+                    setTimer(timer:boss, 90, 1)    # don't melee again immediately
+                )
+                case(ai:spin) do(
+                    if(getSliceExtra(firstChild(getNPCSprite(ref)), extra0) <> 53) then(
+                        newSet(53)
+                    )
+                    setEnemyMelee(ref, true)
+                    # move toward player
+                    bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+                    setSliceDir(npcSl, bearing)
+                    setSliceV(npcSl, getEnemySpeed(ref) + 500)
+                    if(getEnemyPatternStep(ref) < 60) then(
+                        setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                    ) else(
+                        setEnemyState(ref, ai:idle)
+                        setEnemyPatternStep(ref, 0)
+                    )
+                    setEnemyActDelay(ref, 10)
+                )
+                case(ai:charge) do(
+                    # move toward player
+                    if(getSliceExtra(firstChild(getNPCSprite(ref)), extra0) <> 53) then(
+                        newSet(53)
+                    )
+                    setEnemyMelee(ref, true)
+                    if(getSliceDir(npcSl) == -1) then(
+                        bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+                        setSliceDir(npcSl, bearing)
+                        setSliceV(npcSl, getEnemySpeed(ref) * 2)
+                    )
+                    createEnemy(enemy:flame, sliceCX(npcSl)/20, sliceCY(npcSl)/20)
+                    if(getEnemyPatternStep(ref) < 5) then(
+                        setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                    ) else(
+                        setEnemyState(ref, ai:idle)
+                        setEnemyPatternStep(ref, 0)
+                    )
+                    setEnemyActDelay(ref, 8)
+                )
+                case(ai:mega) do(
+                    # remove fences
+                    for(x, 12, 25, 13) do(
+                        for(y, 33, 34) do(
+                            writePassBlock(x, y, 0)
+                            writeMapBlock(x, y, 0, 3)
+                        )
+                    )
+
+                    if(getSliceVisible(npcSl) == false) then(
+                        # Drop down
+                        startAOE(sliceCX(player), sliceCY(player), getEnemyAttackWidth(ref)+12, getEnemyAttackHeight(ref)*2, 20, 3)
+                        vfx := loadWalkaboutSprite(55)      # fake chadbile
+                        setParent(vfx, lookupSlice(sl:mapLayer4))
+                        putSlice(npcSl, sliceCX(player)--(sliceWidth(npcSl)/2), sliceCY(player)--(sliceHeight(npcSl)/2))
+                        updateNPCorHeroFromSlice(npcSl)
+                        putSlice(vfx, sliceCX(npcSl)--(sliceWidth(vfx)/2), sliceCY(npcSl)--(getScreenHeight()/2)--sliceHeight(vfx))
+                        
+                        createParticle(vfx, 20, 6000, 180, 0, false, dissolve:puff, true)
+                        setTimer(timer:boss, 19, 1, @setVisibility)
+                        setTimerArgs(timer:boss, npcSl, true)
+                    ) elseif(getEnemySequenceStep(ref) < 6) then(
+                        # Jump up
+                        setSliceVisible(npcSl, false)
+                        vfx := loadWalkaboutSprite(55)      # fake chadbile
+                        setParent(vfx, lookupSlice(sl:mapLayer4))
+                        putSlice(vfx, sliceCX(npcSl)--(sliceWidth(vfx)/2), sliceCY(npcSl)--(sliceHeight(vfx)))
+                        createParticle(vfx, 20, 5000, 0, 0, false, dissolve:puff)
+                        vfx := loadHeroSprite(15)       # shadow
+                        setParent(vfx, lookupSlice(sl:mapLayer4))
+                        setHorizAnchor(vfx, edge:center), setVertAnchor(vfx, edge:middle)
+                        putSlice(vfx, sliceCX(npcSl), sliceCY(npcSl))
+                        createAnimation(vfx, 20, 5, false, dissolve:fade)
+                    )
+                    
+                    if(getEnemySequenceStep(ref) >= 6) then(
+                        newSet(50)
+                        setEnemyActDelay(ref, 240)
+                        setEnemyState(ref, ai:idle)
+                    ) else(
+                        setEnemyActDelay(ref, 120)
+                        setEnemySequenceStep(ref, getEnemySequenceStep(ref)+1)
+                    )
+                )
+            )
+        )
     )
 
     subscript, telegraphFX, begin
@@ -615,11 +783,12 @@ script, setEnemyHit, ref, b, begin
 end
 
 script, stunEnemy, ref, dur, begin
-    if(getNPCID(ref) == enemy:testboss
-    || getNPCID(ref) == enemy:charvile
-    || getNPCID(ref) == enemy:chadbile)
-    then(
-        exitReturning(false)
+    switch(getNPCID(ref)) do(
+        case(enemy:testboss) exitReturning(false)
+        case(enemy:charvile) exitReturning(false)
+        case(enemy:chadbile) exitReturning(false)
+        case(enemy:starbile) exitReturning(false)
+        case(enemy:speaker) exitReturning(false)
     )
     setNPCExtra(ref, extra2, dur)
 end
@@ -797,6 +966,7 @@ script, getEnemyWidth, ref, begin
         case(enemy:chadbile) exitReturning(36)
         case(enemy:flame) exitReturning(16)
         case(enemy:starbile) exitReturning(16)
+        case(enemy:speaker) exitReturning(20)
         case(else) exitReturning(default)
     )
 end
@@ -818,6 +988,7 @@ script, getEnemyHeight, ref, begin
         case(enemy:chadbile) exitReturning(16)
         case(enemy:flame) exitReturning(12)
         case(enemy:starbile) exitReturning(16)
+        case(enemy:speaker) exitReturning(20)
         case(else) exitReturning(default)
     )
 end
@@ -868,6 +1039,7 @@ script, getEnemyFrames, ref, begin
             case(enemy:chadbile) exitReturning(2)
             case(enemy:flame) exitReturning(5)
             case(enemy:starbile) exitReturning(6)
+            case(enemy:speaker) exitReturning(4)
             case(else) exitReturning(4)
         )
     ) else(

@@ -300,6 +300,7 @@ script, damageEnemy, ref, amount, begin
     variable(sl, current)
 
     if(getNPCID(ref) == -1) then(exitScript())
+    if(getNPCID(ref) == enemy:speaker) then(amount := 0)
 
     sl := getNPCSlice(ref)
     vfx := createText()
@@ -343,6 +344,7 @@ script, damageEnemy, ref, amount, begin
             case(enemy:fan) minionCount -= 1, createRandomPickup(sliceCX(sli), sliceCY(sli))
             case(enemy:charvile) charvileKilled()
             case(enemy:chadbile) chadbileKilled()
+            case(enemy:starbile)
             case(else) createRandomPickup(sliceCX(sli), sliceCY(sli))
         )
 
