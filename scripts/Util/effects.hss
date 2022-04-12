@@ -1,10 +1,6 @@
 # effects.hss
 # animations and particle systems
 
-defineConstant, begin
-    
-end
-
 # ANIMATING SPRITES
 # ==========================
 

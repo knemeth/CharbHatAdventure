@@ -47,6 +47,7 @@ globalVariable, begin
     54,rShift
     55,gShift
     56,bShift
+    57,windDirection
 end
 
 defineConstant, begin

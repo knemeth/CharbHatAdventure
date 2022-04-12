@@ -60,6 +60,14 @@ script, movePlayer, begin
     subX := get_x_subpixels(velocity, bearing)
     subY := get_y_subpixels(velocity, bearing)
 
+    if(windDirection <> 0) then(
+        if(windDirection == 1) then(
+            subX += get_x_subpixels(player:speed/2, 90)
+        ) else(
+            subX += get_x_subpixels(player:speed/2, 270)
+        )
+    )
+
     if(velocity <> 0 && playerState == state:idle) then(
         playerState := state:walk
         playerSpriteset := player:walkSet
