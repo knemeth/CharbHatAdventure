@@ -102,6 +102,7 @@ defineConstant, begin
     8,timer:boss
     9,timer:cutsceneBars
     10,timer:fade
+    11,timer:lightning
 
     0,pal:default
     1,pal:charvile

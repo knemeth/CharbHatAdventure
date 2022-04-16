@@ -8,6 +8,8 @@ define constant, begin
 6,tag:charmileMoved
 7,tag:charmileStretched
 8,tag:chadbileDefeated
+9,tag:starbileStart
+10,tag:starbileDefeated
 0,song:Adventure
 1,song:Battle Ready
 0,sfx:Melee
