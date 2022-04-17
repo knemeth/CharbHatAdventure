@@ -85,7 +85,7 @@ script, updateProjectiles, begin
         )
 
         # Check collision with walls
-        if(readPassBlock(sliceX(sl)/20, sliceY(sl)/20)) then(
+        if(readPassBlock(sliceCX(sl)/20, sliceCY(sl)/20)) then(
             freeSlice(sl)
             exitScript()
         ) else(
