@@ -10,6 +10,7 @@ define constant, begin
 8,tag:chadbileDefeated
 9,tag:starbileStart
 10,tag:starbileDefeated
+11,tag:saveExists
 0,song:Adventure
 1,song:Battle Ready
 0,sfx:Melee
@@ -33,6 +34,11 @@ define constant, begin
 18,sfx:NoAmmo
 19,sfx:Death
 20,sfx:DeathEcho
+21,sfx:TextboxBloop8Bit
+22,sfx:Rise
+23,sfx:Fall
+24,sfx:Lightning
+25,sfx:Shot
 0,stat:HP
 1,stat:SP
 2,stat:Atk

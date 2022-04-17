@@ -55,3 +55,10 @@ end
 script, setVisibility, sl, val, begin
     setSliceVisible(sl, val)
 end
+
+script, insertExtra, handle, slot, val, begin
+    if(sliceExtraLength(handle) < slot+1) then(
+        resizeSliceExtra(handle, slot+1)
+    )
+    setSliceExtra(handle, slot, val)
+end

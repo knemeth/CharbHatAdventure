@@ -344,7 +344,7 @@ script, damageEnemy, ref, amount, begin
             case(enemy:fan) minionCount -= 1, createRandomPickup(sliceCX(sli), sliceCY(sli))
             case(enemy:charvile) charvileKilled()
             case(enemy:chadbile) chadbileKilled()
-            case(enemy:starbile)
+            case(enemy:starbile) starbileKilled()
             case(else) createRandomPickup(sliceCX(sli), sliceCY(sli))
         )
 
