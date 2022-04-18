@@ -187,7 +187,7 @@ script, startGame, begin
 end
 
 plotscript, quitGame, begin
-    gameOver()
+    resetGame()
 end
 
 plotscript, loadSave, begin
@@ -205,6 +205,10 @@ plotscript, load, begin
     enemiesSuspended := false 
     controlsSuspended := false 
     gamePaused := false 
+
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
+    setHeroStat(me, stat:SP, getHeroStat(me, stat:SP, maximumStat))
+    setHeroStat(me, stat:Hits, getHeroStat(me, stat:Hits, maximumStat))
 
     while(true) do(
         primaryLoopContents()

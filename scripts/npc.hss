@@ -131,16 +131,19 @@ script, charvileKilled, begin
     setTag(tag:charvileDefeated, on)
     toggleCutsceneBars(true)
 
-    wait(10)
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
 
     for(c, npcCopyCount(enemy:slime, pool:global)--1, 0, -1) do(
         destroyNPC(globalNPCReference(enemy:slime, c))
     )
     c := lastChild(projectileLayer) 
     while(c) do(
-        freeSlice(c)
+        i := c
         c := previousSibling(c)
+        freeSlice(i)
     )
+
+    wait(10)
 
     variable(x, y)
     for(x, 0, mapWidth()--1) do(
@@ -268,7 +271,9 @@ script, charmileInit, begin
 end
 
 script, charmileUpdate, begin
-    variable(sl, butt, body)
+    variable(ref, sl, butt, body, i)
+
+    ref := npcReference(6, 0)
 
     sl := getNPCSprite(npc:charmile)
     butt := lookupSlice(sli:charmileButt, sl)
@@ -284,13 +289,26 @@ script, charmileUpdate, begin
         
         setSliceExtra(body, extra2, getSliceExtra(body, extra2)--1)
     ) elseif(getSliceExtra(body, extra2) < 0) then(
-        charmileWidth(1)
-        setSliceExtra(body, extra2, getSliceExtra(body, extra2)+1)
+        charmileWidth(2)
+        setSliceExtra(body, extra2, getSliceExtra(body, extra2)+2)
     )
 
     # Match player y along bridge
-    if(sliceY(player)/20 == 12 && checkTag(tag:charvileDefeated)) then(
-        putNPC(npc:charmile, npcPixelX(npc:charmile), sliceY(player)--10)
+    if(checkTag(tag:charmileMoved)) then(
+        putNPC(npc:charmile, 37*20, (12*20)--6)
+        if(checkTag(tag:charmileStretched)) then(
+            if(getSliceExtra(body, extra2) >= 0) then(
+                setSliceExtra(body, extra0, 450)
+                for(i, 39, 59) do(
+                    writePassBlock(i, 12, 0)
+                )
+            )
+        ) else(
+            setSliceExtra(body, extra0, 0)
+        )
+        if(sliceY(player)/20 == 12) then(
+            putNPC(npc:charmile, npcPixelX(npc:charmile), sliceY(player)--10)
+        )
     )
 
     putSlice(butt, getSliceExtra(body, extra0) + sliceWidth(sl), getSliceExtra(body, extra1))
@@ -373,6 +391,7 @@ plotscript, charmileStretch, begin
     body := lookupSlice(sli:charmileBody, sl)
 
     setSliceExtra(body, extra2, -450)
+    setTag(tag:charmileStretched, on)
 
     for(i, 39, 59) do(
         writePassBlock(i, 12, 0)
@@ -441,16 +460,19 @@ script, chadbileKilled, begin
     setTag(tag:chadbileDefeated, on)
     toggleCutsceneBars(true)
 
-    wait(30)
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
 
     for(c, npcCopyCount(enemy:fan, pool:global)--1, 0, -1) do(
         destroyNPC(globalNPCReference(enemy:fan, c))
     )
     c := lastChild(projectileLayer) 
     while(c) do(
-        freeSlice(c)
+        i := c
         c := previousSibling(c)
+        freeSlice(i)
     )
+
+    wait(30)
 
     variable(x, y)
     for(x, 0, mapWidth()--1) do(
@@ -591,16 +613,19 @@ script, starbileKilled, begin
     setTag(tag:starbileDefeated, on)
     toggleCutsceneBars(true)
 
-    wait(10)
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
 
     for(c, npcCopyCount(enemy:speaker, pool:global)--1, 0, -1) do(
         destroyNPC(globalNPC(enemy:speaker, c))
     )
     c := lastChild(projectileLayer) 
     while(c) do(
-        freeSlice(c)
+        i := c
         c := previousSibling(c)
+        freeSlice(i)
     )
+
+    wait(10)
 
     variable(x, y)
     for(x, 0, mapWidth()--1) do(

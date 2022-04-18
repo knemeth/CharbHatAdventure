@@ -413,7 +413,7 @@ script, enemyBehavior, ref, begin
                     seq := getEnemySequenceStep(ref)
                     
                     if(dist < 58 && readTimer(timer:boss) <= 0) then(
-                        setEnemyActDelay(ref, 10)
+                        setEnemyActDelay(ref, 30)
                         setEnemyState(ref, ai:melee)
                     ) elseif(seq == 2 || seq == 3) then(
                         newSet(55)
@@ -428,7 +428,7 @@ script, enemyBehavior, ref, begin
                     ) elseif(seq == 6) then(
                         newSet(55)
                         setEnemySequenceStep(ref, 0)
-                        setEnemyActDelay(ref, 50)
+                        setEnemyActDelay(ref, 180)
                         setEnemyState(ref, ai:spin)
                     ) else(
                         setEnemyActDelay(ref, 10)
@@ -436,21 +436,11 @@ script, enemyBehavior, ref, begin
                         setEnemySequenceStep(ref, getEnemySequenceStep(ref)+1)
                     )
                 )
-                case(ai:aoe) do(
-                    if(getEnemyPatternStep(ref) < 8) then(
-                        startAOE(sliceCX(player), sliceCY(player), 50, 50, 60, 2, 6, 6)
-                        setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
-                    ) else(
-                        setEnemyState(ref, ai:idle)
-                        setEnemyPatternStep(ref, 0)
-                    )
-                    setEnemyActDelay(ref, 24)
-                )
                 case(ai:melee) do(
                     # move toward player
                     bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
                     setSliceDir(npcSl, bearing)
-                    setSliceV(npcSl, getEnemySpeed(ref))
+                    setSliceV(npcSl, getEnemySpeed(ref) / 2)
                     newSet(55)
                     setEnemyActDelay(ref, 30)
                     setEnemyState(ref, ai:spin)
@@ -462,6 +452,7 @@ script, enemyBehavior, ref, begin
                         newSet(53)
                     )
                     setEnemyMelee(ref, true)
+                    playSound(sfx:swish, false, true)
                     # move toward player
                     bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
                     setSliceDir(npcSl, bearing)
@@ -476,10 +467,15 @@ script, enemyBehavior, ref, begin
                 )
                 case(ai:charge) do(
                     # move toward player
-                    if(getSliceExtra(firstChild(getNPCSprite(ref)), extra0) <> 53) then(
+                    if(getSliceExtra(firstChild(getNPCSprite(ref)), extra0) == 50) then(
+                        newSet(52)
+                        setEnemyActDelay(ref, 20)
+                        break
+                    ) elseif(getSliceExtra(firstChild(getNPCSprite(ref)), extra0) <> 53) then(
                         newSet(53)
                     )
                     setEnemyMelee(ref, true)
+                    playSound(sfx:swish, false, true)
                     if(getSliceDir(npcSl) == -1) then(
                         bearing := get_bearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
                         setSliceDir(npcSl, bearing)
@@ -491,6 +487,7 @@ script, enemyBehavior, ref, begin
                     ) else(
                         setEnemyState(ref, ai:idle)
                         setEnemyPatternStep(ref, 0)
+                        newSet(50)
                     )
                     setEnemyActDelay(ref, 8)
                 )
@@ -506,7 +503,7 @@ script, enemyBehavior, ref, begin
                     if(getSliceVisible(npcSl) == false) then(
                         # Drop down
                         playSound(sfx:fall, false, true)
-                        startAOE(sliceCX(player), sliceCY(player), getEnemyAttackWidth(ref)+12, getEnemyAttackHeight(ref)*2, 20, 3)
+                        startAOE(sliceCX(player), sliceCY(player), getEnemyAttackWidth(ref), getEnemyAttackHeight(ref)*2, 20, 3)
                         vfx := loadWalkaboutSprite(55)      # fake chadbile
                         setParent(vfx, lookupSlice(sl:mapLayer4))
                         putSlice(npcSl, sliceCX(player)--(sliceWidth(npcSl)/2), sliceCY(player)--(sliceHeight(npcSl)/2))
@@ -929,7 +926,7 @@ script, getEnemyHP, ref, begin
         case(enemy:slime) exitReturning(5)
         case(enemy:charvile) exitReturning(266)
         case(enemy:chadbile) exitReturning(266)
-        case(enemy:starbile) exitReturning(1)
+        case(enemy:starbile) exitReturning(266)
         case(enemy:fan) exitReturning(2)
         case(enemy:flame) exitReturning(1)
         case(else) exitReturning(default)
