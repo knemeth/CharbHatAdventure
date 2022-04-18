@@ -187,6 +187,10 @@ script, startGame, begin
 end
 
 plotscript, quitGame, begin
+    gameOver()
+end
+
+plotscript, quitToTitle, begin
     resetGame()
 end
 
