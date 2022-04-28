@@ -78,7 +78,6 @@ plotscript, charvile, begin
     walkNPC(ref, down, 9)
     focusCamera(84, 78, 1)
 
-
     showTextbox(6)
     waitForTextbox()
 
@@ -98,6 +97,7 @@ plotscript, charvile, begin
     toggleBossBar(true, 1)
     clearString(1)
     currentBoss := enemy:charvile
+    putSliceSubpixel(sl, npcPixelX(ref)*1000, npcPixelY(ref)*1000)
 
     toggleCutsceneBars(false)
     cameraFollowsHero(me)

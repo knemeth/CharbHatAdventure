@@ -101,7 +101,7 @@ script, movePlayer, begin
                         x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
                         x2 := sliceX(player)+(sliceWidth(player)/2), y2 := sliceY(player)+(sliceHeight(player)/2)
                         pushObject(player, get_bearing(x1, y1, x2, y2), player:touchKnockback)
-                        damagePlayer(2)
+                        damagePlayer(1)
                         exitScript()
                     ) else(
                         x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
