@@ -201,7 +201,6 @@ end
 
 script, palShiftTick, r, g, b, begin
     # r g b are target values
-    traceValue(r, g, b, rShift, gShift, bShift)
 
     if(r == rShift && g == gShift && b == bShift) then(
         exitScript()

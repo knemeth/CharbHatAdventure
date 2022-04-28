@@ -214,6 +214,8 @@ plotscript, load, begin
     setHeroStat(me, stat:SP, getHeroStat(me, stat:SP, maximumStat))
     setHeroStat(me, stat:Hits, getHeroStat(me, stat:Hits, maximumStat))
 
+    resetInputs()
+
     while(true) do(
         primaryLoopContents()
         wait
