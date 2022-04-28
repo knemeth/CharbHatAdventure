@@ -77,7 +77,7 @@ script, updateProjectiles, begin
                     pushObject(hit, bearing, projectile:knockback / 2)
                 ) else(
                     pushObject(hit, bearing, projectile:knockback)
-                    damagePlayer(2)
+                    damagePlayer(1)
                 )
                 freeSlice(sl)
                 exitScript()
