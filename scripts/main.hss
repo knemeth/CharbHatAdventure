@@ -232,6 +232,7 @@ end
 
 plotscript, closeMainMenu, begin
     controlsSuspended := false
+    gamePaused := false
 end
 
 plotscript, titleScreen, begin
@@ -314,6 +315,9 @@ script, primaryLoopContents, begin
 
     # Player
     evaluateInput()
+    if(topMenu) then(
+        gamePaused := true
+    )
     if(gamePaused) then(
         resetInputs()
         exitScript()
