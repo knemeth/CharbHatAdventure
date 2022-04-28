@@ -5,7 +5,7 @@ defineConstant, begin
     90,player:reloadSpeed
     8,player:projectileSize
     30,enemy:flashFrames
-    40,player:invisFrames
+    50,player:invisFrames
     2,player:meleeDamage
     10000,player:knockback
     30,player:meleeStun

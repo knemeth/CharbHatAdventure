@@ -321,7 +321,7 @@ script, enemyBehavior, ref, begin
                         )
                         setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
                     ) else(
-                        setEnemyActDelay(ref, 80)
+                        setEnemyActDelay(ref, 240)
                         setEnemyState(ref, ai:idle)
                         setEnemyPatternStep(ref, 0)
                     )
@@ -364,7 +364,7 @@ script, enemyBehavior, ref, begin
                         setSliceVisible(npcSl, true)
                         dissolveSprite(getNPCSprite(ref), dissolve:melt, 60, 1, true)
                         setTimer(timer:boss, 60, 1, @charvileUndulate)
-                        setEnemyActDelay(ref, 240)
+                        setEnemyActDelay(ref, 500)
                         setEnemyState(ref, ai:idle)
                     ) else(
                         setEnemyActDelay(ref, 60)
@@ -427,11 +427,15 @@ script, enemyBehavior, ref, begin
                         setEnemyState(ref, ai:mega)
                     ) elseif(seq == 6) then(
                         newSet(55)
-                        setEnemySequenceStep(ref, 0)
+                        setEnemySequenceStep(ref, seq+1)
                         setEnemyActDelay(ref, 180)
                         setEnemyState(ref, ai:spin)
+                    ) elseif(seq == 7) then(
+                        setEnemyActDelay(ref, 400)
+                        setEnemySequenceStep(ref, 0)
+                        setEnemyState(ref, ai:idle)
                     ) else(
-                        setEnemyActDelay(ref, 10)
+                        setEnemyActDelay(ref, 50)
                         setEnemyState(ref, ai:melee)
                         setEnemySequenceStep(ref, getEnemySequenceStep(ref)+1)
                     )
@@ -531,7 +535,7 @@ script, enemyBehavior, ref, begin
                     
                     if(getEnemySequenceStep(ref) >= 6) then(
                         newSet(50)
-                        setEnemyActDelay(ref, 240)
+                        setEnemyActDelay(ref, 600)
                         setEnemyState(ref, ai:idle)
                     ) else(
                         setEnemyActDelay(ref, 120)
