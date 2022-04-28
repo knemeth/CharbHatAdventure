@@ -507,7 +507,7 @@ script, enemyBehavior, ref, begin
                     if(getSliceVisible(npcSl) == false) then(
                         # Drop down
                         playSound(sfx:fall, false, true)
-                        startAOE(sliceCX(player), sliceCY(player), getEnemyAttackWidth(ref), getEnemyAttackHeight(ref)*2, 20, 3)
+                        startAOE(sliceCX(player), sliceCY(player), getEnemyAttackWidth(ref), getEnemyAttackHeight(ref)*2, 28, 3)
                         vfx := loadWalkaboutSprite(55)      # fake chadbile
                         setParent(vfx, lookupSlice(sl:mapLayer4))
                         putSlice(npcSl, sliceCX(player)--(sliceWidth(npcSl)/2), sliceCY(player)--(sliceHeight(npcSl)/2))
@@ -709,7 +709,8 @@ script, enemyBehavior, ref, begin
                     for(i, first, last) do(
                         setEnemyState(globalNPC(enemy:speaker, i), ai:charge)
                     )
-                    setEnemyActDelay(ref, 60)
+                    newSet(62)
+                    setEnemyActDelay(ref, 400)
                     setEnemyState(ref, ai:idle)
                 )
             )

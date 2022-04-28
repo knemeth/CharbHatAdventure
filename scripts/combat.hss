@@ -252,6 +252,7 @@ script, damagePlayer, amount, begin
     if(getHeroStat(me, stat:HP) <= 0) then(
         variable(i, sl, vfx, ref)
         # Die
+        windDirection := 0
         updateHud()
         setOpacity(getHeroSprite(me), 100)
         
