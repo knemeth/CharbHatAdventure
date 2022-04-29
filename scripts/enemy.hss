@@ -1036,6 +1036,7 @@ script, getEnemyFrames, ref, begin
         id := getNPCID(ref)
         switch(id) do(
             case(npc:charmile) exitReturning(4)
+            case(23) exitReturning(10)   # minecraft fox
             case(else) exitReturning(1)
         )
     )

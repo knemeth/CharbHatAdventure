@@ -419,7 +419,7 @@ plotscript, mapAutorun, begin
                 setSliceVisible(getNPCSlice(ref), false)
             )
         ) else(
-            if(getNPCID(ref) == npc:charmile) then(
+            if(getNPCID(ref) == npc:charmile || getNPCID(ref) == 23) then(
                 initObject(getNPCSlice(ref), 20, 24, 0, 0)
             )
         )

@@ -111,6 +111,8 @@ script, animateNPCs, begin
             )
             if(getNPCID(ref) == npc:charmile) then(
                 animateNPC(ref)
+            ) elseif(getNPCID(ref) == 23) then(
+                animateNPC(ref)
             )
         ) else(
             animateNPC(ref)
