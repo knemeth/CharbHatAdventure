@@ -50,8 +50,8 @@ script, updateProjectiles, begin
         # Move by speed/direction
         velocity := getSliceExtra(sl, extra1)
         bearing := getSliceExtra(sl, extra0)
-        subX := get_x_subpixels(velocity, bearing)
-        subY := get_y_subpixels(velocity, bearing)
+        subX := getXSubpixels(velocity, bearing)
+        subY := getYSubpixels(velocity, bearing)
 
         # Check collision with player/enemy
         if(friendly) then(

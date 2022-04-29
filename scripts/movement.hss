@@ -31,7 +31,7 @@ script, movePlayer, begin
         joyY := 0
     )
 
-    bearing := get_bearing(0, 0, joyX, joyY)
+    bearing := getBearing(0, 0, joyX, joyY)
     if((bearing <> 0 || joyX <> 0 || joyY <> 0) && playerState <> state:attack) then(
         # Only update direction if moving and not attacking
         setSliceDir(player, bearing)
@@ -57,14 +57,14 @@ script, movePlayer, begin
         #velocity := velocity / 2        # deceleration
     )
 
-    subX := get_x_subpixels(velocity, bearing)
-    subY := get_y_subpixels(velocity, bearing)
+    subX := getXSubpixels(velocity, bearing)
+    subY := getYSubpixels(velocity, bearing)
 
     if(windDirection <> 0) then(
         if(windDirection == 1) then(
-            subX += get_x_subpixels(player:speed/2, 90)
+            subX += getXSubpixels(player:speed/2, 90)
         ) else(
-            subX += get_x_subpixels(player:speed/2, 270)
+            subX += getXSubpixels(player:speed/2, 270)
         )
     )
 
@@ -100,13 +100,13 @@ script, movePlayer, begin
                     if(getHeroStat(me, stat:Def) == 0) then(
                         x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
                         x2 := sliceX(player)+(sliceWidth(player)/2), y2 := sliceY(player)+(sliceHeight(player)/2)
-                        pushObject(player, get_bearing(x1, y1, x2, y2), player:touchKnockback)
+                        pushObject(player, getBearing(x1, y1, x2, y2), player:touchKnockback)
                         damagePlayer(1)
                         exitScript()
                     ) else(
                         x1 := sliceX(hit)+(sliceWidth(hit)/2), y1 := sliceY(hit)+(sliceHeight(hit)/2)
                         x2 := sliceX(player)+(sliceWidth(player)/2), y2 := sliceY(player)+(sliceHeight(player)/2)
-                        pushObject(hit, get_bearing(x2, y2, x1, y1), player:touchKnockback)
+                        pushObject(hit, getBearing(x2, y2, x1, y1), player:touchKnockback)
                         stunEnemy(npcReferenceFromSlice(hit), player:blockStun)
                     )
                 )
@@ -153,8 +153,8 @@ script, pushObject, target, bearing, wt, begin
     # wt: weight of knockback
     variable(subX, subY)
 
-    subX := get_x_subpixels(wt, bearing)
-    subY := get_y_subpixels(wt, bearing)
+    subX := getXSubpixels(wt, bearing)
+    subY := getYSubpixels(wt, bearing)
 
     applyMove(target, subX, subY)
 end

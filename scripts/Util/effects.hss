@@ -131,8 +131,8 @@ script, moveParticles, purge=false, begin
             continue
         )
         # Speed and Bearing
-        xv := get_x_subpixels(getParticleSpeed(sl), getParticleBearing(sl))
-        yv := get_y_subpixels(getParticleSpeed(sl), getParticleBearing(sl))
+        xv := getXSubpixels(getParticleSpeed(sl), getParticleBearing(sl))
+        yv := getYSubpixels(getParticleSpeed(sl), getParticleBearing(sl))
         x := getSubX(sl) + xv
         y := getSubY(sl) + yv
         setSubX(sl, x)

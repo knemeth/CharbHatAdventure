@@ -365,7 +365,7 @@ script, meleeCollisions, begin
             hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), attack, i, false, true)
             ref := npcReferenceFromSlice(hit)
             if(ref && getNPCPool(ref) == pool:global && getEnemyHit(ref) == false) then(
-                pushObject(hit, get_bearing(sliceCX(player), sliceCY(player), sliceCX(hit), sliceCY(hit)), projectile:knockback)   # from movement.hss
+                pushObject(hit, getBearing(sliceCX(player), sliceCY(player), sliceCX(hit), sliceCY(hit)), projectile:knockback)   # from movement.hss
                 setEnemyHit(ref, true)
                 stunEnemy(ref, player:meleeStun)
                 damageEnemy(ref, player:meleeDamage + random(-1,1))

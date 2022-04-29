@@ -1,12 +1,5 @@
 
-# This file contains geometry helper functions that can be included in other
-# scripts to make it easier to program smooth movements for objects.
-#
-# Polkakitty, 03/22/21
-
-
-
-# script, get_x_subpixels, distance, bearing
+# script, GetXSubpixels, distance, bearing
 #
 # This takes a line defined by a length measured in subpixels (units of 1/1000
 # of a pixel) and a compass bearing, and outputs the x component of that line,
@@ -24,9 +17,9 @@
 
 
 
-# script, get_y_subpixels, distance, bearing
+# script, GetYSubpixels, distance, bearing
 #
-# This is the counterpart of get_x_subpixels; when called with the same
+# This is the counterpart of getXSubpixels; when called with the same
 # "distance" and "bearing" arguments, it will give the y component of the same
 # line in subpixels.  Again, the result can be positive or negative.
 #
@@ -40,14 +33,14 @@
 
 
 
-# script, get_bearing, x1, y1, x2, y2
+# script, GetBearing, x1, y1, x2, y2
 #
 # This finds the bearing of a line from the point (x1, y1) to (x2, y2).
 # It works regardless of whether the input coordinates are in subpixels or
 # regular pixels.  This can be useful if you want to make an enemy that always
 # shoots straight towards the player; you can input the enemy's coordinates as
 # x1 and y1 and input the player's coordinates as x2 and y2.  The bearing you
-# get can be plugged into get_x_subpixels and "get_y_subpixels" to get a
+# get can be plugged into getXSubpixels and "getYSubpixels" to get a
 # trajectory that points straight towards the player.
 #
 # Input variables
@@ -59,29 +52,47 @@
 
 
 
-# script, look_up_sine, angle
+# script, GetDistance, x1, y1, x2, y2
+#
+# Get the distance between the points (x1, y1) and (x2, y2), according to the
+# Pythagorean Theorem.  Because this operation involves squaring the input
+# measurements, it can overflow 32-bit variables relatively easily.
+# This should only be used in cases where the differences between x1 and x2,
+# and between y1 and y2, can be guaranteed to be less than 2^15.
+#
+# Input variables
+# x1, y1: x and y coordinates of the first point
+# x2, y2: x and y coordinates of the second point
+#
+# Return value: The distance between those two points.
+
+
+
+# script, LookUpSine, angle
 #
 # This takes in an angle in degrees, looks it up in a table, and returns the
 # integer closest to 1000 times the sine of that angle.  It was made for
-# get_x_subpixels to use, but you can use it if you need to calculate sines
+# getXSubpixels to use, but you can use it if you need to calculate sines
 # for other purposes.
 #
 # Input variables
-# angle: An angle, measured in degrees (this must be between 0 and 359)
+# angle: An angle, measured in degrees (this is normally between 0 and 359,
+#     but can be outside of that range)
 #
 # Return value: The integer closest to the sine of that angle times 1000.
 #     It will be between -1000 and 1000.
 
 
 
-# script, look_up_cosine, angle
+# script, LookUpCosine, angle
 #
 # This is the counterpart to look_up_sine; it looks up an angle in a table
 # and returns the integer closest to 1000 times that angle's cosine.  You can
 # use it if you need to calculate cosines somewhere else.
 #
 # Input variables
-# angle: An angle, measured in degrees (this must be between 0 and 359)
+# angle: An angle, measured in degrees (this is normally between 0 and 359,
+#     but can be outside of that range)
 #
 # Return value: The integer closest to the cosine of that angle times 1000.
 #     It will be between -1000 and 1000.
@@ -102,36 +113,13 @@
 
 
 
-script, get_x_subpixels, distance, bearing
+script, GetXSubpixels, distance, bearing
 (
-  variable(correction, sine, result)
-
-  # Constrain the bearing to the range between 0 and 359.
-  # If this function is given a bearing greater than 359, it will wrap around
-  # to 0, and if it's given a bearing less than 0, it will wrap around to 359.
-  # For any input bearing i, this function will give the same result if it's
-  # called with (i + 360) or (i - 360) as its bearing argument.  Since the
-  # bearing is a measurement of points on a circle, it's useful for it to be
-  # able to go all the way around, starting from any point.
-  if(bearing > 359) then
-  (
-     correction := bearing / 360
-     correction := correction * 360
-     bearing -= correction
-  )
-  else if (bearing < 0) then
-  (
-     correction := (bearing + 1) / -360
-     correction += 1
-     correction := correction * 360
-     bearing += correction
-  )
+  variable(sine, result)
 
   # Take the bearing of the line, and get the integer closest to its sine
-  # times 1000 from a lookup table (using a lookup table is a lot faster to run
-  # and a lot less complicated for me to implement, especially in integer math,
-  # than calculating the sine the proper way.)
-  sine := look_up_sine(bearing)
+  # times 1000 from a lookup table.
+  sine := LookUpSine(bearing)
 
   # Multiply the distance by the (sine * 1000) measurement we looked up, then
   # divide it by 1000.  The result is the delta-x of a line whose length and
@@ -142,36 +130,13 @@ script, get_x_subpixels, distance, bearing
 
 
 
-script, get_y_subpixels, distance, bearing
+script, GetYSubpixels, distance, bearing
 (
-  variable(correction, cosine, result)
-
-  # Constrain the bearing to the range between 0 and 359.
-  # If this function is given a bearing greater than 359, it will wrap around
-  # to 0, and if it's given a bearing less than 0, it will wrap around to 359.
-  # For any input bearing i, this function will give the same result if it's
-  # called with (i + 360) or (i - 360) as its bearing argument.  Since the
-  # bearing is a measurement of points on a circle, it's useful for it to be
-  # able to go all the way around, starting from any point.
-  if(bearing > 359) then
-  (
-     correction := bearing / 360
-     correction := correction * 360
-     bearing -= correction
-  )
-  else if (bearing < 0) then
-  (
-     correction := (bearing + 1) / -360
-     correction += 1
-     correction := correction * 360
-     bearing += correction
-  )
+  variable(cosine, result)
 
   # Take the bearing of the line, and get the integer closest to its cosine
-  # times 1000 from a lookup table (using a lookup table is a lot faster to run
-  # and a lot less complicated for me to implement, especially in integer math,
-  # than calculating the cosine the proper way.)
-  cosine := look_up_cosine(bearing)
+  # times 1000 from a lookup table.
+  cosine := LookUpCosine(bearing)
 
   # Multiply the distance by the (cosine * 1000) measurement we looked up, then
   # divide it by 1000.  The result is the delta-y of a line whose length and
@@ -186,18 +151,14 @@ script, get_y_subpixels, distance, bearing
 )
 
 
-script, get_bearing, x1, y1, x2, y2
+
+script, GetBearing, x1, y1, x2, y2
 (
   variable(deltaX, deltaY, absoluteDeltaX, absoluteDeltaY)
   variable(cardinal, addAngle, relative, slope, result)
 
-  # Find the distance traveled on the x and y axes between the starting point
-  # and the ending point.  The absolute values of these distances will also be
-  # needed for some calculations.
-  deltaX := x2
-  deltaX -= x1
-  deltaY := y2
-  deltaY -= y1
+  deltaX := x2 -- x1
+  deltaY := y2 -- y1
   absoluteDeltaX := abs(deltaX)
   absoluteDeltaY := abs(deltaY)
 
@@ -227,15 +188,11 @@ script, get_bearing, x1, y1, x2, y2
      )
   )
 
-  # To find the correct angle, we must find the slope of the input line, and
-  # then use the inverse tangent function to convert it to an angle.  However,
-  # as that angle approaches 90 degrees, the line's slope will asymptotically
-  # approach infinity, which makes it increasingly difficult to work with using
-  # integer math.  Therefore, I've split the circle into 8 segments of
-  # 45 degrees each, which can be defined by the variables "cardinal" and
-  # "add angle":
+  # A circle can be split into 8 segments of 45 degrees each, which can be
+  # defined by the variables "cardinal" and "add angle":
   #
   # cardinal: A cardinal direction to start with, either 0, 90, 180, or 270
+  #
   # add angle: True if the angle we're trying to find is between cardinal and
   #     cardinal + 45, so we can add the line's relative slope to cardinal to
   #     get the desired bearing, false if the angle we're trying to find is
@@ -246,20 +203,19 @@ script, get_bearing, x1, y1, x2, y2
   # directions, so instead of finding the angle between the original line and
   # north, we can find the angle between the original line and the closest
   # cardinal direction.  Measured this way, the slope of the line will always be
-  # between 0 and 1, so we can impose restrictions on the "look up inverse
-  # tangent" function that make it easier to write: its input (the slope of the
-  # line times 1000) will always be between 0 and 1000, and its output will
-  # always be between 0 and 45 degrees.
+  # between 0 and 1, so we can impose restrictions on the LookUpInverseTangent()
+  # function that make it easier to write: its input (the slope of the line
+  # times 1000) will always be between 0 and 1000, and its output will always be
+  # between 0 and 45 degrees.
   #
   # These if statements will classify the line's direction as fitting within one
   # of the 8 segments of the circle, set "slope" to the slope of the line
   # (relative to the nearest cardinal direction) times 1000, and set "cardinal"
   # and "add angle" to decide what to do with the angle we get from plugging
-  # "slope" into look_up_inverse_tangent.
+  # "slope" into LookUpInverseTangent().
   if(absoluteDeltaX > absoluteDeltaY) then
   (
-    slope := absoluteDeltaY * 1000
-    slope := slope / absoluteDeltaX
+    slope := (absoluteDeltaY * 1000) / absoluteDeltaX
 
     if(deltaX > 0) then
     (
@@ -290,8 +246,7 @@ script, get_bearing, x1, y1, x2, y2
   )
   else
   (
-    slope := absoluteDeltaX * 1000
-    slope := slope / absoluteDeltaY
+    slope := (absoluteDeltaX * 1000) / absoluteDeltaY
 
     if(deltaY > 0) then
     (
@@ -324,23 +279,21 @@ script, get_bearing, x1, y1, x2, y2
   # Get the angle between the input line and the nearest cardinal direction from
   # a lookup table, and then add or subtract that angle from the cardinal
   # direction.
-  relative := look_up_inverse_tangent(slope)
+  relative := LookUpInverseTangent(slope)
 
   if(addAngle) then
   (
-    result := cardinal
-    result += relative
+    result := cardinal + relative
   )
   else
   (
-    result := cardinal
-    result -= relative
+    result := cardinal -- relative
   )
 
   # Constrain the returned value to the range between 0 and 359.
   # This is just done to make the result easier to understand if it's displayed;
-  # get_x_subpixels and "get_y_subpixels" *can* work with bearings outside
-  # that range.
+  # LookUpSine() and LookUpCosine(), and therefore GetXSubpixels()
+  # and GetYSubpixels(), *can* work with bearings outside that range.
   if(result < 0) then
   (
     result += 360
@@ -351,11 +304,51 @@ script, get_bearing, x1, y1, x2, y2
 
 
 
-# This is just a lookup table that get_x_subpixels uses to get the closest
-# integer to the sine of an angle times 1000.  It can be reused to get sines
-# from angles for other purposes.
-script, look_up_sine, angle
+script, GetDistance, x1, y1, x2, y2
 (
+  variable(deltaX, deltaY, sumOfSquares)
+
+  deltaX := x2 -- x1
+  deltaY := y2 -- y1
+  sumOfSquares := (deltaX * deltaX) + (deltaY * deltaY)
+
+  if(sumOfSquares >= 0) then
+  (
+    exit returning(sqrt(sumOfSquares))
+  )
+  else
+  (
+    exit returning(0)
+  )
+)
+
+
+
+script, LookUpSine, angle
+(
+  variable(correction)
+
+  # Constrain the angle to the range between 0 and 359.
+  # If this function is given an angle greater than 359, it will wrap around
+  # to 0, and if it's given an angle less than 0, it will wrap around to 359.
+  # For any input angle i, this function will give the same result if it's
+  # called with (i + 360) or (i - 360) as its angle argument.  Since angle
+  # measurements define a circle, it's useful for them to be able to go all
+  # the way around, starting from any point.
+  if(angle > 359) then
+  (
+     correction := angle / 360
+     correction := correction * 360
+     angle -= correction
+  )
+  else if (angle < 0) then
+  (
+     correction := (angle + 1) / -360
+     correction += 1
+     correction := correction * 360
+     angle += correction
+  )
+
   if(angle < 20) then
   (
     switch(angle) do
@@ -1910,11 +1903,31 @@ script, look_up_sine, angle
 
 
 
-# This is just a lookup table that get_y_subpixels uses to get the closest
-# integer to the cosine of an angle times 1000.  It can be reused to get cosines
-# from angles for other purposes.
-script, look_up_cosine, angle
+script, LookUpCosine, angle
 (
+  variable(correction)
+
+  # Constrain the angle to the range between 0 and 359.
+  # If this function is given an angle greater than 359, it will wrap around
+  # to 0, and if it's given an angle less than 0, it will wrap around to 359.
+  # For any input angle i, this function will give the same result if it's
+  # called with (i + 360) or (i - 360) as its angle argument.  Since angle
+  # measurements define a circle, it's useful for them to be able to go all
+  # the way around, starting from any point.
+  if(angle > 359) then
+  (
+     correction := angle / 360
+     correction := correction * 360
+     angle -= correction
+  )
+  else if (angle < 0) then
+  (
+     correction := (angle + 1) / -360
+     correction += 1
+     correction := correction * 360
+     angle += correction
+  )
+
   if(angle < 20) then
   (
     switch(angle) do
@@ -3469,11 +3482,11 @@ script, look_up_cosine, angle
 
 
 
-# This is a lookup table that get_bearing uses to get the closest integer to
+# This is a lookup table that getBearing uses to get the closest integer to
 # the inverse tangent of a slope times 1000.  I don't recommend using this one
 # for other purposes, though, because it doesn't support slopes greater than 1
 # or angles greater than 45 degrees.
-script, look_up_inverse_tangent, slope
+script, LookUpInverseTangent, slope
 (
   if(slope < 167) then
   (

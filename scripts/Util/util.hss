@@ -21,10 +21,6 @@ script, min, x, y, begin
     if(y < x) then(exitReturning(y))
 end
 
-script, getDistance, x1, y1, x2, y2, begin
-    exitReturning(sqrt((x2--x1)^2 + (y2--y1)^2))
-end
-
 # ========================================
 # SLICES
 # ========================================
