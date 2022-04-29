@@ -45,6 +45,19 @@ script, hideSaveText, begin
     hideString(3)
 end
 
+plotscript, charIdol, arg, ref, begin
+    idols += 1
+    clearString(0)
+    appendNumber(0, idols)
+    $0+"/4 Idols Found"
+    setMessage(0)
+
+    if(idols >= 4) then(
+        setHeroStat(me, stat:HP, getHeroStat(me, stat:HP)+2, maximumStat)
+        setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
+    )
+end
+
 # Charvile
 # =======================
 
@@ -173,6 +186,9 @@ script, charvileKilled, begin
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
+
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP)+1, maximumStat)
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
 
     toggleCutsceneBars(false)
     playSong(0)
@@ -503,6 +519,9 @@ script, chadbileKilled, begin
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
 
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP)+1, maximumStat)
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
+
     toggleCutsceneBars(false)
     playSong(0)
 
@@ -776,4 +795,79 @@ plotscript, upTheMountain, begin
     gamePaused := false
 
     endLightning()
+end
+
+plotscript, intoCave, begin
+    controlsSuspended := true 
+    gamePaused := true 
+
+    fadeScreenOut()
+    wait(2)
+
+    stopSong()
+
+    teleportObject(player, 163*20, 71*20)
+
+    wait
+    fadeScreenIn()
+    wait
+
+    lavaGlow(1)
+
+    controlsSuspended := false 
+    gamePaused := false
+end
+
+plotscript, exitCave, begin
+    controlsSuspended := true 
+    gamePaused := true 
+
+    lavaGlow(false)
+    wait
+
+    fadeScreenOut()
+    wait 
+
+    playSong(0)
+
+    teleportObject(player, 9*20, 61*20)
+
+    wait 
+    fadeScreenIn()
+    wait
+
+    controlsSuspended := false 
+    gamePaused := false
+
+    saveInSlot(1)
+end
+
+script, lavaGlow, state, begin
+    if(state <> 0) then(
+        setTimer(timer:lightning, 8, 1, @lavaGlow)
+        if(state > 0) then(
+            rShift += 1
+            if(rShift >= 10) then(
+                setTimerArgs(timer:lightning, -1)
+            ) else(
+                setTimerArgs(timer:lightning, 1)
+            )
+        ) else(
+            rShift -= 1
+            if(rShift <= -10) then(
+                setTimerArgs(timer:lightning, 1)
+            ) else(
+                setTimerArgs(timer:lightning, -1)
+            )
+        )
+        tweakPalette(state, 0, 0, 15, 15)
+        updatePalette()
+    ) else(
+        stopTimer(timer:lightning)
+        rShift := 0
+        gShift := 0
+        bShift := 0
+        resetPalette()
+        updatePalette()
+    )
 end

@@ -83,4 +83,5 @@ define constant, begin
 8,sli:portrait
 9,sli:cutsceneBars
 10,sli:bossBar
+11,sli:msg
 end

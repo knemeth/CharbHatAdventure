@@ -159,6 +159,18 @@ script, pushObject, target, bearing, wt, begin
     applyMove(target, subX, subY)
 end
 
+script, teleportObject, target, x, y, begin
+    if(target == player) then(
+        playerState := state:idle
+        playerSpriteset := player:idleSet
+        playerFrames := player:idleFrames
+    )
+    setSliceV(target, 0)
+    putSlice(target, x, y)
+    putSliceSubpixel(target, sliceX(target)*1000, sliceY(target)*1000)
+    updateNPCorHeroFromSlice(target)
+end
+
 script, applyMove, handle, subX, subY, begin
     # Called in movePlayer and moveEnemies
     # Moves a slice based on relative x and y

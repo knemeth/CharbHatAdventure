@@ -338,8 +338,6 @@ script, damageEnemy, ref, amount, begin
         putSlice(vfx, x, y)
         createAnimation(vfx, 32, 4)
 
-        createRandomPickup(sliceCX(sli), sliceCY(sli))
-
         switch(getNPCID(ref)) do(
             case(enemy:slime) minionCount -= 1, createRandomPickup(sliceCX(sli), sliceCY(sli))
             case(enemy:fan) minionCount -= 1, createRandomPickup(sliceCX(sli), sliceCY(sli))

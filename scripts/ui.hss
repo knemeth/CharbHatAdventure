@@ -89,3 +89,22 @@ script, bossBarTick, begin
     bar := firstRectChild(firstRectChild(sl))
     setSliceWidth(bar, multdiv(sliceWidth(sliceParent(bar))--2, getSliceExtra(npcSl, extra2), getEnemyHP(globalNPCReference(currentBoss, 0))))
 end 
+
+script, setMessage, str, begin
+    variable(sl)
+
+    sl := lookupSlice(sli:msg, hud)
+    setSliceText(firstChild(sl), str)
+    setSliceVisible(sl, true)
+
+    setTimer(timer:message, 60, 1, @clearMessage)
+end
+
+script, clearMessage, begin
+    variable(sl)
+
+    sl := lookupSlice(sli:msg, hud)
+    clearString(0)
+    setSliceText(firstChild(sl), 0)
+    setSliceVisible(sl, false)
+end

@@ -49,6 +49,7 @@ globalVariable, begin
     55,gShift
     56,bShift
     57,windDirection
+    58,idols
 end
 
 defineConstant, begin
@@ -105,6 +106,7 @@ defineConstant, begin
     10,timer:fade
     11,timer:lightning
     12,timer:saveMsg
+    13,timer:message
 
     0,pal:default
     1,pal:charvile
