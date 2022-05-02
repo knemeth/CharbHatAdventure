@@ -50,6 +50,7 @@ globalVariable, begin
     56,bShift
     57,windDirection
     58,idols
+    59,difficulty
 end
 
 defineConstant, begin
@@ -257,7 +258,9 @@ plotscript, titleScreen, begin
     enemiesSuspended := true
     controlsSuspended := true
 
-    while(menuIsOpen(menu)) do(
+    difficulty := -1
+
+    while(topMenu) do(
         # lightning
         flashTimer += 1
         if(flashTimer > flashDuration) then(
@@ -302,6 +305,9 @@ plotscript, titleScreen, begin
         primaryLoopContents()
         wait(1)
     )
+
+    selectDifficulty()
+    wait
 
     fadeScreenOut()
     wait

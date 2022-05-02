@@ -73,6 +73,7 @@ define constant, begin
 3,slot:Body
 4,slot:Arms
 5,slot:Legs
+2,menu:Difficulty
 1,sli:stamina
 2,sli:ammo
 3,sli:hpBar
@@ -84,4 +85,5 @@ define constant, begin
 9,sli:cutsceneBars
 10,sli:bossBar
 11,sli:msg
+12,sli:diffText
 end

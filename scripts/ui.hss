@@ -108,3 +108,35 @@ script, clearMessage, begin
     setSliceText(firstChild(sl), 0)
     setSliceVisible(sl, false)
 end
+
+plotscript, selectDifficulty, begin
+    variable(menu, col, text)
+
+    menu := openMenu(menu:difficulty)
+    col := loadSliceCollection(5)
+    text := lookupSlice(sli:diffText, col)
+
+    if(difficulty == -1) then(
+        selectMenuItem(menuItemBySlot(menu, 1))
+    ) else(
+        selectMenuItem(menuItemBySlot(menu, difficulty))
+    )
+
+    while(menuIsOpen(menu)) do(
+        clearString(0)
+        switch(menuItemSlot(selectedMenuItem(menu))) do(
+            case(0) $0="- Reduced damage from enemies"
+            case(1) $0="- Normal damage from enemies"
+            case(2) $0="- Increased damage from enemies\n- No healing items"
+        )
+        setSliceText(text, 0)
+        wait
+    )
+
+    freeSlice(col)
+end
+
+plotscript, difficultyMenuItem, handle, begin
+    difficulty := menuItemSlot(handle)
+    closeMenu(topMenu)
+end
