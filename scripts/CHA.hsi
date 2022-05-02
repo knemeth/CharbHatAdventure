@@ -86,4 +86,5 @@ define constant, begin
 10,sli:bossBar
 11,sli:msg
 12,sli:diffText
+13,sli:money
 end

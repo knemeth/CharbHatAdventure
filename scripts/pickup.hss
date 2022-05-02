@@ -17,7 +17,8 @@ script, createPickup, pic, effect, x, y, begin
     setParent(pickup, pickupLayer)
     putSlice(pickup, x, y)
 
-    sprite := loadWeaponSprite(pic)
+    if(pic <= 2) then(sprite := loadWeaponSprite(pic))
+    else(sprite := loadHeroSprite(pic))
     setParent(sprite, pickup)
     centerSlice(sprite)
     createAnimation(sprite, 10, 5, true)
@@ -33,9 +34,9 @@ script, createRandomPickup, x, y, begin
 
     # Random effect: in the order of sprite sets that they refer to
     effectList := initArray()
-    append(effectList, @healthPickup)
     append(effectList, @staminaPickup)
     append(effectList, @ammoPickup)
+    if(difficulty < 2) then(append(effectList, @healthPickup))      # only drop health on lower difficulties
 
     pic := random(0, childCount(effectList)--1) #random sprite that correlates with an effect in the effectslist
 
@@ -43,6 +44,15 @@ script, createRandomPickup, x, y, begin
 
     pickup := createPickup(pic, effect, x, y)
     exitReturning(pickup)
+end
+
+script, createCoins, count, x, y, radius=20, begin
+    variable(i)
+
+    # Create count # of coins around point x,y
+    for(i, 0, count--1) do(
+        createPickup(17, @coinPickup, x+random(radius*-1, radius), y+random(radius*-1, radius))
+    )
 end
 
 script, pickupEachtick, begin
@@ -87,4 +97,10 @@ script, ammoPickup, begin
     setHeroStat(me, stat:Hits, getHeroStat(me, stat:Hits, maximumStat))
     # VFX HERE
     stopTimer(timer:reload)
+end
+
+script, coinPickup, begin
+    if(partyMoney < 999) then(
+        getMoney(1)
+    )    
 end

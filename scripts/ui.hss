@@ -21,6 +21,10 @@ script, updateHud, begin
     setSpriteFrame(ammoBar, getHeroStat(me, stat:Hits))
     # Boss hp bar
     bossBarTick()
+    # Money
+    clearString(0)
+    appendNumber(0, partyMoney)
+    setSliceText(lookupSlice(sli:money, hud), 0)
 end
 
 script, toggleCutsceneBars, state=false, begin

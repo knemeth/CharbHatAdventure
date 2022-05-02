@@ -123,7 +123,7 @@ script, enemyBehavior, ref, begin
                 setEnemyActDelay(ref, enemy:actDelay)
                 setSliceDir(npcSl, bearing)
                 setSliceV(npcSl, 0)
-            ) elseif(dist / 20 < 10 && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
+            ) elseif(dist / 20 < 6 && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
                 # Move towards player
                 bearing := getBearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
                 setEnemyActDelay(ref, enemy:actDelay)
@@ -140,7 +140,7 @@ script, enemyBehavior, ref, begin
                 setEnemyActDelay(ref, enemy:actDelay)
                 setSliceDir(npcSl, bearing)
                 setSliceV(npcSl, getEnemySpeed(ref))
-            ) elseif(dist / 20 < 10 && dist / 20 > 6 && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
+            ) elseif(dist / 20 < 6 && dist / 20 > 4 && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
                 # Move towards player
                 bearing := getBearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
                 setEnemyActDelay(ref, enemy:actDelay)
@@ -148,7 +148,7 @@ script, enemyBehavior, ref, begin
                 setSliceV(npcSl, getEnemySpeed(ref))
             ) 
 
-            if(dist / 20 < 8 && getAttackDelay(npcSl) == 0) then(
+            if(dist / 20 < 7 && getAttackDelay(npcSl) == 0) then(
                 # Fire projectile
                 bearing := getBearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
                 createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, bearing, projectile:speed, false)

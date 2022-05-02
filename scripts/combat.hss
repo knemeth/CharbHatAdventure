@@ -244,6 +244,9 @@ script, damagePlayer, amount, begin
         # BLOCKED
         exitScript()
     )
+
+    amount += difficulty
+
     setHeroStat(me, stat:HP, getHeroStat(me, stat:HP) -- amount)
     setHeroStat(me, stat:dodge, player:invisFrames)
 
@@ -344,7 +347,7 @@ script, damageEnemy, ref, amount, begin
             case(enemy:charvile) charvileKilled()
             case(enemy:chadbile) chadbileKilled()
             case(enemy:starbile) starbileKilled()
-            case(else) createRandomPickup(sliceCX(sli), sliceCY(sli))
+            case(else) createRandomPickup(sliceCX(sli), sliceCY(sli)), createCoins(random(4,6), sliceCX(sli), sliceCY(sli))
         )
 
         destroyNPC(ref)
