@@ -28,6 +28,7 @@ script, timerWaitForTextbox, begin
         setTimer(timer:cutscene, 0, 1, @timerWaitForTextbox)
     ) else(
         controlsSuspended := false
+        enemiesSuspended := false
     )
 end
 
@@ -370,12 +371,14 @@ end
 plotscript, charmileTalk, begin
     tbSource := 0
     controlsSuspended := true
+    enemiesSuspended := true
     showTextbox(25)
     timerWaitForTextbox()
 end
 
 plotscript, charmileLeave, begin
     controlsSuspended := true 
+    enemiesSuspended := false
 
     variable(sl, body, i)
     sl := getNPCSprite(npc:charmile)
@@ -870,4 +873,35 @@ script, lavaGlow, state, begin
         resetPalette()
         updatePalette()
     )
+end
+
+# SHOP
+# =============================
+
+plotscript, upgradeShop, begin
+    variable(menu, col, money, cost, item)
+
+    showTextbox(118)
+    suspendBoxAdvance
+
+    menu := openMenu(menu:shop)
+    col := loadSliceCollection(6)
+    money := lookupSlice(sli:money, col)
+    cost := lookupSlice(sli:cost, col)
+
+    while(menuIsOpen(menu)) do(
+        clearString(0)
+        appendNumber(0, partyMoney)
+        setSliceText(money, 0)
+
+        item := selectedMenuItem(menu)
+        clearString(0)
+        appendNumber(0, getMenuItemExtra(item, extra0))
+        setSliceText(cost, 0)
+
+        wait
+    )
+
+    resumeBoxAdvance
+    freeSlice(col)
 end

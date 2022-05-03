@@ -408,8 +408,9 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
         )
     )
 
-    #putSlice(handle, sliceCX(handle) -- (width/2), sliceCY(handle) -- (height/2))
     setSliceSize(handle, width, height)
+    #putSlice(handle, sliceX(handle) + (20--width), sliceY(handle) + (20--height))
+    #updateNPCorHeroFromSlice(handle)
     putSliceSubpixel(handle, sliceX(handle)*1000, sliceY(handle)*1000)
 end
 
@@ -425,8 +426,8 @@ plotscript, mapAutorun, begin
                 setSliceVisible(getNPCSlice(ref), false)
             )
         ) else(
-            if(getNPCID(ref) == npc:charmile || getNPCID(ref) == 23) then(
-                initObject(getNPCSlice(ref), 20, 24, 0, 0)
+            switch(getNPCID(ref)) do(
+                case(npc:charmile, 23, 25) initObject(getNPCSlice(ref), 20, 24, 0, 0)
             )
         )
         

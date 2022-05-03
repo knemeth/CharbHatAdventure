@@ -140,7 +140,7 @@ script, enemyBehavior, ref, begin
                 setEnemyActDelay(ref, enemy:actDelay)
                 setSliceDir(npcSl, bearing)
                 setSliceV(npcSl, getEnemySpeed(ref))
-            ) elseif(dist / 20 < 6 && dist / 20 > 4 && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
+            ) elseif(dist / 20 < 6 && dist / 20 > 5 && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
                 # Move towards player
                 bearing := getBearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
                 setEnemyActDelay(ref, enemy:actDelay)
@@ -1037,6 +1037,7 @@ script, getEnemyFrames, ref, begin
         switch(id) do(
             case(npc:charmile) exitReturning(4)
             case(23) exitReturning(10)   # minecraft fox
+            case(25) exitReturning(6)   # shopbile
             case(else) exitReturning(1)
         )
     )

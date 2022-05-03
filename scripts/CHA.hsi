@@ -75,6 +75,7 @@ define constant, begin
 4,slot:Arms
 5,slot:Legs
 2,menu:Difficulty
+3,menu:shop
 1,sli:stamina
 2,sli:ammo
 3,sli:hpBar
@@ -88,4 +89,5 @@ define constant, begin
 11,sli:msg
 12,sli:diffText
 13,sli:money
+14,sli:cost
 end
