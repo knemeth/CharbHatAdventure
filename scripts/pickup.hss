@@ -47,11 +47,12 @@ script, createRandomPickup, x, y, begin
 end
 
 script, createCoins, count, x, y, radius=20, begin
-    variable(i)
+    if(partyMoney >= 999) then(exitScript())
+    variable(i, coin, sprite)
 
     # Create count # of coins around point x,y
     for(i, 0, count--1) do(
-        createPickup(17, @coinPickup, x+random(radius*-1, radius), y+random(radius*-1, radius))
+        coin := createPickup(17, @coinPickup, x+random(radius*-1, radius), y+random(radius*-1, radius))
     )
 end
 
@@ -78,6 +79,7 @@ end
 
 script, healthPickup, begin
     # Heal player when picked up
+    playSound(sfx:pickup, false, true)
     setHeroStat(me, stat:HP, getHeroStat(me, stat:HP) + 5)
     if(getHeroStat(me, stat:HP) > getHeroStat(me, stat:HP, maximumStat)) then(
         setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
@@ -87,6 +89,7 @@ end
 
 script, staminaPickup, begin
     # Restore all stamina when picked up
+    playSound(sfx:SPRecover, false, true)
     setHeroStat(me, stat:SP, getHeroStat(me, stat:SP, maximumStat))
     # VFX HERE
     stopTimer(timer:stamina)
@@ -94,6 +97,7 @@ end
 
 script, ammoPickup, begin
     # Instantly reload 
+    playSound(sfx:Reload, false, true)
     setHeroStat(me, stat:Hits, getHeroStat(me, stat:Hits, maximumStat))
     # VFX HERE
     stopTimer(timer:reload)
@@ -101,6 +105,7 @@ end
 
 script, coinPickup, begin
     if(partyMoney < 999) then(
+        playSound(sfx:coin, false, true)
         getMoney(1)
     )    
 end

@@ -40,6 +40,7 @@ define constant, begin
 24,sfx:Lightning
 25,sfx:Shot
 26,sfx:Swish
+27,sfx:Coin
 0,stat:HP
 1,stat:SP
 2,stat:Atk

@@ -374,6 +374,11 @@ script, meleeCollisions, begin
                 damageEnemy(ref, player:meleeDamage + random(-1,1))
             )
         )
+        for(i, findCollidingSlice(pickupLayer, attack, getCount, false)--1, 0, -1) do(
+            hit := findCollidingSlice(pickupLayer, attack, i, false)
+            runScriptByID(getSliceExtra(hit, extra0))
+            freeSlice(hit)
+        )
     ) else(
         # Mark all enemies as not yet hit
         ref := nextNPCReference()

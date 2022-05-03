@@ -88,7 +88,6 @@ script, movePlayer, begin
         # Pickups
         for(num, findCollidingSlice(pickupLayer, player, getCount, false)--1, 0, -1) do(
             hit := findCollidingSlice(pickupLayer, player, num, false)
-            playSound(sfx:pickup, false, true)
             runScriptByID(getSliceExtra(hit, extra0))
             freeSlice(hit)
         )
