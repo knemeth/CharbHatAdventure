@@ -13,17 +13,17 @@ script, movePlayer, begin
 
     oldBearing := getSliceDir(player)
 
-    joyX := joystickAxis(axis:X, player:speed)
-    joyY := joystickAxis(axis:Y, player:speed)
+    joyX := joystickAxis(axis:X, playerSpeed)
+    joyY := joystickAxis(axis:Y, playerSpeed)
     if(abs(joyX) < axis:deadZone) then(joyX := 0)
     if(abs(joyY) < axis:deadZone) then(joyY := 0)
 
     if(joyX == 0 && joyY == 0) then(
         # Keyboard controls
-        if(wantLeft) then(joyX := 0--player:speed)
-        elseif(wantRight) then(joyX := player:speed)
-        if(wantUp) then(joyY := 0--player:speed)
-        elseif(wantDown) then(joyY := player:speed)
+        if(wantLeft) then(joyX := 0--playerSpeed)
+        elseif(wantRight) then(joyX := playerSpeed)
+        if(wantUp) then(joyY := 0--playerSpeed)
+        elseif(wantDown) then(joyY := playerSpeed)
     )
 
     if(controlsSuspended) then(
@@ -42,12 +42,12 @@ script, movePlayer, begin
         else(setHeroDirection(me, up))
     )
     
-    velocity := clampValue(abs(joyX) + abs(joyY), 0--player:speed, player:speed)
+    velocity := clampValue(abs(joyX) + abs(joyY), 0--playerSpeed, playerSpeed)
 
     if(playerState == state:attack) then(
-        velocity := clampValue(velocity, 0--(player:speed / 2), player:speed / 2) 
+        velocity := clampValue(velocity, 0--(playerSpeed / 2), playerSpeed / 2) 
     ) elseif(playerState == state:roll) then(
-        velocity := player:speed * 2
+        velocity := playerSpeed * 2
         bearing := oldBearing
     ) elseif(playerState == state:block || lockPress) then(
         velocity := 0

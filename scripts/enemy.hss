@@ -18,6 +18,7 @@ defineConstant, begin
     9,enemy:starbile
     10,enemy:speaker
     11,enemy:stardummy
+    12,enemy:barrier
     30,enemy:actDelay
 
     0,ai:idle
@@ -934,6 +935,7 @@ script, getEnemyHP, ref, begin
         case(enemy:starbile) exitReturning(266)
         case(enemy:fan) exitReturning(2)
         case(enemy:flame) exitReturning(1)
+        case(enemy:barrier) exitReturning(100)
         case(else) exitReturning(default)
     )
 end
@@ -956,6 +958,7 @@ script, getEnemyWidth, ref, begin
         case(enemy:flame) exitReturning(16)
         case(enemy:starbile) exitReturning(16)
         case(enemy:speaker) exitReturning(20)
+        case(enemy:barrier) exitReturning(20)
         case(else) exitReturning(default)
     )
 end
@@ -978,6 +981,7 @@ script, getEnemyHeight, ref, begin
         case(enemy:flame) exitReturning(10)
         case(enemy:starbile) exitReturning(22)
         case(enemy:speaker) exitReturning(20)
+        case(enemy:barrier) exitReturning(20)
         case(else) exitReturning(default)
     )
 end
@@ -1030,6 +1034,7 @@ script, getEnemyFrames, ref, begin
             case(enemy:starbile) exitReturning(6)
             case(enemy:speaker) exitReturning(4)
             case(enemy:stardummy) exitReturning(1)
+            case(enemy:barrier) exitReturning(1)
             case(else) exitReturning(4)
         )
     ) else(

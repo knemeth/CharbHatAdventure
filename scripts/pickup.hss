@@ -5,7 +5,7 @@ defineConstant, begin
     1,pickup:picStart
     1,pickup:picEnd
     600,pickup:lifetime
-    180,pickup:flashPoint
+    120,pickup:flashPoint
 end
 
 script, createPickup, pic, effect, x, y, begin
@@ -53,6 +53,7 @@ script, createCoins, count, x, y, radius=20, begin
     # Create count # of coins around point x,y
     for(i, 0, count--1) do(
         coin := createPickup(17, @coinPickup, x+random(radius*-1, radius), y+random(radius*-1, radius))
+        #setSliceExtra(coin, extra1, pickup:lifetime*2)
     )
 end
 
@@ -67,7 +68,8 @@ script, pickupEachtick, begin
             freeSlice(pickup)
             continue
         ) elseif(getSliceExtra(pickup, extra1) <= pickup:flashPoint) then(
-            dissolveSprite(firstSpriteChild(pickup), dissolve:flicker, pickup:flashPoint+1)
+            setTopPadding(firstSpriteChild(pickup), dissolve:fade)
+            #dissolveSprite(firstSpriteChild(pickup), dissolve:flicker, pickup:flashPoint+1)
         )
         setSliceExtra(pickup, extra1, getSliceExtra(pickup, extra1)--1)
     )
@@ -107,5 +109,5 @@ script, coinPickup, begin
     if(partyMoney < 999) then(
         playSound(sfx:coin, false, true)
         getMoney(1)
-    )    
+    ) 
 end

@@ -35,6 +35,7 @@ globalVariable, begin
     16,playerAnimSpeed
     17,controlsSuspended
     18,enemiesSuspended
+    19,playerSpeed
     # UI
     30,hud
     31,titleScreenHud
@@ -127,6 +128,7 @@ script, initGame, begin
     playerSpriteset := player:walkSet
     playerFrames := player:walkFrames
     playerAnimSpeed := player:animSpeed
+    playerSpeed := player:speed
 
     # hud
     hud := loadSliceCollection(0)
@@ -140,7 +142,7 @@ script, initGame, begin
     setParent(projectileLayer, lookupSlice(sl:mapOverlay))
     playerProjectileLayer := createContainer()
     setParent(playerProjectileLayer, lookupSlice(sl:mapOverlay))
-    pickupLayer := lookupSlice(sl:mapLayer3)
+    pickupLayer := lookupSlice(sl:mapLayer5)
     aoeLayer := createContainer()
     setParent(aoeLayer, lookupSlice(sl:mapOverlay))
 
@@ -164,7 +166,7 @@ script, initGame, begin
             setParent(sl, npcSl)
             putSlice(sl, sliceWidth(npcSl)/2, sliceHeight(npcSl)/2)
             setSliceLookup(sl, sli:emitter)
-            createEmitter(sl, 120, -1, 2, lookupSlice(sl:mapLayer2))
+            createEmitter(sl, 120, -1, 2, lookupSlice(sl:mapLayer4))
             sl := loadHeroSprite(12)
             setOpacity(sl, 50)
             createParticle(sl, 240, 300, 270, 0, false, dissolve:fade)
@@ -323,10 +325,18 @@ script, primaryLoopContents, begin
     # UI
     updateHud()
 
+    # Permeating FX
+    animateEffects()
+    moveParticles()
+    processEmitters()
+
     # Player
     evaluateInput()
     if(topMenu) then(
         gamePaused := true
+        suspendTimers
+    ) elseif(timersAreSuspended) then(
+        resumeTimers
     )
     if(gamePaused) then(
         resetInputs()
@@ -340,14 +350,11 @@ script, primaryLoopContents, begin
         enemyEachtick()    
     )
     animateNPCs()
-
     meleeCollisions()
     processAOE()
 
     # Effects
-    animateEffects()
-    moveParticles()
-    processEmitters()
+    
     updateProjectiles()
     pickupEachtick()
     charmileUpdate()
@@ -409,13 +416,17 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
     )
 
     setSliceSize(handle, width, height)
-    #putSlice(handle, sliceX(handle) + (20--width), sliceY(handle) + (20--height))
-    #updateNPCorHeroFromSlice(handle)
+    putSlice(handle, sliceX(handle) + (20--width), sliceY(handle) + (20--height))
+    updateNPCorHeroFromSlice(handle)
     putSliceSubpixel(handle, sliceX(handle)*1000, sliceY(handle)*1000)
 end
 
 plotscript, mapAutorun, begin
     # Default autorun commands
+    setTimer(timer:beat, 0, 1, @initNPCs)    
+end
+
+script, initNPCs, begin
     variable(ref, npcSl, sl)
 
     ref := nextNPCReference()

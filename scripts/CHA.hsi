@@ -11,6 +11,9 @@ define constant, begin
 9,tag:starbileStart
 10,tag:starbileDefeated
 11,tag:saveExists
+12,tag:meleeMaster
+13,tag:rangeMaster
+14,tag:caveOpen
 0,song:Adventure
 1,song:Battle Ready
 0,sfx:Melee
@@ -74,6 +77,8 @@ define constant, begin
 3,slot:Body
 4,slot:Arms
 5,slot:Legs
+0,menu:main
+1,menu:title
 2,menu:Difficulty
 3,menu:shop
 1,sli:stamina
@@ -90,4 +95,11 @@ define constant, begin
 12,sli:diffText
 13,sli:money
 14,sli:cost
+15,sli:menuHud
+16,sli:melee
+17,sli:ranged
+18,sli:speed
+19,sli:spRecover
+20,sli:reload
+21,sli:acc
 end

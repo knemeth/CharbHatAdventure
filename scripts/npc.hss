@@ -899,9 +899,48 @@ plotscript, upgradeShop, begin
         appendNumber(0, getMenuItemExtra(item, extra0))
         setSliceText(cost, 0)
 
+        clearString(0)
+        switch(menuItemSlot(item)) do(
+            case(0) $0="Increase damage of all attacks by 1"
+            case(1) $0="Increase movement speed by 0.25 pixels per frame"
+            case(2) $0="Reduce cooldown of energy recovery and reload time"
+            case(3) $0="Significantly increase melee damage, but severely reduce ranged damage\n\n(incompatible with Glass Cannon)"
+            case(4) $0="Significantly increase ranged damage, but reduce HP by 6\n\n(incompatible with Brawler)"
+        )
+        setSliceText(lookupSlice(sli:diffText, col), 0)
+        updateHud()
+
         wait
     )
 
     resumeBoxAdvance
     freeSlice(col)
+end
+
+plotscript, shopItem, handle, cost, begin
+    if(payMoney(cost)) then(
+        playSound(sfx:coin, false, true)
+        switch(menuItemSlot(handle)) do(
+            case(0) gainHeroStat(me, stat:Acc, 1, true)    # Universal dmg buff
+            case(1) playerSpeed += 250
+            case(2) do(
+                gainHeroStat(me, stat:MP~, -12, true)
+                gainHeroStat(me, stat:Ctr, -12, true) # recharge speeds
+            )
+            case(3) do(
+                setHeroStat(me, stat:Atk, 8, maximumStat)
+                setHeroStat(me, stat:Atk, 8)
+                setHeroStat(me, stat:Magic, 0, maximumStat)
+                setTag(tag:meleeMaster, on)
+            )
+            case(4) do(
+                setHeroStat(me, stat:Magic, 10, maximumStat)
+                setHeroStat(me, stat:Magic, 10)
+                gainHeroStat(me, stat:HP, -6, true)
+                setTag(tag:rangeMaster, on)
+            )
+        )
+    ) else(
+        showTextbox(119)
+    )
 end

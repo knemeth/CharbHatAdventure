@@ -122,7 +122,7 @@ script, evaluateInput, begin
 
             setHeroStat(me, stat:Hits, getHeroStat(me, stat:Hits) -- 1)
             if(getHeroStat(me, stat:Hits) <= 0) then(
-                setTimer(timer:reload, player:reloadSpeed, 1, @reloadAmmo)
+                setTimer(timer:reload, getHeroStat(me, stat:Ctr), 1, @reloadAmmo)
             )
 
             playSound(sfx:Throw+random(0,2), false, true)
@@ -304,6 +304,7 @@ script, damageEnemy, ref, amount, begin
     variable(sl, current)
 
     if(getNPCID(ref) == -1) then(exitScript())
+    if(amount <= 0) then(amount := 1)
     if(getNPCID(ref) == enemy:speaker) then(amount := 0)
 
     sl := getNPCSlice(ref)
@@ -324,7 +325,10 @@ script, damageEnemy, ref, amount, begin
     setSliceExtra(sl, extra2, current -- amount)
     setSliceExtra(sl, extra1, enemy:flashFrames)
 
-    playSound(sfx:beast+random(0,3), false, true)
+    switch(getNPCID(ref)) do(
+        case(enemy:barrier, enemy:flame, enemy:speaker) break
+        case(else) playSound(sfx:beast+random(0,3), false, true)
+    )
 
     if(getSliceExtra(sl, extra2) <= 0) then(
         # Die
@@ -347,7 +351,8 @@ script, damageEnemy, ref, amount, begin
             case(enemy:charvile) charvileKilled()
             case(enemy:chadbile) chadbileKilled()
             case(enemy:starbile) starbileKilled()
-            case(else) createRandomPickup(sliceCX(sli), sliceCY(sli)), createCoins(random(4,6), sliceCX(sli), sliceCY(sli))
+            case(enemy:barrier) setTag(tag:caveOpen, on)
+            case(else) createRandomPickup(sliceCX(sli), sliceCY(sli)), createCoins(random(2,3), sliceCX(sli), sliceCY(sli))
         )
 
         destroyNPC(ref)
@@ -368,10 +373,13 @@ script, meleeCollisions, begin
             hit := findCollidingSlice(lookupSlice(sl:walkaboutLayer), attack, i, false, true)
             ref := npcReferenceFromSlice(hit)
             if(ref && getNPCPool(ref) == pool:global && getEnemyHit(ref) == false) then(
-                pushObject(hit, getBearing(sliceCX(player), sliceCY(player), sliceCX(hit), sliceCY(hit)), projectile:knockback)   # from movement.hss
+                switch(getNPCID(ref)) do(
+                    case(enemy:barrier, enemy:flame) break
+                    case(else) pushObject(hit, getBearing(sliceCX(player), sliceCY(player), sliceCX(hit), sliceCY(hit)), projectile:knockback)
+                )
                 setEnemyHit(ref, true)
                 stunEnemy(ref, player:meleeStun)
-                damageEnemy(ref, player:meleeDamage + random(-1,1))
+                damageEnemy(ref, getHeroStat(me, stat:Atk) + getHeroStat(me, stat:Acc) + random(-1,1))
             )
         )
         for(i, findCollidingSlice(pickupLayer, attack, getCount, false)--1, 0, -1) do(
@@ -394,7 +402,7 @@ script, meleeCollisions, begin
         if(getNPCPool(ref) == pool:global) then(
             sl := lookupSlice(sli:attack, getNPCSlice(ref))
             if(getSliceVisible(sl) && getHeroStat(me, stat:dodge) == 0 && sliceCollide(sl, player)) then(
-                damagePlayer(3)
+                damagePlayer(2)
             )
         )
         ref := nextNPCReference(ref)

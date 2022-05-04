@@ -25,6 +25,30 @@ script, updateHud, begin
     clearString(0)
     appendNumber(0, partyMoney)
     setSliceText(lookupSlice(sli:money, hud), 0)
+    # Menu hud
+    variable(bg)
+    bg := lookupSlice(sli:menuHud, hud)
+    if(findMenuID(menu:main) || findMenuID(menu:shop)) then(
+        setSliceVisible(bg, true)
+    ) else(
+        setSliceVisible(bg, false)
+    )
+    if(getSliceVisible(bg)) then(
+        clearString(0), appendNumber(0, getHeroStat(me, stat:Atk))
+        setSliceText(lookupSlice(sli:melee, bg), 0)
+        clearString(0), appendNumber(0, getHeroStat(me, stat:Magic))
+        setSliceText(lookupSlice(sli:ranged, bg), 0)
+        clearString(0), appendNumber(0, getHeroStat(me, stat:Acc))
+        setSliceText(lookupSlice(sli:acc, bg), 0)
+        clearString(0), appendNumber(0, playerSpeed/100)
+        appendAscii(0, asciiFromString(0, stringLength(0)))
+        replaceChar(0, 2, 46)
+        setSliceText(lookupSlice(sli:speed, bg), 0)
+        clearString(0), appendNumber(0, getHeroStat(me, stat:MP~))
+        setSliceText(lookupSlice(sli:spRecover, bg), 0)
+        clearString(0), appendNumber(0, getHeroStat(me, stat:Ctr))
+        setSliceText(lookupSlice(sli:reload, bg), 0)
+    )
 end
 
 script, toggleCutsceneBars, state=false, begin

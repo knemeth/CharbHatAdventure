@@ -25,6 +25,7 @@ plotscript, keypressHandler, begin
     if(keypress(key:x) || mouseRelease(rightButton)) then(cancelPress := true)
     if(newKeypress(key:esc)) then(escPress := true)
     # DEBUG KEYS
+    if(keypress(key:1)) then(createCoins(10, mousePixelX+cameraPixelX, mousePixelY+cameraPixelY, 40))
     #if(keypress(key:r)) then(resetGame())
     #if(keypress(key:1)) then(startAOE(mousePixelX+cameraPixelX, mousePixelY+cameraPixelY, 50, 50, 60, 1, 6, 6))
 end

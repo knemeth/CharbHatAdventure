@@ -63,7 +63,7 @@ script, updateProjectiles, begin
                     # Damage enemy/npc
                     pushObject(hit, bearing, projectile:knockback)   # from movement.hss
                     stunEnemy(npcReferenceFromSlice(hit), player:rangedStun)
-                    damageEnemy(npcReferenceFromSlice(hit), projectile:playerdamage + random(-1,1))
+                    damageEnemy(npcReferenceFromSlice(hit), getHeroStat(me, stat:Magic) + getHeroStat(me, stat:Acc) + random(-1,1))
                     freeSlice(sl)
                     exitScript()
                 )
