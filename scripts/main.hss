@@ -371,7 +371,7 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
     if(heroRankFromSlice(handle) == -1 && npcReferenceFromSlice(handle) == 0) then(
         exitScript() # slice is not a hero or npc
     )
-    variable(isNPC)
+    variable(isNPC, x, y)
 
     if(npcReferenceFromSlice(handle)) then(
         isNPC := true
@@ -412,21 +412,22 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
             sl := createContainer()
             setParent(sl, handle)
             setSliceLookup(sl, sli:ai)
+            x := npcPixelX(npcReferenceFromSlice(handle))
+            y := npcPixelY(npcReferenceFromSlice(handle))
+        ) else(
+            x := heroPixelX(me)
+            y := heroPixelY(me)
         )
     )
 
     setSliceSize(handle, width, height)
-    putSlice(handle, sliceX(handle) + (20--width), sliceY(handle) + (20--height))
+    putSlice(handle, x + (20--width), y + (20--height))
     updateNPCorHeroFromSlice(handle)
     putSliceSubpixel(handle, sliceX(handle)*1000, sliceY(handle)*1000)
 end
 
 plotscript, mapAutorun, begin
     # Default autorun commands
-    setTimer(timer:beat, 0, 1, @initNPCs)    
-end
-
-script, initNPCs, begin
     variable(ref, npcSl, sl)
 
     ref := nextNPCReference()
@@ -445,7 +446,7 @@ script, initNPCs, begin
         ref := nextNPCReference(ref)
     )
 
-    initEnemies()
+    initEnemies()  
 end
 
 script, introCutscene, begin

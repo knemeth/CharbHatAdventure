@@ -49,6 +49,7 @@ script, sliceCY, sl, begin
 end
 
 script, setVisibility, sl, val, begin
+    if(sl == false || sliceIsValid(sl) == false) then(exitScript())
     setSliceVisible(sl, val)
 end
 
