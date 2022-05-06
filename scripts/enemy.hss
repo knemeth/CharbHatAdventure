@@ -996,7 +996,7 @@ script, getEnemyHP, ref, begin
         case(enemy:ranged) exitReturning(2)
         case(enemy:testboss) exitReturning(100)
         case(enemy:slime) exitReturning(5)
-        case(enemy:charvile) exitReturning(266)
+        case(enemy:charvile) exitReturning(1)
         case(enemy:chadbile) exitReturning(266)
         case(enemy:starbile) exitReturning(266)
         case(enemy:fan) exitReturning(2)

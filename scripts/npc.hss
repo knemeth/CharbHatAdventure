@@ -144,13 +144,12 @@ script, charvileKilled, begin
     controlsSuspended := true
     stopSong()
 
-    setTag(tag:charvileDefeated, on)
     toggleCutsceneBars(true)
 
     setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
 
     for(c, npcCopyCount(enemy:slime, pool:global)--1, 0, -1) do(
-        destroyNPC(globalNPCReference(enemy:slime, c))
+        destroyNPC(globalNPC(enemy:slime, c))
     )
     c := lastChild(projectileLayer) 
     while(c) do(
@@ -200,6 +199,8 @@ script, charvileKilled, begin
 
     setTimer(timer:cutscene, 30, 1, @delayedTb)
     setTimerArgs(timer:cutscene, 22)
+
+    setTag(tag:charvileDefeated, on)
 
     saveInSlot(1)
 end
@@ -481,7 +482,6 @@ script, chadbileKilled, begin
     controlsSuspended := true
     stopSong()
 
-    setTag(tag:chadbileDefeated, on)
     toggleCutsceneBars(true)
 
     setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
@@ -535,6 +535,8 @@ script, chadbileKilled, begin
 
     toggleCutsceneBars(false)
     playSong(0)
+
+    setTag(tag:chadbileDefeated, on)
 
     setTimer(timer:cutscene, 30, 1, @delayedTb)
     setTimerArgs(timer:cutscene, 59)
@@ -639,7 +641,6 @@ script, starbileKilled, begin
     updatePalette()
     stopTimer(timer:lightning)
 
-    setTag(tag:starbileDefeated, on)
     toggleCutsceneBars(true)
 
     setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
@@ -682,6 +683,8 @@ script, starbileKilled, begin
     )
 
     createCoins(20, sliceCX(sl), sliceCY(sl), 30)
+
+    setTag(tag:starbileDefeated, on)
 
     setTimer(timer:cutscene, 60, 1, @endingScene)
 end
