@@ -189,10 +189,9 @@ script, charvileKilled, begin
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
 
-    createCoins(20, sliceCX(sl), sliceCY(sl), 30)
+    createCoins(50, sliceCX(sl), sliceCY(sl), 30)
 
-    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP)+1, maximumStat)
-    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
+    gainHeroStat(me, stat:HP, 1, true)
 
     toggleCutsceneBars(false)
     playSong(0)
@@ -528,10 +527,9 @@ script, chadbileKilled, begin
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
 
-    createCoins(20, sliceCX(sl), sliceCY(sl), 30)
+    createCoins(50, sliceCX(sl), sliceCY(sl), 30)
 
-    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP)+1, maximumStat)
-    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
+    gainHeroStat(me, stat:HP, 1, true)
 
     toggleCutsceneBars(false)
     playSong(0)
@@ -682,7 +680,9 @@ script, starbileKilled, begin
         createParticle(vfx, 50, 4000, i*(360/8), 20)
     )
 
-    createCoins(20, sliceCX(sl), sliceCY(sl), 30)
+    createCoins(50, sliceCX(sl), sliceCY(sl), 30)
+    
+    gainHeroStat(me, stat:HP, 1, true)
 
     setTag(tag:starbileDefeated, on)
 
@@ -745,65 +745,69 @@ plotscript, upTheMountain, begin
     fadeScreenOut()
     wait 
 
-    cutsceneBg := loadSliceCollection(4)
-    variable(dot) 
-    dot := firstEllipseChild(cutsceneBg)
-
     putSlice(player, 164*20, 43*20)
     putSliceSubpixel(player, sliceX(player), sliceY(player))
     updateNPCorHeroFromSlice(player)
 
-    wait 
-    fadeScreenIn()
-    wait(30)
+    if(checkTag(tag:climbedMountain) == off) then(
+        setTag(tag:climbedMountain, on)
+        cutsceneBg := loadSliceCollection(4)
+        variable(dot) 
+        dot := firstEllipseChild(cutsceneBg)
 
-    showTextbox(82)
-    moveSliceTo(dot, 315, 110, 400)
-    waitForTextbox()
-    waitForSlice(dot)
+        wait 
+        fadeScreenIn()
+        wait(30)
 
-    showTextbox(84)
-    moveSliceTo(dot, 313, 98, 300)
-    waitForTextbox()
-    waitForSlice(dot)
+        showTextbox(82)
+        moveSliceTo(dot, 315, 110, 400)
+        waitForTextbox()
+        waitForSlice(dot)
 
-    showTextbox(86)
-    moveSliceTo(dot, 287, 82, 400)
-    waitForTextbox()
-    waitForSlice(dot)
+        showTextbox(84)
+        moveSliceTo(dot, 313, 98, 300)
+        waitForTextbox()
+        waitForSlice(dot)
 
-    showTextbox(88)
-    moveSliceTo(dot, 338, 69, 450)
-    waitForTextbox()
-    waitForSlice(dot)
+        showTextbox(86)
+        moveSliceTo(dot, 287, 82, 400)
+        waitForTextbox()
+        waitForSlice(dot)
 
-    showTextbox(93)
-    moveSliceTo(dot, 302, 52, 400)
-    setSliceSize(dot, 4, 4)
-    waitForTextbox()
-    waitForSlice(dot)
+        showTextbox(88)
+        moveSliceTo(dot, 338, 69, 450)
+        waitForTextbox()
+        waitForSlice(dot)
 
-    showTextbox(96)
-    moveSliceTo(dot, 318, 46, 300)
-    setSliceSize(dot, 3, 3)
-    waitForTextbox()
-    waitForSlice(dot)
+        showTextbox(93)
+        moveSliceTo(dot, 302, 52, 400)
+        setSliceSize(dot, 4, 4)
+        waitForTextbox()
+        waitForSlice(dot)
 
-    showTextbox(98)
-    moveSliceTo(dot, 309, 39, 300)
-    waitForTextbox()
-    waitForSlice(dot)
+        showTextbox(96)
+        moveSliceTo(dot, 318, 46, 300)
+        setSliceSize(dot, 3, 3)
+        waitForTextbox()
+        waitForSlice(dot)
 
-    wait(60)
+        showTextbox(98)
+        moveSliceTo(dot, 309, 39, 300)
+        waitForTextbox()
+        waitForSlice(dot)
 
-    showTextbox(99)
-    waitForTextbox()
+        wait(60)
 
-    fadeScreenOut()
+        showTextbox(99)
+        waitForTextbox()
+
+        fadeScreenOut()
+        wait
+        freeSlice(cutsceneBg)
+        wait
+    )
+
     wait
-    freeSlice(cutsceneBg)
-    wait
-
     fadeScreenIn()
     wait(10)
 
@@ -811,6 +815,26 @@ plotscript, upTheMountain, begin
     gamePaused := false
 
     endLightning()
+end
+
+plotscript, leaveMountain, begin
+    controlsSuspended := true 
+    gamePaused := true 
+    stopTimer(timer:lightning)
+
+    fadeScreenOut()
+    wait(2)
+
+    stopSong()
+
+    teleportObject(player, 75*20, 3*20)
+
+    wait
+    fadeScreenIn()
+    wait
+
+    controlsSuspended := false 
+    gamePaused := false
 end
 
 plotscript, intoCave, begin
@@ -919,6 +943,11 @@ plotscript, startChallenge, begin
             challengePoints := 0 
             challengeGoal := 18
         )
+        case(1) do(
+            # Second Challenge - Melee focus
+            challengePoints := 0
+            challengeGoal := 28
+        )
     )
 end
 
@@ -932,6 +961,8 @@ script, endChallenge, begin
             )
         )
     )
+
+    gainHeroStat(me, stat:HP, 1, true)
 
     stopSong()
 
@@ -987,6 +1018,11 @@ plotscript, shopItem, handle, cost, begin
             case(0) gainHeroStat(me, stat:Acc, 1, true)    # Universal dmg buff
             case(1) playerSpeed += 250
             case(2) do(
+                if(getHeroStat(me, stat:MP~) < 13) then(
+                    showTextbox(120)
+                    getMoney(cost)
+                    break
+                )
                 gainHeroStat(me, stat:MP~, -12, true)
                 gainHeroStat(me, stat:Ctr, -12, true) # recharge speeds
             )
@@ -994,6 +1030,7 @@ plotscript, shopItem, handle, cost, begin
                 setHeroStat(me, stat:Atk, 8, maximumStat)
                 setHeroStat(me, stat:Atk, 8)
                 setHeroStat(me, stat:Magic, 0, maximumStat)
+                setHeroStat(me, stat:Magic, getHeroStat(me, stat:Magic, maximumStat))
                 setTag(tag:meleeMaster, on)
             )
             case(4) do(

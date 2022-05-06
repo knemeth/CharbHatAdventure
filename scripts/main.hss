@@ -131,7 +131,7 @@ script, initGame, begin
     playerSpriteset := player:walkSet
     playerFrames := player:walkFrames
     playerAnimSpeed := player:animSpeed
-    playerSpeed := player:speed
+    if(playerSpeed < player:speed) then(playerSpeed := player:speed)
 
     # hud
     hud := loadSliceCollection(0)

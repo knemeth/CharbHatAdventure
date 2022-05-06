@@ -16,6 +16,8 @@ define constant, begin
 14,tag:caveOpen
 15,tag:caveEntered
 16,tag:challengeInProgress
+17,tag:climbedMountain
+18,tag:charredbileDefeated
 0,song:Adventure
 1,song:Battle Ready
 2,song:9 Dark Fantasy Studio  Stars

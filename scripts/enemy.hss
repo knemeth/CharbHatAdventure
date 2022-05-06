@@ -763,6 +763,8 @@ script, enemyBehavior, ref, begin
                             # End challenge
                             challengeProgress += 1
                             setEnemyState(ref, ai:wait)
+                            setEnemySequenceStep(ref, 0)
+                            setEnemyPatternStep(ref, 0)
                             endChallenge()
                         )
                     )
@@ -795,6 +797,53 @@ script, enemyBehavior, ref, begin
                                 startAOE(sliceCX(player), sliceCY(player), 100, 100, 80, 2, 11, 6)
                                 setEnemySequenceStep(ref, seq + 1)
                                 setEnemyState(ref, ai:idle)
+                            )
+                        )
+                        case(1) do(
+                            # Second Challenge - Melee focus
+                            seq := getEnemySequenceStep(ref)
+                            if(seq == 0 || seq == 2) then(
+                                if(getEnemyPatternStep(ref) > 7) then(
+                                    setEnemyPatternStep(ref, 0)
+                                    setEnemySequenceStep(ref, seq + 1)
+                                    setEnemyState(ref, ai:idle)
+                                ) else(
+                                    switch(getEnemyPatternStep(ref)) do(
+                                        case(0, 4) spawn := createEnemy(enemy:melee, 158, 74, true), stunEnemy(spawn, 24)
+                                        case(1, 5) spawn := createEnemy(enemy:melee, 158, 78, true), stunEnemy(spawn, 24)
+                                        case(2, 6) spawn := createEnemy(enemy:melee, 168, 78, true), stunEnemy(spawn, 24)
+                                        case(3, 7) spawn := createEnemy(enemy:melee, 168, 74, true), stunEnemy(spawn, 24)
+                                    )
+                                    minionCount += 1
+                                    setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                                    setEnemyActDelay(ref, 30)
+                                )
+                            ) else(
+                                if(minionCount == 0 && getEnemyPatternStep(ref) > 0) then(
+                                    setEnemyState(ref, ai:idle)
+                                    setEnemyPatternStep(ref, 0)
+                                    setEnemySequenceStep(ref, seq + 1)
+                                ) else if(getEnemyPatternStep(ref) > 44) then(
+                                    setEnemyPatternStep(ref, 1)
+                                    setEnemyActDelay(ref, 120)
+                                ) else(
+                                    switch(getEnemyPatternStep(ref)) do(
+                                        case(0) do(
+                                            spawn := createEnemy(enemy:melee, 158, 78, true), stunEnemy(spawn, 24)
+                                            spawn := createEnemy(enemy:melee, 160, 78, true), stunEnemy(spawn, 24)
+                                            spawn := createEnemy(enemy:melee, 162, 78, true), stunEnemy(spawn, 24)
+                                            spawn := createEnemy(enemy:melee, 164, 78, true), stunEnemy(spawn, 24)
+                                            spawn := createEnemy(enemy:melee, 166, 78, true), stunEnemy(spawn, 24)
+                                            spawn := createEnemy(enemy:melee, 168, 78, true), stunEnemy(spawn, 24)
+                                            minionCount += 6
+                                        )
+                                        case(else) do(
+                                            startAOE((156 + (getEnemyPatternStep(ref),mod,15)) * 20, (74 + (getEnemyPatternStep(ref)*2/15)) * 20, 32, 48, 48, 2, 5)
+                                        )
+                                    )
+                                    setEnemyPatternStep(ref, getEnemyPatternStep(ref) + 1)
+                                    setEnemyActDelay(ref, 4)
+                                )
                             )
                         )
                     )
@@ -996,7 +1045,7 @@ script, getEnemyHP, ref, begin
         case(enemy:ranged) exitReturning(2)
         case(enemy:testboss) exitReturning(100)
         case(enemy:slime) exitReturning(5)
-        case(enemy:charvile) exitReturning(1)
+        case(enemy:charvile) exitReturning(266)
         case(enemy:chadbile) exitReturning(266)
         case(enemy:starbile) exitReturning(266)
         case(enemy:fan) exitReturning(2)

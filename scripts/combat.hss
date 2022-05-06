@@ -240,7 +240,7 @@ end
 # ==============================
 
 script, damagePlayer, amount, begin
-    if(getHeroStat(me, stat:Def) > 0 || controlsSuspended) then(
+    if(getHeroStat(me, stat:Def) > 0 || getHeroStat(me, stat:Dodge) > 0 || controlsSuspended) then(
         # BLOCKED
         exitScript()
     )
@@ -357,7 +357,7 @@ script, damageEnemy, ref, amount, begin
             case(enemy:chadbile) chadbileKilled()
             case(enemy:starbile) starbileKilled()
             case(enemy:barrier) setTag(tag:caveOpen, on)
-            case(else) createRandomPickup(sliceCX(sli), sliceCY(sli)), createCoins(random(2,3), sliceCX(sli), sliceCY(sli))
+            case(else) createRandomPickup(sliceCX(sli), sliceCY(sli)), createCoins(random(1,2), sliceCX(sli), sliceCY(sli))
         )
 
         destroyNPC(ref)

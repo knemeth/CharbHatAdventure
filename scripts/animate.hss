@@ -96,13 +96,20 @@ end
 # =======================================
 
 script, animateNPCs, begin
-    variable(ref)
+    variable(ref, sl)
 
     ref := nextNPCReference()
     while(ref) do(
         # Exclamation point for talkable npcs
         if(getNPCPool(ref) == pool:local) then(
             if(readNPC(ref, npcStat:activation) == npcActivation:use) then(
+                if(lookupSlice(sli:exclamation, getNPCSlice(ref)) == false) then(
+                    sl := loadHeroSprite(9)
+                    setSliceLookup(sl, sli:exclamation)
+                    setParent(sl, getNPCSlice(ref))
+                    realignSlice(sl, edge:center, edge:top, edge:middle, edge:bottom)
+                    createAnimation(sl, 40, 5, true)
+                )
                 if(sliceCollide(lookupSlice(sli:attack, player), getNPCSlice(ref))) then(
                     setSliceVisible(lookupSlice(sli:exclamation, getNPCSlice(ref)), true)
                 ) else(
