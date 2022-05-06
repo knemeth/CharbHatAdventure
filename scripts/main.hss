@@ -415,11 +415,11 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
             sl := createContainer()
             setParent(sl, handle)
             setSliceLookup(sl, sli:ai)
-            x := npcPixelX(npcReferenceFromSlice(handle))
-            y := npcPixelY(npcReferenceFromSlice(handle))
+            x := npcX(npcReferenceFromSlice(handle)) * 20
+            y := npcY(npcReferenceFromSlice(handle)) * 20
         ) else(
-            x := heroPixelX(me)
-            y := heroPixelY(me)
+            x := heroX(me) * 20
+            y := heroY(me) * 20
         )
     )
 
