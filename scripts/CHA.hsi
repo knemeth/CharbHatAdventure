@@ -14,8 +14,13 @@ define constant, begin
 12,tag:meleeMaster
 13,tag:rangeMaster
 14,tag:caveOpen
+15,tag:caveEntered
+16,tag:challengeInProgress
 0,song:Adventure
 1,song:Battle Ready
+2,song:9 Dark Fantasy Studio  Stars
+3,song:7 Dark Fantasy Studio  Black
+4,song:27Dark Fantasy Studio Myster
 0,sfx:Melee
 1,sfx:Melee2
 2,sfx:Melee3

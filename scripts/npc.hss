@@ -69,6 +69,8 @@ plotscript, charvile, begin
 
     toggleCutsceneBars(true)
 
+    playSong(4)
+
     focusCamera(84, 68, 2)
     waitForCamera()
 
@@ -174,7 +176,7 @@ script, charvileKilled, begin
     showTextbox(20)
     waitForTextbox()
 
-    sl := getNPCSlice(globalNPC(enemy:charvile))
+    sl := getNPCSlice(globalNPC(enemy:charvile, 0))
     playSound(sfx:DeathEcho, false, true)
     for(i, 0, 7) do(
         vfx := loadAttackSprite(5)
@@ -187,6 +189,8 @@ script, charvileKilled, begin
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
+
+    createCoins(20, sliceCX(sl), sliceCY(sl), 30)
 
     setHeroStat(me, stat:HP, getHeroStat(me, stat:HP)+1, maximumStat)
     setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
@@ -432,6 +436,8 @@ plotscript, chadbile, begin
 
     toggleCutsceneBars(true)
 
+    playSong(4)
+
     focusCamera(18, 30, 2)
     waitForCamera()
 
@@ -464,7 +470,7 @@ plotscript, chadbile, begin
     controlsSuspended := false
     setEnemyActDelay(globalNPCReference(enemy:chadbile), 45)
     setEnemyState(globalNPCReference(enemy:chadbile), ai:idle)
-    playSong(1)
+    playSong(3)
 
     minionCount := 0
 end
@@ -509,7 +515,7 @@ script, chadbileKilled, begin
 
     playSound(sfx:DeathEcho, false, true)
 
-    sl := getNPCSlice(globalNPC(enemy:chadbile))
+    sl := getNPCSlice(globalNPC(enemy:chadbile, 0))
     for(i, 0, 7) do(
         vfx := loadAttackSprite(5)
         setParent(vfx, fxLayer)
@@ -521,6 +527,8 @@ script, chadbileKilled, begin
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
     createPickup(0, @healthPickup, sliceCX(sl)+random(-20,20), sliceCY(sl)+random(-20,20))
+
+    createCoins(20, sliceCX(sl), sliceCY(sl), 30)
 
     setHeroStat(me, stat:HP, getHeroStat(me, stat:HP)+1, maximumStat)
     setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
@@ -617,7 +625,7 @@ plotscript, starbile, begin
         )
         setEnemyState(globalNPC(enemy:speaker, x), ai:idle)
     )
-    playSong(1)
+    playSong(2)
 
     minionCount := 0
 end
@@ -672,6 +680,8 @@ script, starbileKilled, begin
         putSlice(vfx, sliceCX(sl), sliceCY(sl))
         createParticle(vfx, 50, 4000, i*(360/8), 20)
     )
+
+    createCoins(20, sliceCX(sl), sliceCY(sl), 30)
 
     setTimer(timer:cutscene, 60, 1, @endingScene)
 end
@@ -847,20 +857,20 @@ end
 
 script, lavaGlow, state, begin
     if(state <> 0) then(
-        setTimer(timer:lightning, 8, 1, @lavaGlow)
+        setTimer(timer:lightning, 4, 1, @lavaGlow)
         if(state > 0) then(
             rShift += 1
             if(rShift >= 10) then(
-                setTimerArgs(timer:lightning, -1)
+                setTimerArgs(timer:lightning, -2)
             ) else(
-                setTimerArgs(timer:lightning, 1)
+                setTimerArgs(timer:lightning, 2)
             )
         ) else(
             rShift -= 1
             if(rShift <= -10) then(
-                setTimerArgs(timer:lightning, 1)
+                setTimerArgs(timer:lightning, 2)
             ) else(
-                setTimerArgs(timer:lightning, -1)
+                setTimerArgs(timer:lightning, -2)
             )
         )
         tweakPalette(state, 0, 0, 15, 15)
@@ -873,6 +883,56 @@ script, lavaGlow, state, begin
         resetPalette()
         updatePalette()
     )
+end
+
+plotscript, declareChallenge, begin
+    controlsSuspended := true
+    showTextbox(117)
+    setTag(tag:caveEntered, on)
+    timerWaitForTextbox()
+end
+
+plotscript, startChallenge, begin
+    setTag(tag:challengeInProgress, on)
+    # Temp walls
+    variable(x, y)
+    for(x, 0, mapWidth()--1) do(
+        for(y, 0, mapHeight()--1) do(
+            if(readZone(1, x, y)) then(
+                writePassBlock(x, y, northwall+southwall+eastwall+westwall)
+                writeMapBlock(x, y, 133, 3)
+            )
+        )
+    )
+
+    playSong(1)
+
+    minionCount := 0
+    setEnemyState(globalNPC(enemy:challenger, 0), ai:idle)
+
+    switch(challengeProgress) do(
+        case(0) do(
+            # First Challenge
+            challengePoints := 0 
+            challengeGoal := 18
+        )
+    )
+end
+
+script, endChallenge, begin
+    variable(x, y)
+    for(x, 0, mapWidth()--1) do(
+        for(y, 0, mapHeight()--1) do(
+            if(readZone(1, x, y)) then(
+                writePassBlock(x, y, 0)
+                writeMapBlock(x, y, 0, 3)
+            )
+        )
+    )
+
+    stopSong()
+
+    setTag(tag:challengeInProgress, off)
 end
 
 # SHOP

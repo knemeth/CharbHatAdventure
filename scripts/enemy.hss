@@ -19,6 +19,7 @@ defineConstant, begin
     10,enemy:speaker
     11,enemy:stardummy
     12,enemy:barrier
+    13,enemy:challenger
     30,enemy:actDelay
 
     0,ai:idle
@@ -47,7 +48,7 @@ script, initEnemies, begin
     )
 end
 
-script, createEnemy, id, x, y, begin
+script, createEnemy, id, x, y, fx=false, begin
     variable(ref)
 
     ref := createGlobalNPC(id, x, y)
@@ -59,6 +60,14 @@ script, createEnemy, id, x, y, begin
     ) elseif(id == enemy:flame) then(
         setEnemyPatternStep(ref, random(0, 240))
         dissolveSprite(getNPCSprite(ref), dissolve:fade, 600)
+    )
+
+    if(fx) then(
+        variable(vfx)
+
+        vfx := loadHeroSprite(5)
+        putSlice(vfx, sliceCX(getNPCSlice(ref)), sliceCY(getNPCSlice(ref)))
+        createAnimation(vfx, 32, 4)
     )
 
     exitReturning(ref)
@@ -733,6 +742,63 @@ script, enemyBehavior, ref, begin
                 projectile := createProjectile(6, sliceCX(npcSl)+offset, sliceCY(npcSl), 8, 18, bearing, projectile:speed, false)
                 if(NPCDirection(ref) == left) then(horizFlipSprite(firstSpriteChild(projectile), true))
                 setAttackDelay(npcSl, 120)
+            )
+        )
+        case(enemy:challenger) do(
+            if(getEnemyState(ref) == ai:wait) then(
+                setSliceVisible(getNPCSlice(ref), false)
+                break
+            ) else(
+                setSliceVisible(getNPCSlice(ref), true)
+            )
+
+            switch(getEnemyState(ref)) do(
+                case(ai:idle) do(
+                    if(minionCount == 0) then(
+                        if(challengePoints < challengeGoal) then(
+                            # Spawn enemies
+                            setEnemyActDelay(ref, 120)
+                            setEnemyState(ref, ai:charge)
+                        ) else(
+                            # End challenge
+                            challengeProgress += 1
+                            setEnemyState(ref, ai:wait)
+                            endChallenge()
+                        )
+                    )
+                )
+                case(ai:charge) do(
+                    switch(challengeProgress) do(
+                        case(0) do(
+                            # First Challenge
+                            seq := getEnemySequenceStep(ref)
+                            if(seq == 0 || seq == 5) then(
+                                spawn := createEnemy(enemy:ranged, 157, 78, true), stunEnemy(spawn, 24)
+                                spawn := createEnemy(enemy:ranged, 169, 78, true), stunEnemy(spawn, 24)
+                                spawn := createEnemy(enemy:melee, 158, 74, true), stunEnemy(spawn, 24)
+                                spawn := createEnemy(enemy:melee, 163, 77, true), stunEnemy(spawn, 24)
+                                spawn := createEnemy(enemy:melee, 168, 74, true), stunEnemy(spawn, 24)
+                                minionCount += 5
+                                setEnemySequenceStep(ref, seq + 1)
+                                setEnemyState(ref, ai:idle)
+                            ) elseif(seq == 1 || seq == 3) then(
+                                spawn := createEnemy(enemy:melee, 160, 74, true), stunEnemy(spawn, 24)
+                                spawn := createEnemy(enemy:melee, 160, 77, true), stunEnemy(spawn, 24)
+                                spawn := createEnemy(enemy:melee, 166, 74, true), stunEnemy(spawn, 24)
+                                spawn := createEnemy(enemy:melee, 166, 77, true), stunEnemy(spawn, 24)
+                                minionCount += 4
+                                setEnemySequenceStep(ref, seq + 1)
+                                setEnemyActDelay(ref, 30)
+                                setEnemyState(ref, ai:charge)
+                            ) elseif(seq == 2 || seq == 4) then(
+                                # Drop fire
+                                startAOE(sliceCX(player), sliceCY(player), 100, 100, 80, 2, 11, 6)
+                                setEnemySequenceStep(ref, seq + 1)
+                                setEnemyState(ref, ai:idle)
+                            )
+                        )
+                    )
+                )
             )
         )
     )

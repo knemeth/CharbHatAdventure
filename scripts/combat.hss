@@ -345,6 +345,11 @@ script, damageEnemy, ref, amount, begin
         putSlice(vfx, x, y)
         createAnimation(vfx, 32, 4)
 
+        if(checkTag(tag:challengeInProgress)) then(
+            minionCount -= 1
+            challengePoints += 1
+        )
+
         switch(getNPCID(ref)) do(
             case(enemy:slime) minionCount -= 1, createRandomPickup(sliceCX(sli), sliceCY(sli))
             case(enemy:fan) minionCount -= 1, createRandomPickup(sliceCX(sli), sliceCY(sli))

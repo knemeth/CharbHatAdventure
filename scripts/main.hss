@@ -52,6 +52,9 @@ globalVariable, begin
     57,windDirection
     58,idols
     59,difficulty
+    60,challengeProgress
+    61,challengeGoal
+    62,challengePoints
 end
 
 defineConstant, begin
@@ -166,7 +169,7 @@ script, initGame, begin
             setParent(sl, npcSl)
             putSlice(sl, sliceWidth(npcSl)/2, sliceHeight(npcSl)/2)
             setSliceLookup(sl, sli:emitter)
-            createEmitter(sl, 120, -1, 2, lookupSlice(sl:mapLayer4))
+            createEmitter(sl, 120, -1, 2, lookupSlice(sl:mapLayer6))
             sl := loadHeroSprite(12)
             setOpacity(sl, 50)
             createParticle(sl, 240, 300, 270, 0, false, dissolve:fade)
