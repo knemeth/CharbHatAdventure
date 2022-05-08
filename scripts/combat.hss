@@ -356,6 +356,7 @@ script, damageEnemy, ref, amount, begin
             case(enemy:charvile) charvileKilled()
             case(enemy:chadbile) chadbileKilled()
             case(enemy:starbile) starbileKilled()
+            case(enemy:charredbile) minionCount -= 1, createCoins(100, sliceCX(sli), sliceCY(sli))
             case(enemy:barrier) setTag(tag:caveOpen, on)
             case(else) createRandomPickup(sliceCX(sli), sliceCY(sli)), createCoins(random(1,2), sliceCX(sli), sliceCY(sli))
         )
@@ -379,7 +380,7 @@ script, meleeCollisions, begin
             ref := npcReferenceFromSlice(hit)
             if(ref && getNPCPool(ref) == pool:global && getEnemyHit(ref) == false) then(
                 switch(getNPCID(ref)) do(
-                    case(enemy:barrier, enemy:flame) break
+                    case(enemy:barrier, enemy:flame, enemy:charredbile) break
                     case(else) pushObject(hit, getBearing(sliceCX(player), sliceCY(player), sliceCX(hit), sliceCY(hit)), projectile:knockback)
                 )
                 setEnemyHit(ref, true)

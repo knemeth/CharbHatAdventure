@@ -935,10 +935,21 @@ plotscript, startChallenge, begin
     playSong(1)
 
     minionCount := 0
-    setEnemyState(globalNPC(enemy:challenger, 0), ai:idle)
+    #setEnemyState(globalNPC(enemy:challenger, 0), ai:idle)
 
     switch(challengeProgress) do(
         case(0) do(
+            createEnemy(enemy:charredbile, 163, 78)
+            setEnemyState(globalNPC(enemy:charredbile), ai:idle)
+            setEnemyActDelay(globalNPC(enemy:charredbile), 30)
+            $1="Charredbile"
+            toggleBossBar(true, 1)
+            clearString(1)
+            currentBoss := enemy:charredbile
+            challengePoints := 0
+            challengeGoal := 1
+        )
+        case(999) do(
             # First Challenge
             challengePoints := 0 
             challengeGoal := 18

@@ -20,6 +20,7 @@ defineConstant, begin
     11,enemy:stardummy
     12,enemy:barrier
     13,enemy:challenger
+    14,enemy:charredbile
     30,enemy:actDelay
 
     0,ai:idle
@@ -66,6 +67,9 @@ script, createEnemy, id, x, y, fx=false, begin
         variable(vfx)
 
         vfx := loadHeroSprite(5)
+        setParent(vfx, fxLayer)
+        setHorizAnchor(vfx, edge:center)
+        setVertAnchor(vfx, edge:middle)
         putSlice(vfx, sliceCX(getNPCSlice(ref)), sliceCY(getNPCSlice(ref)))
         createAnimation(vfx, 32, 4)
     )
@@ -850,6 +854,126 @@ script, enemyBehavior, ref, begin
                 )
             )
         )
+        case(enemy:charredbile) do(
+            if(getEnemyState(ref) == ai:wait) then(break)   # fight hasn't started yet
+
+            dist := getDistance(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+            if(getDistance(sliceCX(npcSl), sliceCY(npcSl), 84*20, 78*20) / 20 > 6) then(
+                bearing := getBearing(sliceCX(npcSl), sliceCY(npcSl), 84*20, 78*20)
+                setSliceDir(npcSl, bearing)
+            ) elseif(dist / 20 > 7) then(
+                # move toward player
+                bearing := getBearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+                setSliceDir(npcSl, bearing)
+                setSliceV(npcSl, getEnemySpeed(ref))
+            ) else(
+                setSliceV(npcSl, 0)
+            )
+
+            seq := getEnemySequenceStep(ref)
+            
+            switch(getEnemyState(ref)) do(
+                case(ai:idle) do(
+                    if(dist < 58 && readTimer(timer:boss) <= 0) then(
+                        setEnemyActDelay(ref, 60)
+                        setEnemyState(ref, ai:melee)
+                    ) elseif(seq == 0) then(
+                        setEnemyActDelay(ref, 50)
+                        setEnemySequenceStep(ref, 1)
+                        setEnemyState(ref, ai:charge)
+                    ) elseif(seq == 4) then(
+                        setEnemyActDelay(ref, 50)
+                        setEnemyState(ref, ai:mega)
+                    ) else(
+                        setEnemySequenceStep(ref, seq+1)
+                        setEnemyActDelay(ref, 50)
+                        setEnemyState(ref, random(1, 2))
+                    )
+                )
+                case(ai:charge) do(
+                    # Change locations and put up walls
+                    if(getEnemyPatternStep(ref) == 0) then(
+                        # Disappear and Clear existing walls
+                        setSliceVisible(npcSl, false)
+                        for(i, npcCopyCount(26)--1, 0, -1) do(
+                            spawn := npcReference(26, i)
+                            writePassBlock(npcX(spawn), npcY(spawn), 0)
+                            writeMapBlock(npcX(spawn), npcY(spawn), 0, 2)
+                            writeMapBlock(npcX(spawn), npcY(spawn)--1, 0, 7)
+                            destroyNPC(spawn)
+                        )
+                        setEnemyActDelay(ref, 60)
+                        setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                    ) elseif(getEnemyPatternStep(ref) == 1) then(
+                        # Reappear and create new walls
+                        teleportObject(npcSl, random(159, 167) * 20, random(75, 76) * 20)
+                        setSliceVisible(npcSl, true)
+                        x := -2, y := 0
+                        for(i, 0, 3) do(
+                            if(i == 1) then(x := 0, y := -2)
+                            elseif(i == 2) then(x := 2, y := 0)
+                            elseif(i == 3) then(x := 0, y := 2)
+                            spawn := createNPC(26, npcX(ref)+x, npcY(ref)+y) 
+                            if(sliceCollide(getNPCSlice(spawn), player)) then(
+                                pushObject(player, getBearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player)), 32000)
+                            )
+                            writePassBlock(npcX(spawn), npcY(spawn), northwall+southwall+eastwall+westwall)
+                            writeMapBlock(npcX(spawn), npcY(spawn), 69, 2)
+                            writeMapBlock(npcX(spawn), npcY(spawn)--1, 70, 7)
+                        )
+                        setEnemyActDelay(ref, 60)
+                        setEnemyPatternStep(ref, 0)
+                        setEnemyState(ref, ai:idle)
+                    )
+                )
+                case(ai:spray) do(
+                    if(getEnemyPatternStep(ref) < 16) then(
+                        playSound(sfx:shot, false, true)
+                        createProjectile(0, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getEnemyPatternStep(ref)*(360/16), projectile:speed, false)
+                        setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                    ) else(
+                        setEnemyState(ref, ai:idle)
+                        setEnemyPatternStep(ref, 0)
+                    )
+                    setEnemyActDelay(ref, 12)
+                )
+                case(ai:aoe) do(
+                    if(getEnemyPatternStep(ref) > 44) then(
+                        setEnemyState(ref, ai:idle)
+                        setEnemyPatternStep(ref, 0)
+                        setEnemyActDelay(ref, 80)
+                    ) else(
+                        startAOE((156 + (getEnemyPatternStep(ref),mod,15)) * 20, (74 + (getEnemyPatternStep(ref)*2/15)) * 20, 32, 48, 48, 2, 5)
+                        setEnemyPatternStep(ref, getEnemyPatternStep(ref) + 1)
+                        setEnemyActDelay(ref, 4)
+                    )
+                )
+                case(ai:mega) do(
+                    if(getEnemyPatternStep(ref) < 4) then(
+                        playSound(sfx:shot, false, true)
+                        for(i, 0, 360, 5) do(
+                            createProjectile(8, sliceCX(npcSl), sliceCY(npcSl), 10, 10, i + (getEnemyPatternStep(ref)*5), multdiv(projectile:speed, 3, 5), false)
+                        )
+                        setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                        setEnemyActDelay(ref, 76)
+                    ) else(
+                        setEnemyActDelay(ref, 240)
+                        setEnemyState(ref, ai:idle)
+                        setEnemyPatternStep(ref, 0)
+                        setEnemySequenceStep(ref, 0)
+                    )
+                )
+                case(ai:melee) do(
+                    startAOE(sliceCX(npcSl)--sliceWidth(npcSl), sliceCY(npcSl), 50, 50, 60, 2, 11, 6)
+                    startAOE(sliceCX(npcSl)+sliceWidth(npcSl), sliceCY(npcSl), 50, 50, 60, 2, 11, 6)
+                    startAOE(sliceCX(npcSl), sliceCY(npcSl)--sliceHeight(npcSl), 50, 50, 60, 2, 11, 6)
+                    startAOE(sliceCX(npcSl), sliceCY(npcSl)+sliceHeight(npcSl), 50, 50, 60, 2, 11, 6)
+                    setEnemyActDelay(ref, 80)
+                    setEnemyState(ref, ai:idle)
+                    setTimer(timer:boss, 160, 1)    # don't melee again immediately
+                )
+            )
+        )
     )
 
     subscript, telegraphFX, begin
@@ -894,6 +1018,7 @@ script, stunEnemy, ref, dur, begin
         case(enemy:chadbile) exitReturning(false)
         case(enemy:starbile) exitReturning(false)
         case(enemy:speaker) exitReturning(false)
+        case(enemy:charredbile) exitReturning(false)
     )
     setNPCExtra(ref, extra2, dur)
 end
@@ -1051,6 +1176,7 @@ script, getEnemyHP, ref, begin
         case(enemy:fan) exitReturning(2)
         case(enemy:flame) exitReturning(1)
         case(enemy:barrier) exitReturning(100)
+        case(enemy:charredbile) exitReturning(366)
         case(else) exitReturning(default)
     )
 end
@@ -1074,6 +1200,7 @@ script, getEnemyWidth, ref, begin
         case(enemy:starbile) exitReturning(16)
         case(enemy:speaker) exitReturning(20)
         case(enemy:barrier) exitReturning(20)
+        case(enemy:charredbile) exitReturning(40)
         case(else) exitReturning(default)
     )
 end
@@ -1097,6 +1224,7 @@ script, getEnemyHeight, ref, begin
         case(enemy:starbile) exitReturning(22)
         case(enemy:speaker) exitReturning(20)
         case(enemy:barrier) exitReturning(20)
+        case(enemy:charredbile) exitReturning(30)
         case(else) exitReturning(default)
     )
 end
@@ -1150,6 +1278,7 @@ script, getEnemyFrames, ref, begin
             case(enemy:speaker) exitReturning(4)
             case(enemy:stardummy) exitReturning(1)
             case(enemy:barrier) exitReturning(1)
+            case(enemy:charredbile) exitReturning(1)
             case(else) exitReturning(4)
         )
     ) else(
