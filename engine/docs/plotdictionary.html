@@ -204,7 +204,7 @@ function toggleContent(target) {
 </head>
 <body>
 <h1>Plotscripting Dictionary</h1>
-<h2>For the next WIP OHRRPGCE version (nightly build 2022-04-06)</h2>
+<h2>For the next WIP OHRRPGCE version (nightly build 2022-04-22)</h2>
 <p>This is the documentation for all <a href="https://rpg.hamsterrepublic.com/ohrrpgce/Plotscripting">plotscripting</a> commands.
 				In addition to reading this document, we also recommend you check out the
 				<a href="https://rpg.hamsterrepublic.com/ohrrpgce/Plotscripting_Tutorial">Plotscripting Tutorial</a>
@@ -433,6 +433,10 @@ function toggleContent(target) {
 </ul>
 </li>
 		<li>
+<a href="#Extra%20Data%20Array%20Functions">Extra Data Array Functions</a><br>
+		<ul></ul>
+</li>
+		<li>
 <a href="#Menu%20Functions">Menu Functions</a><br>
 		<ul>
 		<li>
@@ -454,10 +458,6 @@ function toggleContent(target) {
 <a href="#Slices">Slices</a><br>
 		<ul>
 		<li>
-<a href="#Extra%20Data">Extra Data</a><br>
-		<ul></ul>
-</li>
-		<li>
 <a href="#Getting%20Slices">Getting Slices</a><br>
 		<ul></ul>
 </li>
@@ -467,6 +467,10 @@ function toggleContent(target) {
 </li>
 		<li>
 <a href="#Positioning%20Slices">Positioning Slices</a><br>
+		<ul></ul>
+</li>
+		<li>
+<a href="#Extra%20Data">Extra Data</a><br>
 		<ul></ul>
 </li>
 		<li>
@@ -666,8 +670,8 @@ function toggleContent(target) {
 		<a href="#about-animationstarttile">animation start tile (tile number, layer)</a><br>
 		<a href="#about-anykey">any key</a><br>
 		<a href="#about-appendascii">append ascii (ID, char)</a><br>
+		<a href="#about-appendextra">append extra (handle, value)</a><br>
 		<a href="#about-appendnumber">append number (ID, number, min length, pad with zeros)</a><br>
-		<a href="#about-appendsliceextra">append slice extra (handle, value)</a><br>
 		<a href="#about-asciifromstring">ascii from string (ID, position)</a><br>
 		<a href="#about-assert">assert (expression)</a><br>
 		<a href="#about-autonumber">autonumber</a><br>
@@ -754,7 +758,7 @@ function toggleContent(target) {
 		<a href="#about-deletehero">delete hero (who)</a><br>
 		<a href="#about-deleteherobyslot">delete hero by slot (slot)</a><br>
 		<a href="#about-deleteitem">delete item (item, number)</a><br>
-		<a href="#about-deletemapstate">delete map state (whichdata)</a><br>
+		<a href="#about-deletemapstate">delete map state (whichdata, custom id)</a><br>
 		<a href="#about-deletemenuitem">delete menu item(menu item handle)</a><br>
 		<a href="#about-destroynpc">delete NPC (reference)</a><br>
 		<a href="#about-deletesave">delete save (slot)</a><br>
@@ -783,6 +787,7 @@ function toggleContent(target) {
 		<a href="#about-equal">number == number</a><br>
 		<a href="#about-equipmenu">equip menu (who, allow switching)</a><br>
 		<a href="#about-equipwhere">equip where (hero, item)</a><br>
+		<a href="#about-exit">exit</a><br>
 		<a href="#about-exitreturning">exit returning(value)</a><br>
 		<a href="#about-exitscript">exit script</a><br>
 		<a href="#about-expandstring">expand string(ID, saveslot)</a><br>
@@ -794,6 +799,7 @@ function toggleContent(target) {
 		<a href="#about-extendedscancodesenabled">extended scancodes enabled</a><br>
 		<a href="#about-extractcolor">extract color (color, component)</a><br>
 		<a href="#about-extradataindex">Extra data array index</a><br>
+		<a href="#about-extralength">extra length (handle)</a><br>
 		<a href="#about-fadescreenin">fade screen in</a><br>
 		<a href="#about-fadescreenout">fade screen out (red, green, blue)</a><br>
 		<a href="#about-false">false</a><br>
@@ -865,6 +871,7 @@ function toggleContent(target) {
 		<a href="#about-getenemyappearance">get enemy appearance (enemyid, appearance)</a><br>
 		<a href="#about-getenemyname">get enemy name (enemyid, stringid)</a><br>
 		<a href="#about-getenemystat">get enemy stat(enemy, stat)</a><br>
+		<a href="#about-getextra">get extra (handle, extra)</a><br>
 		<a href="#about-getfootoffset">get foot offset</a><br>
 		<a href="#about-getformationbackground">get formation background (formation)</a><br>
 		<a href="#about-getformationsong">get formation song (formation)</a><br>
@@ -991,6 +998,7 @@ function toggleContent(target) {
 		<a href="#about-getvertanchor">get vert anchor (handle)</a><br>
 		<a href="#about-getvictorymusic">get victory music</a><br>
 		<a href="#about-getwrap">get wrap(handle)</a><br>
+		<a href="#about-getzone">get zone (zone id)</a><br>
 		<a href="#about-getzoneextra">get zone extra (zone id, extra num)</a><br>
 		<a href="#about-getzonename">get zone name (string id, zone id)</a><br>
 		<a href="#about-giveexperience">give experience (hero, amount)</a><br>
@@ -1020,6 +1028,7 @@ function toggleContent(target) {
 		<a href="#about-herorankfromslice">hero rank from slice (handle)</a><br>
 		<a href="#about-heroslotfromslice">hero slot from slice (handle)</a><br>
 		<a href="#about-herototalelementalresistasint">hero total elemental resist as int (who, element)</a><br>
+		<a href="#about-herouseslevelmp">hero uses level MP (who)</a><br>
 		<a href="#about-herowallsaresuspended">hero walls are suspended</a><br>
 		<a href="#about-herox">hero X (who)</a><br>
 		<a href="#about-heroy">hero Y (who)</a><br>
@@ -1086,7 +1095,8 @@ function toggleContent(target) {
 		<a href="#about-logicalor">value || value</a><br>
 		<a href="#about-logicalxor">value ^^ value</a><br>
 		<a href="#about-lookupcode">Slice lookup codes</a><br>
-		<a href="#about-lookupslice">lookup slice (lookup code, start slice)</a><br>
+		<a href="#about-lookupnextslice">lookup next slice (lookup code, current slice, root slice)</a><br>
+		<a href="#about-lookupslice">lookup slice (lookup code, root slice)</a><br>
 		<a href="#about-losemoney">lose money (amount)</a><br>
 		<a href="#about-mainmenu">main menu</a><br>
 		<a href="#about-mapcure">map cure (attack, target, attacker)</a><br>
@@ -1142,6 +1152,7 @@ function toggleContent(target) {
 		<a href="#about-nextselectsibling">next select sibling (handle)</a><br>
 		<a href="#about-nextsibling">next sibling (handle)</a><br>
 		<a href="#about-nextsiblingoftype">next sibling of type (handle, type)</a><br>
+		<a href="#about-nextsliceintree">next slice in tree (current slice, root slice, visit children)</a><br>
 		<a href="#about-nextspritesibling">next sprite sibling (handle)</a><br>
 		<a href="#about-nexttextsibling">next text sibling (handle)</a><br>
 		<a href="#about-none">none</a><br>
@@ -1174,6 +1185,7 @@ function toggleContent(target) {
 		<a href="#about-npcz">NPC Z (who)</a><br>
 		<a href="#about-numberfromstring">number from string (ID, default)</a><br>
 		<a href="#about-numericconstants">Numeric Constants</a><br>
+		<a href="#about-objecthandle">Object handles</a><br>
 		<a href="#about-obstructionissuspended">obstruction is suspended</a><br>
 		<a href="#about-off">off</a><br>
 		<a href="#about-on">on</a><br>
@@ -1248,6 +1260,9 @@ function toggleContent(target) {
 		<a href="#about-replacesubstring">replace substring (in string, replace what, with what, max replacements, case insensitive)</a><br>
 		<a href="#about-replacewalkaboutsprite">replace walkabout sprite (handle, num, palette)</a><br>
 		<a href="#about-replaceweaponsprite">replace weapon sprite (handle, num, palette)</a><br>
+		<a href="#about-resetenemydata">reset enemy data (enemyid, data)</a><br>
+		<a href="#about-resetenemyname">reset enemy name (enemyid)</a><br>
+		<a href="#about-resetenemystat">reset enemy stat(enemy, stat)</a><br>
 		<a href="#about-resetformation">reset formation (formation)</a><br>
 		<a href="#about-resetformationslot">reset formation slot (formation, slot)</a><br>
 		<a href="#about-resetgame">reset game(args...)</a><br>
@@ -1255,7 +1270,7 @@ function toggleContent(target) {
 		<a href="#about-resetheropicture">reset hero picture (who, type)</a><br>
 		<a href="#about-resetmapstate">reset map state (whichdata)</a><br>
 		<a href="#about-resetpalette">reset palette</a><br>
-		<a href="#about-resizesliceextra">resize slice extra (handle, length)</a><br>
+		<a href="#about-resizeextra">resize extra (handle, length)</a><br>
 		<a href="#about-resumeboxadvance">resume box advance</a><br>
 		<a href="#about-resumecaterpillar">resume catapillar</a><br>
 		<a href="#about-resumecaterpillar">resume caterpillar</a><br>
@@ -1329,6 +1344,7 @@ function toggleContent(target) {
 		<a href="#about-setenemyname">set enemy name (enemyid, stringid)</a><br>
 		<a href="#about-setenemystat">set enemy stat(enemy, stat, value)</a><br>
 		<a href="#about-setexperience">set experience (who, experience, allowforget)</a><br>
+		<a href="#about-setextra">set extra (handle, extra, value)</a><br>
 		<a href="#about-setfootoffset">set foot offset (offset)</a><br>
 		<a href="#about-setformationbackground">set formation background (formation, background, animation frames, animation ticks)</a><br>
 		<a href="#about-setformationsong">set formation song (formation, song)</a><br>
@@ -1483,7 +1499,8 @@ function toggleContent(target) {
 		<a href="#about-showstring">show string (ID)</a><br>
 		<a href="#about-showstringat">show string at (ID, x, y)</a><br>
 		<a href="#about-showtextbox">show text box (number)</a><br>
-		<a href="#about-showvalue">show value (number)</a><br>
+		<a href="#about-showvalue">show value (number, ...)</a><br>
+		<a href="#about-showvalueof">show value of (expression, ...)</a><br>
 		<a href="#about-showvirtualgamepad">show virtual gamepad</a><br>
 		<a href="#about-sign">sign (number)</a><br>
 		<a href="#about-sliceatpixel">slice at pixel (parent, x, y, number, check descendants, visible only)</a><br>
@@ -1494,7 +1511,6 @@ function toggleContent(target) {
 		<a href="#about-slicecontains">slice contains (handle1, handle2)</a><br>
 		<a href="#about-sliceedgex">slice edge x (handle, edge)</a><br>
 		<a href="#about-sliceedgey">slice edge y (handle, edge)</a><br>
-		<a href="#about-sliceextralength">slice extra length (handle)</a><br>
 		<a href="#about-slicehandle">Slice handles</a><br>
 		<a href="#about-sliceheight">slice height (handle)</a><br>
 		<a href="#about-sliceiscontainer">slice is container (handle)</a><br>
@@ -1509,7 +1525,7 @@ function toggleContent(target) {
 		<a href="#about-sliceisselect">slice is select (handle)</a><br>
 		<a href="#about-sliceissprite">slice is sprite (handle)</a><br>
 		<a href="#about-sliceistext">slice is text (handle)</a><br>
-		<a href="#about-sliceisvalid">slice is valid (id)</a><br>
+		<a href="#about-sliceisvalid">slice is valid (value)</a><br>
 		<a href="#about-sliceparent">slice parent (handle)</a><br>
 		<a href="#about-slicescreenx">slice screen x (handle)</a><br>
 		<a href="#about-slicescreeny">slice screen y (handle)</a><br>
@@ -1642,6 +1658,7 @@ function toggleContent(target) {
 		<a href="#about-west">west</a><br>
 		<a href="#about-westwall">west wall</a><br>
 		<a href="#about-while">while(condition) do(commands)</a><br>
+		<a href="#about-windowisfocused">window is focused</a><br>
 		<a href="#about-wrap">wrap</a><br>
 		<a href="#about-writecolor">write color (index, element, value)</a><br>
 		<a href="#about-writeenemydata">write enemy data (enemyid, data, value)</a><br>
@@ -2293,6 +2310,7 @@ y := hero pixel Y(me) + 10 + 20 * dir Y(dir)</pre>
 		<a href="#about-do">do</a><br>
 		<a href="#about-for">for(counter,start,finish,step) do(commands)</a><br>
 		<a href="#about-return">return(value)</a><br>
+		<a href="#about-exit">exit</a><br>
 		<a href="#about-exitreturning">exit returning(value)</a><br>
 		<a href="#about-exitscript">exit script</a><br>
 		<a href="#about-break">break (levels)</a><br>
@@ -2449,7 +2467,8 @@ if (inventory (item:apple)) then (
 			
 				<div class="notice warn">
 <img src="Plotwarn.png" alt="[Warning]" class="icon">
-					<span class="param">return</span> in HamsterSpeak is very different from <span class="param">return</span> in nearly all other programming languages!
+					<span class="param">return</span> in HamsterSpeak is very different from <span class="param">return</span> in nearly all other programming languages,
+					which is equivalent to <a href="#about-exit" class="ref">exit</a> in HamsterSpeak!
 				</div>
 				Sets the value to be returned by the script.
 				This is only useful when the script has been called as a function from another script.
@@ -2491,10 +2510,31 @@ end
 		</p>
 </div>
 		<div class="command">
+			<a name="about-exit"></a>
+				<h4>exit</h4>
+				<h4>exit(value)</h4>
+<p>
+			
+				With no argument, is equivalent to <a href="#about-exitscript" class="ref">exit script</a>. With one argument is equivalent to <a href="#about-exitreturning" class="ref">exit returning</a>.
+				<div class="notice note">
+<img src="Plotnote.png" alt="[Notice]" class="icon">
+					This is the same as the <span class="param">return</span> statement in most other programming languages.
+				</div>
+			
+			
+			
+			
+		</p>
+</div>
+		<div class="command">
 			<a name="about-exitreturning"></a>
 				<h4>exit returning(value)</h4>
+				<h4>exit(value)</h4>
 <p>
-			Sets the value to be returned by the script, and exits the script. This is only useful when the script has been called as a function from another script.
+			
+				Sets the value to be returned by the script, and exits the script.
+				Can be written as either <span class="param">exit returning(value)</span> or the new style <span class="param">exit(value)</span>.
+				This is only useful when the script has been called as a function from another script.
 <pre>
 script, key wait, ticks, begin
   # Returns true if the wait was cancelled by a keypress.
@@ -2517,7 +2557,8 @@ plotscript, usage example, begin
    )
 end
 </pre>
-The <span class="param">exit returning</span> command works exactly the same as the <a href="#about-return" class="ref">return</a> command followed immediately by <a href="#about-exitscript" class="ref">exit script</a>. Whether you decide to use <a href="#about-return" class="ref">return</a> or <span class="param">exit returning</span> to set your script's return value is often just a matter of style and taste.
+				The <span class="param">exit returning</span> command works exactly the same as the <a href="#about-return" class="ref">return</a> command followed immediately by <a href="#about-exitscript" class="ref">exit script</a>.
+				Whether you decide to use <a href="#about-return" class="ref">return</a> or <span class="param">exit returning</span> to set your script's return value is often just a matter of style and taste.
 			
 			
 			
@@ -2532,9 +2573,11 @@ The <span class="param">exit returning</span> command works exactly the same as 
 		<div class="command">
 			<a name="about-exitscript"></a>
 				<h4>exit script</h4>
+				<h4>exit</h4>
 <p>
 			
 				Causes the script to end immediately, and return the value set by the most recent <a href="#about-return" class="ref">return</a> statement.
+				Can be written as either <span class="param">exit script</span> or the new style <span class="param">exit</span>.
 			
 			
 			
@@ -4373,7 +4416,8 @@ while (npcref) do (
 			
 				This command (along with <a href="#about-npccopynumber" class="ref">NPC copy number</a> and <a href="#about-getnpcpool" class="ref">get NPC pool</a>)
 				is the inverse of <a href="#about-npcreference" class="ref">NPC reference</a>.
-				Returns an NPC's ID. <span class="param">reference</span>If you give <span class="param">get NPC ID</span> an <a href="#about-npcref" class="ref">NPC reference</a> it will return the NPC's ID.
+				Returns an NPC's ID.
+				If you give <span class="param">get NPC ID</span> an <a href="#about-npcref" class="ref">NPC reference</a> it will return the NPC's ID.
 				If the reference is not valid then <span class="param">get NPC ID</span> will return -1.
 				This command can be used on tag-disabled NPCs too, returning their ID number.
 				<div class="notice note">
@@ -5055,7 +5099,15 @@ walk NPC(npc, NPC direction(npc), 0)</pre>
 			<a name="about-npcextra"></a>
 				<h4>NPC extra (who, which)</h4>
 <p>
-			Returns the npc instance-specific extra data field requested in <span class="param">which</span>, a number from 0 to 2. You may use the constants <span class="param">extra 0</span>, <span class="param">extra 1</span> and <span class="param">extra 2</span> to refer to them. If you use an NPC ID for <span class="param">who</span>, the first instance's data will be used.
+			
+				Returns an extra data value previously set on NPC instance <span class="param">who</span> with <a href="#about-setnpcextra" class="ref">set NPC extra</a>.
+				<br>
+				If you use an NPC ID for <span class="param">who</span>, the first instance's data will be used.
+				<span class="param">extra</span> is the <a href="#about-extradataindex" class="ref">extra array index</a> to read.
+				<br>
+				This command is like <a href="#about-getextra" class="ref">get extra</a> but only works on NPCs
+				and accepts NPC IDs as well as NPC references.
+			
 			
 			
 			<div class="seealso">See also: <ul><li><a href="#about-setnpcextra" class="ref">set NPC extra</a></li></ul>
@@ -5066,7 +5118,15 @@ walk NPC(npc, NPC direction(npc), 0)</pre>
 			<a name="about-setnpcextra"></a>
 				<h4>set NPC extra (who, which, value)</h4>
 <p>
-			Sets the npc instance-specific extra data field requested in <span class="param">which</span>, a number from 0 to 2. You may use the constants <span class="param">extra 0</span>, <span class="param">extra 1</span> and <span class="param">extra 2</span> to refer to them.  If you use an NPC ID for <span class="param">who</span>, the first instance's data will be used.
+			
+				Sets one of the extra data variables on the NPC instance <span class="param">who</span>.
+				If you use an NPC ID for <span class="param">who</span>, the first instance's data will be used.
+				<span class="param">extra</span> is an <a href="#about-extradataindex" class="ref">extra array index</a>.
+				<br>
+				This command is like <a href="#about-setextra" class="ref">set extra</a> but only works on NPCs
+				and accepts NPC IDs as well as NPC references.
+				See <a href="#about-appendextra" class="ref">append extra</a> and <a href="#about-resizeextra" class="ref">resize extra</a> for more ways to
+				modify zone extra data.
 				<div class="notice note">
 <img src="Plotnote.png" alt="[Notice]" class="icon">
 					Like other NPC instance data, the extra data for NPCs on the current map is not saved in save games!
@@ -5793,7 +5853,8 @@ resume box advance # go back to normal</pre>
 		<a href="#Categories" class="backlink">[Back to top-level index]</a><p></p>
 <div class="select-content-shown" id="Basic Display Commands-index">
 <button onclick="toggleContent(this);"><span class="content-shown">Hide command index</span><span class="content-hidden">Show command index</span></button><ul><div class="content-shown">
-		<a href="#about-showvalue">show value (number)</a><br>
+		<a href="#about-showvalue">show value (number, ...)</a><br>
+		<a href="#about-showvalueof">show value of (expression, ...)</a><br>
 		<a href="#about-showstring">show string (ID)</a><br>
 		<a href="#about-shownovalue">show no value</a><br>
 		<a href="#about-cancelmapnamedisplay">cancel map name display</a><br>
@@ -5803,11 +5864,49 @@ resume box advance # go back to normal</pre>
 </div>
 		<div class="command">
 			<a name="about-showvalue"></a>
-				<h4>show value (number)</h4>
+				<h4>show value (number, ...)</h4>
+				<h4>show values (number, ...)</h4>
 <p>
-			Displays the number in the bottom left corner of the screen. Useful for count-down timers, and for debugging complicated scripts. See <a href="#about-tracevalue" class="ref">trace value</a> for a more powerful debugging tool.
+			
+				Displays one or more numbers at the bottom left corner of the screen,
+				which remains there until overwritten or <a href="#about-shownovalue" class="ref">show no value</a> is used.
+				Useful for count-down timers, and for debugging complicated scripts.
+				The number of arguments to this command is variable.
+				See <a href="#about-showvalueof" class="ref">show value of</a> and <a href="#about-tracevalue" class="ref">trace value</a> for similar debugging tools.
+				You can't print strings with this command; use <a href="#about-showstring" class="ref">show string</a> instead.
+				<div class="notice note">
+<img src="Plotnote.png" alt="[Notice]" class="icon">
+					At most one of <a href="#about-showvalue" class="ref">show value</a>, <a href="#about-showstring" class="ref">show string</a>, and
+					<a href="#about-showvalueof" class="ref">show value of</a> can show at once.
+				</div>
 			
 			
+			<pre>
+				show value(hero X(me), hero Y(me))   # Shows something like "  3   14" at the bottom of the screen
+			</pre>
+			
+		</p>
+</div>
+		<div class="command">
+			<a name="about-showvalueof"></a>
+				<h4>show value of (expression, ...)</h4>
+<p>
+			
+				Displays one or more expressions and their values at the bottom left corner of the screen,
+				which remains there until overwritten or <a href="#about-shownovalue" class="ref">show no value</a> is used.
+				Useful for debugging complicated scripts.
+				The number of arguments to this command is variable;
+				each is printed as source text along with its value.
+				You can't print strings with this command; use <a href="#about-showstring" class="ref">show string</a> instead.
+				<div class="notice note">
+<img src="Plotnote.png" alt="[Notice]" class="icon">
+					At most one of <a href="#about-showvalue" class="ref">show value</a>, <a href="#about-showstring" class="ref">show string</a>, and
+					<a href="#about-showvalueof" class="ref">show value of</a> can show at once.
+				</div>
+			
+			
+			<pre># Shows something like "coins=0, hero X(me)=3, hero Y(me)=14" at the bottom of the screen
+show value(coins, hero X(me), hero Y(me))</pre>
 			
 		</p>
 </div>
@@ -6090,7 +6189,7 @@ if (slot &gt; 0) then (load from slot (slot))</pre>
 			See also the <a href="#Hero%20Data" class="ref">Hero Data</a> section for inspecting or modifying individual heroes.
 			<div class="notice note">
 <img src="Plotnote.png" alt="[Notice]" class="icon">
-			You should definitely read <a href="http://rpg.hamsterrepublic.com/ohrrpgce/Ways_to_refer_to_a_hero_in_a_script">
+			You should definitely read <a href="https://rpg.hamsterrepublic.com/ohrrpgce/Ways_to_refer_to_a_hero_in_a_script">
 			Ways to refer to a hero in a script</a> to understand the differences between hero ID numbers
 			(including <span class="code">hero:name</span> constants), hero party slots, and walkabout rank!
 			</div>
@@ -7436,7 +7535,7 @@ fade screen in</pre>
 			heroes in the party.
 			<div class="notice note">
 <img src="Plotnote.png" alt="[Notice]" class="icon">
-			You should definitely read <a href="http://rpg.hamsterrepublic.com/ohrrpgce/Ways_to_refer_to_a_hero_in_a_script">
+			You should definitely read <a href="https://rpg.hamsterrepublic.com/ohrrpgce/Ways_to_refer_to_a_hero_in_a_script">
 			Ways to refer to a hero in a script</a> to understand the differences between hero ID numbers
 			(including <span class="code">hero:name</span> constants), hero party slots, and walkabout rank!
 			</div>
@@ -7490,6 +7589,7 @@ fade screen in</pre>
 		<a href="#about-setherostatcap">set hero stat cap (stat, value)</a><br>
 		<a href="#about-getlevelmp">get level MP (who, mp level slot, type)</a><br>
 		<a href="#about-setlevelmp">set level MP (who, mp level slot, new value)</a><br>
+		<a href="#about-herouseslevelmp">hero uses level MP (who)</a><br>
 		<a href="#about-healparty">heal party (revive dead heroes)</a><br>
 		<a href="#about-herobaseelementalresistasint">hero base elemental resist as int (who, element)</a><br>
 		<a href="#about-setherobaseelementalresist">set hero base elemental resist (who, element, percent)</a><br>
@@ -8053,6 +8153,16 @@ as returned by <a href="#about-findhero" class="ref">find hero</a>.
 		</p>
 </div>
 		<div class="command">
+			<a name="about-herouseslevelmp"></a>
+				<h4>hero uses level MP (who)</h4>
+<p>
+			Returns true if a hero makes use of level MP (FF1-style MP). The argument <span class="param">who</span> is the hero's position in the party, as returned by <a href="#about-findhero" class="ref">find hero</a>. This will be true if the hero has at least one named spell list set to use level MP, and that spell list is included in their battle menu. This is the same logic that is used internall to decide if Level MP will be displayed on the Status screen.
+			
+			
+			
+		</p>
+</div>
+		<div class="command">
 			<a name="about-healparty"></a>
 				<h4>heal party (revive dead heroes)</h4>
 <p>
@@ -8454,13 +8564,16 @@ end</pre>
 <div class="content-shown">
 		<a href="#about-getenemystat">get enemy stat(enemy, stat)</a><br>
 		<a href="#about-setenemystat">set enemy stat(enemy, stat, value)</a><br>
+		<a href="#about-resetenemystat">reset enemy stat(enemy, stat)</a><br>
 		<a href="#about-enemyelementalresistasint">enemy elemental resist as int (enemy, element)</a><br>
 		<a href="#about-getenemyname">get enemy name (enemyid, stringid)</a><br>
 		<a href="#about-setenemyname">set enemy name (enemyid, stringid)</a><br>
+		<a href="#about-resetenemyname">reset enemy name (enemyid)</a><br>
 		<a href="#about-getenemyappearance">get enemy appearance (enemyid, appearance)</a><br>
 		<a href="#about-setenemyappearance">set enemy appearance (enemyid, appearance, value)</a><br>
 		<a href="#about-readenemydata">read enemy data (enemyid, data)</a><br>
 		<a href="#about-writeenemydata">write enemy data (enemyid, data, value)</a><br>
+		<a href="#about-resetenemydata">reset enemy data (enemyid, data)</a><br>
 </div>
 		<li>
 <a href="#Formations">Formations</a><br>
@@ -8492,7 +8605,7 @@ end</pre>
 			<a name="about-getenemystat"></a>
 				<h4>get enemy stat(enemy, stat)</h4>
 <p>
-			Returns the selected stat from the selected enemy. The first argument is the number of the enemy whose stats you want to check. The second argument is the name of the stat that you want to check. The names of the stats are defined in your HSI file in the form stat:name. 
+			Returns the selected stat from the selected enemy definition. The first argument is the number of the enemy whose stats you want to check. The second argument is the name of the stat that you want to check. The names of the stats are defined in your HSI file in the form <span class="code">stat:name</span>.
 			
 			
 			<div class="seealso">See also: <ul>
@@ -8511,18 +8624,44 @@ end</pre>
 			<a name="about-setenemystat"></a>
 				<h4>set enemy stat(enemy, stat, value)</h4>
 <p>
-			Sets the selected stat of the selected enemy to the value you supply. The first argument is the number of the enemy whose stats you want to set. The second argument is the name of the stat that you want to set. The names of the stats are defined in your HSI file in the form stat:name. The third is the new value of the stat.<div class="notice note">
-<img src="Plotnote.png" alt="[Notice]" class="icon">Enemy stat changes are temporary. They are not saved in the game save.</div>
+			
+				Sets the selected stat of the selected enemy definition to the value you supply.
+				The first argument is the number of the enemy whose stats you want to set.
+				The second argument is the name of the stat that you want to set.
+				The names of the stats are defined in your HSI file in the form <span class="code">stat:name</span>.
+				The third is the new value of the stat.
+				<div class="notice note">
+<img src="Plotnote.png" alt="[Notice]" class="icon">
+					Enemy stat changes are temporary. They are not saved in saved games.
+					If you want to reset them early, use <a href="#about-resetenemystat" class="ref">reset enemy stat</a>.
+				</div>
+			
 			
 			
 			<div class="seealso">See also: <ul>
 <li>
 <a href="#about-getenemystat" class="ref">get enemy stat</a>, </li>
 <li>
+<a href="#about-resetenemystat" class="ref">reset enemy stat</a>, </li>
+<li>
 <a href="#about-getherostat" class="ref">get hero stat</a>, </li>
 <li><a href="#about-setherostat" class="ref">set hero stat</a></li>
 </ul>
 </div>
+		</p>
+</div>
+		<div class="command">
+			<a name="about-resetenemystat"></a>
+				<h4>reset enemy stat(enemy, stat)</h4>
+<p>
+			
+				Resets the selected stat of the selected enemy definition to its original value as set in the editor.
+				<span class="param">enemy</span> is an enemy ID and <span class="param">stat</span> is the name of the stat that you want to check.
+				The names of the stats are defined in your HSI file in the form stat:name.
+			
+			
+			
+			
 		</p>
 </div>
 		<div class="command">
@@ -8566,7 +8705,7 @@ end</pre>
 				<h4>set enemy name (enemyid, stringid)</h4>
 <p>
 			
-				Lets you change an enemy's name from a string.
+				Lets you change an enemy's name to a new name in a string.
 				The string length cannot be more then 16 characters, if it is more then 16 the name will be truncated.
 				<br>
 				<span class="param">enemyid</span> is the number of the enemy
@@ -8575,12 +8714,30 @@ end</pre>
 				<div class="notice note">
 <img src="Plotnote.png" alt="[Notice]" class="icon">
 					Enemy name changes are temporary. They are not saved in saved games.
+					If you want to reset them early, use <a href="#about-resetenemyname" class="ref">reset enemy name</a>.
 				</div>
 			
 			
 			
-			<div class="seealso">See also: <ul><li><a href="#about-getenemyname" class="ref">get enemy name</a></li></ul>
+			<div class="seealso">See also: <ul>
+<li>
+<a href="#about-getenemyname" class="ref">get enemy name</a>, </li>
+<li><a href="#about-resetenemyname" class="ref">reset enemy name</a></li>
+</ul>
 </div>
+		</p>
+</div>
+		<div class="command">
+			<a name="about-resetenemyname"></a>
+				<h4>reset enemy name (enemyid)</h4>
+<p>
+			
+				Resets the name of an enemy to the value originally set in the editor.
+				<span class="param">enemyid</span> is the number of the enemy.
+			
+			
+			
+			
 		</p>
 </div>
 		<div class="command">
@@ -8598,6 +8755,8 @@ end</pre>
 				</ul>
 				<br>
 				You can compare the values returned for <span class="code">enemy:picturesize</span> with the constants <span class="code">enemysize:small</span>, <span class="code">enemysize:medium</span> and <span class="code">enemysize:large</span>.
+				<br>
+				This command is just an alias for <a href="#about-readenemydata" class="ref">read enemy data</a>.
 			
 			
 			
@@ -8622,6 +8781,8 @@ end</pre>
 				<div class="notice note">
 <img src="Plotnote.png" alt="[Notice]" class="icon">
 					Enemy appearance changes are temporary: they are not saved in saved games.
+					If you want to reset them early, use <a href="#about-resetenemydata" class="ref">reset enemy data</a>,
+					because <span class="param">set enemy appearance</span> is (now) just an alias for <a href="#about-writeenemydata" class="ref">write enemy data</a>.
 				</div>
 			
 			
@@ -8662,12 +8823,42 @@ end</pre>
 			<a name="about-writeenemydata"></a>
 				<h4>write enemy data (enemyid, data, value)</h4>
 <p>
-			Lets you set items of an enemy's data. Enemyid is the number of enemy, data is a predefined constant for the data you want to change. Value is the new value given to that setting. Use the same constants as are given at <a href="#about-readenemydata" class="ref">read enemy data</a>.<div class="notice note">
-<img src="Plotnote.png" alt="[Notice]" class="icon">Enemy data changes are temporary. They are not saved in saved games.</div>
+			
+				Lets you set items of an enemy's data.
+				<span class="param">enemyid</span> is the number of enemy.
+				<span class="param">data</span> is a predefined constant for the data you want to change:
+				use the same constants listed at <a href="#about-readenemydata" class="ref">read enemy data</a>.
+				<span class="param">value</span> is the new value given to that setting.
+				<div class="notice note">
+<img src="Plotnote.png" alt="[Notice]" class="icon">
+					Enemy data changes are temporary. They are not saved in saved games.
+					If you want to reset them early, use <a href="#about-resetenemydata" class="ref">reset enemy data</a>.
+				</div>
 			
 			
-			<div class="seealso">See also: <ul><li><a href="#about-readenemydata" class="ref">read enemy data</a></li></ul>
+			
+			<div class="seealso">See also: <ul>
+<li>
+<a href="#about-readenemydata" class="ref">read enemy data</a>, </li>
+<li><a href="#about-resetenemydata" class="ref">reset enemy data</a></li>
+</ul>
 </div>
+		</p>
+</div>
+		<div class="command">
+			<a name="about-resetenemydata"></a>
+				<h4>reset enemy data (enemyid, data)</h4>
+<p>
+			
+				Undoes the effect of <a href="#about-writeenemydata" class="ref">write enemy data</a>, resetting one piece of
+				an enemy's data to the original value set in the enemy editor.
+				<span class="param">enemyid</span> is the number of enemy.
+				<span class="param">data</span> is a predefined constant for the data you want to change:
+				use the constants listed at <a href="#about-readenemydata" class="ref">read enemy data</a> or <a href="#about-getenemyappearance" class="ref">get enemy appearance</a>.
+			
+			
+			
+			
 		</p>
 </div>
 		<hr>
@@ -9500,7 +9691,7 @@ end
 			<a name="about-initmouse"></a>
 				<h4>init mouse</h4>
 <p>
-			Informs the engine that you intend to use the mouse. This command should be run before any mouse functions are be used. It causes the normal mouse cursor to be hidden when over the game's window, and causes mouse buttons to trigger on-keypress scripts. Therefore, it is a good idea to place this command in the newgame and loadgame scripts if you are going to use the mouse.<br><div class="notice note">
+			Informs the engine that you intend to use the mouse. This command should be run before any mouse functions are be used, but it's not necessary. It causes the normal mouse cursor to be hidden when over the game's window, and causes mouse buttons to trigger on-keypress scripts. Therefore, it is a good idea to place this command in the newgame and loadgame scripts if you are going to use the mouse.<br><div class="notice note">
 <img src="Plotnote.png" alt="[Notice]" class="icon">Running this command does not draw a cursor onscreen. Either you can enable the default mouse cursor with <a href="#about-unhidemousecursor" class="ref">unhidemousecursor</a>, or your script may display the cursor itself by placing a slice at the appropriate location. If you use a slice, your cursor will appear below menus and text and strings shown with <a href="#about-showvalue" class="ref">show value</a>, <a href="#about-showstringat" class="ref">show string at</a>, etc., which is currently unavoidable.</div> Here is an example:
 			
 			<pre>#Simple Mouse cursor example
@@ -9539,7 +9730,14 @@ end</pre>
 			<a name="about-mousepixelx"></a>
 				<h4>mouse pixel X</h4>
 <p>
-			Returns the X coordinate in pixels of the mouse on the screen.
+			
+				Returns the X coordinate in pixels of the mouse on the screen (window).
+				The position is clamped to the size of the window: it is always in the range <span class="code">0</span> to <a href="#about-getscreenwidth" class="ref">get screen width</a><span class="code"> -- 1</span>.
+				<div class="notice note">
+<img src="Plotnote.png" alt="[Notice]" class="icon">
+					Because of the clamping, currently there's no way to tell whether the mouse is actually over the window.
+				</div>
+			
 			
 			
 			
@@ -9549,7 +9747,10 @@ end</pre>
 			<a name="about-mousepixely"></a>
 				<h4>mouse pixel Y</h4>
 <p>
-			Returns the Y coordinate in pixels of the mouse on the screen.
+			
+				Returns the Y coordinate in pixels of the mouse on the screen.
+				The position is clamped to the size of the window: it is always in the range <span class="code">0</span> to <a href="#about-getscreenheight" class="ref">get screen height</a><span class="code"> -- 1</span>.
+			
 			
 			
 			
@@ -9645,7 +9846,7 @@ end</pre>
 			<a name="about-putmouse"></a>
 				<h4>put mouse (X, Y)</h4>
 <p>
-			Changes the location of the mouse on the screen, in pixels. Note that this function might do nothing, if the game's window is not active. <a href="#about-initmouse" class="ref">init mouse</a> should be called before this command is used.
+			Changes the location of the mouse on the screen, in pixels. Note that this function might do nothing, if the game's window is not active (see <a href="#about-windowisfocused" class="ref">window is focused</a>). <a href="#about-initmouse" class="ref">init mouse</a> should be called before this command is used.
 			
 			
 			
@@ -10459,6 +10660,126 @@ get hero name (1, find hero (leader))
 			
 			<div class="seealso">See also: <ul><li><a href="#about-stringtoglobals" class="ref">string to globals</a></li></ul>
 </div>
+		</p>
+</div>
+		<hr>
+		</div>
+		<div class="section">
+<a name="Extra%20Data%20Array%20Functions"></a>
+		<h3>
+<span class="backlink"></span>Extra Data Array Functions</h3>
+		<a href="#Categories" class="backlink">[Back to top-level index]</a><p>
+			Certain types of objects (slices, NPCs, zones, menu items) have "extra data",
+			which are data fields with no builtin meaning which you can use for whatever you want.
+			(Menu item extra data is passed as arguments to any script triggered by the item.)
+			For example you could write a script to randomly play a sound effects while inside a zone,
+			and store the sound effect number in the extra data.
+			<br>
+			These functions act on any objects with a resizable "extra data" array, which is currently
+			slices, npcs and zones.
+			(To operate on zones you need to use <a href="#about-getzone" class="ref">get zone</a> to get a zone handle.)
+			Menu items have a fixed number of extra data slots (three) and can't yet be used with these commands.
+		</p>
+<div class="select-content-shown" id="Extra Data Array Functions-index">
+<button onclick="toggleContent(this);"><span class="content-shown">Hide command index</span><span class="content-hidden">Show command index</span></button><ul><div class="content-shown">
+		<a href="#about-setextra">set extra (handle, extra, value)</a><br>
+		<a href="#about-getextra">get extra (handle, extra)</a><br>
+		<a href="#about-appendextra">append extra (handle, value)</a><br>
+		<a href="#about-extralength">extra length (handle)</a><br>
+		<a href="#about-resizeextra">resize extra (handle, length)</a><br>
+</div></ul>
+</div>
+		<div class="command">
+			<a name="about-setextra"></a>
+				<h4>set extra (handle, extra, value)</h4>
+<p>
+			
+				Sets one of the extra data variables on an object.
+				By default all new slices and zones start have a length 3 extra data array,
+				which has no builtin meaning, it is only for use by scripts.
+				<br>
+				<span class="param">handle</span> is an <a href="#about-objecthandle" class="ref">object handle</a>.
+				<span class="param">extra</span> is an <a href="#about-extradataindex" class="ref">extra array index</a>, typically a value from 0 to 2.
+				Use <a href="#about-resizeextra" class="ref">resize extra</a> if you want more than 3 extra values.
+				<br>
+				This command is a generic alternative to <a href="#about-setsliceextra" class="ref">set slice extra</a>, <a href="#about-setzoneextra" class="ref">set zone extra</a>, <a href="#about-setnpcextra" class="ref">set NPC extra</a>.
+			
+			
+			
+			<div class="seealso">See also: <ul>
+<li>
+<a href="#about-getextra" class="ref">get extra</a>, </li>
+<li><a href="#about-appendextra" class="ref">append extra</a></li>
+</ul>
+</div>
+		</p>
+</div>
+		<div class="command">
+			<a name="about-getextra"></a>
+				<h4>get extra (handle, extra)</h4>
+<p>
+			
+				Retrieve an extra data value previously set on a <span class="param">handle</span> with <a href="#about-setextra" class="ref">set extra</a>.
+				<br>
+				<span class="param">handle</span> is an <a href="#about-objecthandle" class="ref">object handle</a>.
+				<span class="param">extra</span> is the <a href="#about-extradataindex" class="ref">extra array index</a> to read.
+				<br>
+				This command is a generic alternative to <a href="#about-getsliceextra" class="ref">get slice extra</a>, <a href="#about-getzoneextra" class="ref">get zone extra</a>, <a href="#about-npcextra" class="ref">NPC extra</a>.
+			
+			
+			
+			
+		</p>
+</div>
+		<div class="command">
+			<a name="about-appendextra"></a>
+				<h4>append extra (handle, value)</h4>
+<p>
+			
+				Increases the length of an object's extra data array by 1 and puts <span class="param">value</span> in the new slot at the end.
+				<span class="param">handle</span> is the <a href="#about-objecthandle" class="ref">object handle</a>.
+				<br>
+				The return value is the new array length.
+				<br>
+				Equivalent to:
+				<pre>resize extra(handle, extra length(handle) + 1)
+set extra(handle, -1, value)   # Index -1 is the last element of the array</pre>
+			
+			
+			
+			
+		</p>
+</div>
+		<div class="command">
+			<a name="about-extralength"></a>
+				<h4>extra length (handle)</h4>
+<p>
+			
+				Returns the length of an object's extra data array.
+				This is 3 by default, and can be changed with <a href="#about-resizeextra" class="ref">resize extra</a>.
+				<span class="param">handle</span> is the <a href="#about-objecthandle" class="ref">object handle</a>.
+			
+			
+			
+			
+		</p>
+</div>
+		<div class="command">
+			<a name="about-resizeextra"></a>
+				<h4>resize extra (handle, length)</h4>
+<p>
+			
+				Changes the length of an object's extra data array.
+				<span class="param">handle</span> is the <a href="#about-objecthandle" class="ref">object handle</a>.
+				The new <span class="param">length</span> can be between 0 and 1,000,000.
+				For backwards compatibility it's 3 by default for all newly created slices and zones.
+				Values will either be removed from the end of the array, or zeroes added to the
+				end to meet the new length.
+				The rest of the existing contents of the array will be preserved.
+			
+			
+			
+			
 		</p>
 </div>
 		<hr>
@@ -11942,7 +12263,7 @@ set menu on close script(m, @my menu exit handler)
 		<h3>
 <span class="backlink"></span>Slices</h3>
 		<a href="#Categories" class="backlink">[Back to top-level index]</a><p>
-			To learn what a slice is, read the <a href="http://rpg.hamsterrepublic.com/ohrrpgce/Slices">Slices article</a> on the wiki,
+			To learn what a slice is, read the <a href="https://rpg.hamsterrepublic.com/ohrrpgce/Slices">Slices article</a> on the wiki,
 			or one of the other tutorials you can find there.
 			Although there are many commands here for manipulating slices, it's much easier to create slices
 			in the Slice Collection Editor and then use <a href="#about-loadslicecollection" class="ref">load slice collection</a>.
@@ -11953,7 +12274,7 @@ set menu on close script(m, @my menu exit handler)
 <button onclick="toggleContent(this);"><span class="content-shown">Hide command index</span><span class="content-hidden">Show command index</span></button><ul>
 <div class="content-shown">
 		<a href="#about-setparent">set parent (handle, parent handle)</a><br>
-		<a href="#about-sliceisvalid">slice is valid (id)</a><br>
+		<a href="#about-sliceisvalid">slice is valid (value)</a><br>
 		<a href="#about-freeslice">free slice (handle)</a><br>
 		<a href="#about-freeslicechildren">free slice children (handle)</a><br>
 		<a href="#about-cloneslice">clone slice (handle, recurse)</a><br>
@@ -11961,21 +12282,11 @@ set menu on close script(m, @my menu exit handler)
 		<a href="#about-reparenttohero">reparent to hero (handle, hero)</a><br>
 </div>
 		<li>
-<a href="#Extra%20Data">Extra Data</a><br>
-		<ul class="content-shown">
-		<a href="#about-setsliceextra">set slice extra (handle, extra, value)</a><br>
-		<a href="#about-getsliceextra">get slice extra (handle, extra)</a><br>
-		<a href="#about-appendsliceextra">append slice extra (handle, value)</a><br>
-		<a href="#about-sliceextralength">slice extra length (handle)</a><br>
-		<a href="#about-resizesliceextra">resize slice extra (handle, length)</a><br>
-</ul>
-<ul></ul>
-</li>
-		<li>
 <a href="#Getting%20Slices">Getting Slices</a><br>
 		<ul class="content-shown">
 		<a href="#about-loadslicecollection">load slice collection (id)</a><br>
-		<a href="#about-lookupslice">lookup slice (lookup code, start slice)</a><br>
+		<a href="#about-lookupslice">lookup slice (lookup code, root slice)</a><br>
+		<a href="#about-lookupnextslice">lookup next slice (lookup code, current slice, root slice)</a><br>
 		<a href="#about-spritelayer">sprite layer</a><br>
 		<a href="#about-getslicelookup">get slice lookup (handle)</a><br>
 		<a href="#about-setslicelookup">set slice lookup (handle, code)</a><br>
@@ -12018,6 +12329,14 @@ set menu on close script(m, @my menu exit handler)
 		<a href="#about-putslicescreen">put slice screen (handle, x, y)</a><br>
 		<a href="#about-setslicescreenx">set slice screen x (handle, x)</a><br>
 		<a href="#about-setslicescreeny">set slice screen y (handle, y)</a><br>
+</ul>
+<ul></ul>
+</li>
+		<li>
+<a href="#Extra%20Data">Extra Data</a><br>
+		<ul class="content-shown">
+		<a href="#about-setsliceextra">set slice extra (handle, extra, value)</a><br>
+		<a href="#about-getsliceextra">get slice extra (handle, extra)</a><br>
 </ul>
 <ul></ul>
 </li>
@@ -12107,6 +12426,7 @@ set menu on close script(m, @my menu exit handler)
 		<a href="#about-previoussibling">previous sibling (handle)</a><br>
 		<a href="#about-parentslice">parent slice (handle)</a><br>
 		<a href="#about-sliceparent">slice parent (handle)</a><br>
+		<a href="#about-nextsliceintree">next slice in tree (current slice, root slice, visit children)</a><br>
 		<a href="#about-checkparentage">check parentage (handle, ancestor handle)</a><br>
 </ul>
 <ul>
@@ -12398,21 +12718,25 @@ set menu on close script(m, @my menu exit handler)
 </div>
 		<div class="command">
 			<a name="about-sliceisvalid"></a>
-				<h4>slice is valid (id)</h4>
+				<h4>slice is valid (value)</h4>
 <p>
 			
-				Returns true if the given <span class="param">id</span> is a valid slice handle to some existing slice.
-				However this tells you nothing about whether the slice it points to is the original one.
-				<div class="notice danger" title="Danger">
-<img src="Plotdanger.png" alt="[Danger]" class="icon">
-					<b>You should almost never use this command.</b>
-					Just because a slice handle is valid doesn't mean it points to the slice that you expected.
-					After a slice is deleted, its handle can be reused for new slices!
-					If you delete a slice but still have a slice handle to it stored in a variable,
-					you must never access that handle again, because it will either be invalid,
-					causing an error when you use it, or even worse, it will point to some
-					random slice, which is a bug in your script!
-					For alternatives to sliceisvalid, please see the examples.
+				Returns true if the given <span class="param">value</span> is a valid slice handle to some existing slice,
+				or false if the value isn't a slice handle (e.g. if it's <span class="code">false</span> or is any
+				other type of handle such as an NPC reference or menu item handle) or if it refers
+				to a slice that's been deleted.
+				This command never throws an error.
+				<div class="notice note">
+<img src="Plotnote.png" alt="[Notice]" class="icon">
+					Previously this command was considered dangerous because it could return
+					<span class="code">true</span> even if the slice had been deleted because its handle
+					could be reused for a different slice.
+					But starting in the <b>ichorescent</b> release this is mostly solved.
+					Now in ichorescent slice handles won't get reused unless you create and
+					delete at least a million slices.
+					If you create millions of slices and want to be sure,
+					set your slice handles to 0 when you delete the slice (see examples)
+					rather than using this command.
 				</div>
 				When you want to check whether the result of a slice command is a valid slice,
 				you can just test whether the handle is <span class="param">false</span>, as this example shows:
@@ -12432,7 +12756,7 @@ if (sl) then (....)
 				<pre>
 global variable (1, bullet slice)
 
-###### Suppose we have one script that creates a temporary slice:
+###### Suppose one script creates a slice:
 
 plotscript, fire bullet, begin
 	bullet slice := create rect (3, 3)
@@ -12445,32 +12769,31 @@ end
 	if (slice collide (bullet slice, get hero slice(me))) then (
 		...
 
-		###### Also, the temp slice can be deleted:
 		# Bullet is destroyed
 		free slice (bullet slice)
 	)
 
 ###### Wait! First we need to test if there is a bullet slice at all, or we have an error.
-###### You might be tempted to use sliceisvalid:
+###### You could use sliceisvalid:
 
-	if (slice is valid (bullet slice)) then (     # &lt;--- Sometimes returns WRONG result!
+	if (slice is valid (bullet slice)) then (
 		# Test for collision with the player
 		if (slice collide (bullet slice, get hero slice(me))) then (
 			...
 		)
 	)
 
-###### That's a mistake. Instead, you should make sure to set the variable
-###### bulletslice to 0 in every single place you delete it.
+###### Or you could make sure to set the variable bulletslice to 0 in every single place you delete
+###### it so there are no invalid slice handles.
 ###### Some of other places aren't obvious! They include leaving the map, or loading a saved game!
 
-	if (bullet slice) then (     # &lt;--- Since we do the needed bookkeeping, this is correct
+	if (bullet slice) then (     # &lt;--- This works only because we do the needed bookkeeping
 		# Test for collision with the player
 		if (slice collide (bullet slice, get hero slice(me))) then (
 			...
 			# Bullet is destroyed
 			free slice (bullet slice)
-			bullet slice := 0     # &lt;--- Very important!
+			bullet slice := 0     # &lt;---
 		)
 	)
 				</pre>
@@ -12498,8 +12821,8 @@ end
 				(if slice error reporting is enabled, e.g. while testing your game).
 				However, <span class="code">free slice (0)</span> is fine, showing no warning.
 				It's good practice to set a variable containing a slice handle to 0
-				after you free it, so that the script can test whether the slice
-				exists or not. (<a href="#about-sliceisvalid" class="ref">slice is valid</a> is not reliable.)
+				after you free it, so that the script can easily test whether the slice
+				exists or not without needing to use <a href="#about-sliceisvalid" class="ref">slice is valid</a>.
 				<div class="notice note">
 <img src="Plotnote.png" alt="[Notice]" class="icon">
 					You can't delete a protected slice, which includes most
@@ -12640,98 +12963,6 @@ end
 		<hr>
 		</div>
 		<div class="subsection">
-<a name="Extra%20Data"></a>
-		<h3>
-<span class="backlink"><a href="#Slices">Slices</a> →
-			</span>Extra Data</h3>
-		<p></p>
-<ul></ul>
-		<div class="command">
-			<a name="about-setsliceextra"></a>
-				<h4>set slice extra (handle, extra, value)</h4>
-<p>
-			
-				Sets one of the extra data variables on the slice <span class="param">handle</span>.
-				By default all slices start have a length 3 extra data array,
-				which has no builtin meaning, it is only for use by scripts.
-				<span class="param">extra</span> is an <a href="#about-extradataindex" class="ref">extra array index</a>, typically a value from 0 to 2.
-				Use <a href="#about-resizesliceextra" class="ref">resize slice extra</a> if you want more than 3 extra values.
-			
-			
-			
-			<div class="seealso">See also: <ul>
-<li>
-<a href="#about-getsliceextra" class="ref">get slice extra</a>, </li>
-<li><a href="#about-appendsliceextra" class="ref">append slice extra</a></li>
-</ul>
-</div>
-		</p>
-</div>
-		<div class="command">
-			<a name="about-getsliceextra"></a>
-				<h4>get slice extra (handle, extra)</h4>
-<p>
-			
-				Retrieve an extra data value previously set on a slice <span class="param">handle</span> with <a href="#about-setsliceextra" class="ref">set slice extra</a>.
-				<span class="param">extra</span> is the <a href="#about-extradataindex" class="ref">extra array index</a> to read.
-			
-			
-			
-			
-		</p>
-</div>
-		<div class="command">
-			<a name="about-appendsliceextra"></a>
-				<h4>append slice extra (handle, value)</h4>
-<p>
-			
-				Increases the length of a slice's extra data array by 1 and puts <span class="param">value</span> in the new slot at the end.
-				<span class="param">handle</span> is the <a href="#about-slicehandle" class="ref">slice handle</a>.
-				<br>
-				Equivalent to:
-				<pre>resize slice extra(handle, slice extra length(handle) + 1)
-set slice extra(handle, -1, value)   # Index -1 is the last element of the array</pre>
-			
-			
-			
-			
-		</p>
-</div>
-		<div class="command">
-			<a name="about-sliceextralength"></a>
-				<h4>slice extra length (handle)</h4>
-<p>
-			
-				Returns the length of a slice's extra data array.
-				This is 3 by default, and can be changed with <a href="#about-resizesliceextra" class="ref">resize slice extra</a>.
-				<span class="param">handle</span> is the <a href="#about-slicehandle" class="ref">slice handle</a>.
-			
-			
-			
-			
-		</p>
-</div>
-		<div class="command">
-			<a name="about-resizesliceextra"></a>
-				<h4>resize slice extra (handle, length)</h4>
-<p>
-			
-				Changes the length of a slice's extra data array.
-				<span class="param">handle</span> is the <a href="#about-slicehandle" class="ref">slice handle</a>.
-				The new <span class="param">length</span> can be between 0 and 1,000,000.
-				For backwards compatibility it's 3 by default for all newly created slices.
-				Values will either be removed from the end of the array, or zeroes added to the
-				end to meet the new length.
-				The rest of the existing contents of the array will be preserved.
-			
-			
-			
-			
-		</p>
-</div>
-		<hr>
-		</div>
-		<div class="subsection">
 <a name="Getting%20Slices"></a>
 		<h3>
 <span class="backlink"><a href="#Slices">Slices</a> →
@@ -12750,12 +12981,14 @@ set slice extra(handle, -1, value)   # Index -1 is the last element of the array
 </div>
 		<div class="command">
 			<a name="about-lookupslice"></a>
-				<h4>lookup slice (lookup code, start slice)</h4>
+				<h4>lookup slice (lookup code, root slice)</h4>
 <p>
 			
-				Search for an important slice using a <a href="#about-lookupcode" class="ref">slice lookup code</a>, and return a handle to it, or 0 if it is not found.
-				You can optionally specify a slice for the <span class="param">lookup slice</span> command to start searching from,
-				but if you do not, the whole slice tree will be searched.
+				Search for a slice that's tagged with a <a href="#about-lookupcode" class="ref">slice lookup code</a>, and return a handle to it, or 0 if it is not found.
+				<br>
+				<span class="param">root slice</span> is optional, if you don't specify it the whole slice tree will be searched,
+				otherwise only descendents of that slice (a subtree) will be searched.
+				<span class="param">root slice</span> itself will be returned if it matches.
 				<div class="notice note">
 <img src="Plotnote.png" alt="[Notice]" class="icon">
 					You can use a number as a lookup code, but usually you use a builtin code constant, starting with <span class="code">sl:</span>
@@ -12765,8 +12998,18 @@ set slice extra(handle, -1, value)   # Index -1 is the last element of the array
 				<div class="notice note">
 <img src="Plotnote.png" alt="[Notice]" class="icon">Although the user-defined slice lookup codes are always safe to use for any purpose, there is a lot of potential mischief that you can do with a handle to a special slice. If you do anything dubious, like reordering, reparenting, or god forbid freeing the special slice, don't expect your scripts to work in later versions of the engine, which are likely to impose stricter restrictions! Deleting or reparenting special slices generally won't work. You may parent your own slices to these special slices, though.</div>
 				<div class="notice note">
-<img src="Plotnote.png" alt="[Notice]" class="icon">Be aware that when there is more than one slice with the same lookup code, the <span class="param">lookup slice</span> command will only return the first one it finds in a depth-first search. If you need to find multiple slices with the same lookup code, you must search manually using <a href="#about-getslicelookup" class="ref">get slice lookup</a>.</div>
-			You may <a href="#about-setparent" class="ref">set parent</a> a slice to a map layer to make it move with the camera just like heroes and NPCs do.
+<img src="Plotnote.png" alt="[Notice]" class="icon">
+					When there is more than one slice with the same lookup code
+					this command will only return the first one it finds (in depth-first search order).
+					If you need to find multiple slices with the same lookup code,
+					use <a href="#about-lookupnextslice" class="ref">lookup next slice</a>.
+					<br>
+					Also, if you want to find a slice based on something other than lookup code,
+					search for it using <a href="#about-nextsliceintree" class="ref">next slice in tree</a>.
+				</div>
+				You may <a href="#about-setparent" class="ref">set parent</a> a slice to a map layer
+				(or to <span class="code">sl:map overlay</span> which is above all map layers)
+				to make it move with the camera just like heroes and NPCs do.
 			
 			
 			<pre>
@@ -12784,7 +13027,7 @@ portrait := lookup slice(sl:textbox portrait)
 if(portrait) then(
   replace portrait sprite(portrait, 5)
 )
-
+</pre><pre>
 # This is a list of special slice lookup codes
 lookup slice(sl:root)
 lookup slice(sl:textbox text)
@@ -12831,9 +13074,55 @@ lookup slice(sl:pathfind dest display)
 			<div class="seealso">See also: <ul>
 <li>
 <a href="#about-setslicelookup" class="ref">set slice lookup</a>, </li>
-<li><a href="#about-getslicelookup" class="ref">get slice lookup</a></li>
+<li>
+<a href="#about-getslicelookup" class="ref">get slice lookup</a>, </li>
+<li><a href="#about-lookupnextslice" class="ref">lookup next slice</a></li>
 </ul>
 </div>
+		</p>
+</div>
+		<div class="command">
+			<a name="about-lookupnextslice"></a>
+				<h4>lookup next slice (lookup code, current slice, root slice)</h4>
+<p>
+			
+				Find the next slice after <span class="param">current slice</span> that has a certain <a href="#about-lookupcode" class="ref">slice lookup code</a>
+				and return it, or 0 if there are no more matching slices.
+				<br>
+				The first matching slice after <span class="param">current slice</span> (in the order that slices are shown in the slice editor/debugger, 
+				called the "depth first search order"), will be returned.
+				<span class="param">current slice</span> is actually optional, if it's <span class="code">0</span> then this command is equivalent to <a href="#about-lookupslice" class="ref">lookup slice</a>.
+				(In that case, if <span class="param">root slice</span> has the lookup code you're searching for, it's returned first.)
+				<span class="param">current slice</span> can be any descendent of <span class="param">root slice</span>, it doesn't have to have the lookup code.
+				<br>
+				<span class="param">root slice</span> is optional, if you don't specify it the whole slice tree will be searched,
+				otherwise only descendents of that slice (a subtree) will be searched.
+				<div class="notice note">
+<img src="Plotnote.png" alt="[Notice]" class="icon">
+					You can delete slices while you're iterating over them,
+					as long as you don't pass a handle to a deleted slice to this command.
+				</div>
+			
+			
+			<pre>
+# Suppose you've scripted a slice-based GUI or menu, attached to the sprite layer,
+# and every clickable thing the sli:selectable lookup code, and now you want to undo any
+# highlighting of text or buttons you might have added previously due to mouse-over.
+variable(sl)
+sl := lookup slice (sli:selectable, sprite layer)
+while (sl) do (
+  if (slice is sprite (sl)) then (set sprite frame (sl, 0))  # Reset button appearances
+  if (slice is text (sl)) then (set text color (sl, ui:text))  # Reset text highlighting
+  sl := lookup next slice (sli:selectable, sl, sprite layer)
+)</pre><pre># An alternative way to write the above
+variable(sl)
+while (true) do (
+  sl := lookup next slice (sli:selectable, sl, sprite layer)
+  if (sl == 0) then (break)
+  if (slice is sprite (sl)) then (set sprite frame (sl, 0))  # Reset button appearances
+  if (slice is text (sl)) then (set text color (sl, ui:text))  # Reset text highlighting
+)</pre>
+			
 		</p>
 </div>
 		<div class="command">
@@ -12864,7 +13153,9 @@ end
 			<div class="seealso">See also: <ul>
 <li>
 <a href="#about-lookupslice" class="ref">lookup slice</a>, </li>
-<li><a href="#about-setslicelookup" class="ref">set slice lookup</a></li>
+<li>
+<a href="#about-setslicelookup" class="ref">set slice lookup</a>, </li>
+<li><a href="#about-getslicelookupname" class="ref">get slice lookup name</a></li>
 </ul>
 </div>
 		</p>
@@ -13474,6 +13765,49 @@ map y := slice screen y(sl) + camera pixel y</pre>
 <li><a href="#about-setslicescreenx" class="ref">set slice screen x</a></li>
 </ul>
 </div>
+		</p>
+</div>
+		<hr>
+		</div>
+		<div class="subsection">
+<a name="Extra%20Data"></a>
+		<h3>
+<span class="backlink"><a href="#Slices">Slices</a> →
+			</span>Extra Data</h3>
+		<p>
+				You can use any of the <a href="#Extra%20Data%20Array%20Functions" class="ref">Extra Data Array Functions</a> on slices.
+			</p>
+<ul></ul>
+		<div class="command">
+			<a name="about-setsliceextra"></a>
+				<h4>set slice extra (handle, extra, value)</h4>
+<p>
+			
+				Sets one of the extra data variables on the slice <span class="param">handle</span>.
+				<span class="param">extra</span> is an <a href="#about-extradataindex" class="ref">extra array index</a>.
+				<br>
+				This command is the same as <a href="#about-setextra" class="ref">set extra</a> but only works on slices
+				and is slightly faster.
+			
+			
+			
+			
+		</p>
+</div>
+		<div class="command">
+			<a name="about-getsliceextra"></a>
+				<h4>get slice extra (handle, extra)</h4>
+<p>
+			
+				Retrieve an extra data value previously set on a slice <span class="param">handle</span> with <a href="#about-setsliceextra" class="ref">set slice extra</a>.
+				<span class="param">extra</span> is an <a href="#about-extradataindex" class="ref">extra array index</a>.
+				<br>
+				This command is the same as <a href="#about-getextra" class="ref">get extra</a> but only works on slices
+				and is slightly faster.
+			
+			
+			
+			
 		</p>
 </div>
 		<hr>
@@ -14655,15 +14989,26 @@ end
 			<pre>variable(sl)
 sl := first child(sprite layer)
 while (sl) do, begin
- if (slice is sprite(sl)) then, begin
-   # do an operation on each sprite
- end
+ if (slice is sprite(sl)) then (
+   # ...do an operation on each sprite
+ )
  sl := next sibling(sl)
+end
+
+# The above loop can be written more simply as:
+sl := first sprite child(sprite layer)
+while (sl) do, begin
+ # ...do an operation on each sprite
+ sl := next sprite sibling(sl)
 end
 </pre>
 			<div class="seealso">See also: <ul>
 <li>
 <a href="#about-previoussibling" class="ref">previous sibling</a>, </li>
+<li>
+<a href="#about-parentslice" class="ref">parent slice</a>, </li>
+<li>
+<a href="#about-nextsliceintree" class="ref">next slice in tree</a>, </li>
 <li>
 <a href="#about-nextspritesibling" class="ref">next sprite sibling</a>, </li>
 <li>
@@ -14672,8 +15017,6 @@ end
 <a href="#about-nextcontainersibling" class="ref">next container sibling</a>, </li>
 <li>
 <a href="#about-slicechild" class="ref">slice child</a>, </li>
-<li>
-<a href="#about-freeslice" class="ref">free slice</a>, </li>
 <li>
 <a href="#about-slicetofront" class="ref">slice to front</a>, </li>
 <li>
@@ -14695,17 +15038,7 @@ end
 			<div class="seealso">See also: <ul>
 <li>
 <a href="#about-nextsibling" class="ref">next sibling</a>, </li>
-<li>
-<a href="#about-slicechild" class="ref">slice child</a>, </li>
-<li>
-<a href="#about-freeslice" class="ref">free slice</a>, </li>
-<li>
-<a href="#about-slicetofront" class="ref">slice to front</a>, </li>
-<li>
-<a href="#about-slicetoback" class="ref">slice to back</a>, </li>
-<li>
-<a href="#about-movesliceabove" class="ref">move slice above</a>, </li>
-<li><a href="#about-moveslicebelow" class="ref">move slice below</a></li>
+<li><a href="#about-slicechild" class="ref">slice child</a></li>
 </ul>
 </div>
 		</p>
@@ -14726,6 +15059,72 @@ end
 <li>
 <a href="#about-checkparentage" class="ref">check parentage</a>, </li>
 <li><a href="#about-slicechild" class="ref">slice child</a></li>
+</ul>
+</div>
+		</p>
+</div>
+		<div class="command">
+			<a name="about-nextsliceintree"></a>
+				<h4>next slice in tree (current slice, root slice, visit children)</h4>
+<p>
+			
+				Returns the next slice after <span class="param">current slice</span> in the slice tree, or a sub-tree.
+				This can be used for iterating over a tree of slices using a <a href="#about-while" class="ref">while</a> loop, in the order that they appear
+				in the slice collection editor (from top to bottom):
+				first go to the first child if any, and then any other descendents and children,
+				then go across to the next sibling if any,
+				then finally go up and look for a sibling of the parent, then of the grandparent, etc.
+				Finally, returns <span class="param">false</span> if <span class="param">current slice</span> is the last descendent of <span class="param">root slice</span>.
+				<br>
+				<span class="param">root slice</span> tells the sub-tree to iterate over: every descendent of it starting with <span class="param">root slice</span> itself.
+				<span class="param">root slice</span> is optional, if it's omitted (or <span class="code">0</span>) then iterate over the entire slice tree.
+				<br>
+				On the first iteration you can pass <span class="code">0</span> or <span class="code">false</span> as <span class="param">current slice</span>,
+				in which case the return value is <span class="param">root slice</span>.
+				<span class="param">current slice</span> can actually be any slice, but
+				should normally be in the subtree defined by <span class="param">root slice</span>.
+				<br>
+				<span class="param">visit children</span> is optional, defaulting to true.
+				If false, then skip over all the children and descendents of this slice.
+				<br>
+				Unless you use <span class="code">visit children = false</span> each slice in the sub-tree is visited exactly once,
+				provided that you don't add, delete, or reorder slices.
+				<pre>variable(root, sl)
+root := sprite layer
+sl := root
+# If you want to skip over the root slice itself, write instead:
+#sl := first child(root)
+
+while (sl) do, begin
+  # Reset all text slices to default text color, e.g. to unhighlight all menu items in a slice-based menu
+  if (slice is text(sl)) then (set text color(sl, ui:Text))
+  sl := next slice in tree(sl, root)
+end
+</pre>
+This example shows how to delete slices while you're iterating over them:
+			<pre>variable(root, sl)
+root := sprite layer
+sl := root
+
+while (sl) do, begin
+  next := next slice in tree(sl, root)
+  # Delete all the hidden slices
+  if (get slice visible(sl) == false) then (
+    free slice (sl)
+  )
+end
+</pre>
+			
+			
+			
+			<div class="seealso">See also: <ul>
+<li>
+<a href="#about-nextsibling" class="ref">next sibling</a>, </li>
+<li>
+<a href="#about-parentslice" class="ref">parent slice</a>, </li>
+<li>
+<a href="#about-slicechild" class="ref">slice child</a>, </li>
+<li><a href="#about-lookupnextslice" class="ref">lookup next slice</a></li>
 </ul>
 </div>
 		</p>
@@ -15367,7 +15766,7 @@ end
 <span class="backlink"><a href="#Slices">Slices</a> →
 			</span>Slice Types</h3>
 		<p>
-				For a description of the different slice types, see the <a href="http://rpg.hamsterrepublic.com/ohrrpgce/Slices#Slice_types">Slices</a> article on the wiki.
+				For a description of the different slice types, see the <a href="https://rpg.hamsterrepublic.com/ohrrpgce/Slices#Slice_types">Slices</a> article on the wiki.
 				<div class="notice note">
 <img src="Plotnote.png" alt="[Notice]" class="icon">
 					There are two types of slice used by the engine for which there are no commands:
@@ -17717,7 +18116,8 @@ set rect trans(rect, trans:fuzzy)  # Becomes fuzzy with 70% fuzziness</pre>
 				<br>
 				<span class="param">number</span> is an optional argument indicating which slice to return if there is more than one at that point;
 				the bottom-most one (returned by default) is number 0, next up is 1, etc.
-				slice at pixel returns 0 if <span class="param">number</span> is too large (larger than or equal to the number of overlapping slices).
+				Alternatively, -1 is the topmost one, -2 is the second from the top, etc.
+				slice at pixel returns 0 if <span class="param">number</span> is out of range (<span class="code">number &lt; -count</span> or  larger than or equal to the number of overlapping slices).
 				If you pass <a href="#about-getcount" class="ref">get count</a> as <span class="param">number</span> the number of slices at that pixel is returned instead of a slice handle.
 				<br>
 				<span class="param">check descendants</span> is an optional argument defaulting to true.
@@ -18070,6 +18470,7 @@ set rect trans(rect, trans:fuzzy)  # Becomes fuzzy with 70% fuzziness</pre>
 		<a href="#about-getzoneextra">get zone extra (zone id, extra num)</a><br>
 		<a href="#about-setzoneextra">set zone extra (zone id, extra num, value)</a><br>
 		<a href="#about-zonenumberoftiles">zone number of tiles (zone id)</a><br>
+		<a href="#about-getzone">get zone (zone id)</a><br>
 </ul>
 <ul></ul>
 </li>
@@ -18094,7 +18495,7 @@ set rect trans(rect, trans:fuzzy)  # Becomes fuzzy with 70% fuzziness</pre>
 		<a href="#about-savemapstate">save map state (whichdata, customid)</a><br>
 		<a href="#about-loadmapstate">load map state (whichdata, customid)</a><br>
 		<a href="#about-resetmapstate">reset map state (whichdata)</a><br>
-		<a href="#about-deletemapstate">delete map state (whichdata)</a><br>
+		<a href="#about-deletemapstate">delete map state (whichdata, custom id)</a><br>
 </ul>
 <ul></ul>
 </li>
@@ -18617,7 +19018,13 @@ end</pre>
 		<h3>
 <span class="backlink"><a href="#Tweaking%20Maps">Tweaking Maps</a> →
 			</span>Zonemaps</h3>
-		<p></p>
+		<p>
+				<div class="notice note">
+<img src="Plotnote.png" alt="[Notice]" class="icon">
+					All zone commands accept zone handles (returned by <a href="#about-getzone" class="ref">get zone</a>)
+					in place of zone IDs.
+				</div>
+			</p>
 <ul></ul>
 		<div class="command">
 			<a name="about-writezone"></a>
@@ -18625,7 +19032,7 @@ end</pre>
 <p>
 			
 				Sets whether the tile at (<span class="param">x,y</span>) is part of the specified zone.
-				<span class="param">zone id</span> is a valid ID number (see <a href="#about-readzone" class="ref">read zone</a>),
+				<span class="param">zone id</span> is a valid ID number (see <a href="#about-readzone" class="ref">read zone</a>) or zone handle,
 				and <span class="param">value</span> is interpreted as either <span class="param">true</span> (non-zero) or <span class="param">false</span> (zero).
 				<div class="notice note">
 <img src="Plotnote.png" alt="[Notice]" class="icon">
@@ -18655,6 +19062,7 @@ end</pre>
 			
 				Returns <a href="#about-true" class="ref">true</a> if the tile at (<span class="param">x,y</span>) is part of the specified zone.
 				The <span class="param">zone id</span> is an ID number from 1 to 9999 for zones defined in the map editor,
+				or a zone handle,
 				or can be the ID one of these special zones:
 				<ul>
 					<li>
@@ -18686,7 +19094,10 @@ end</pre>
 				If <span class="param">count</span> too large (greater than or equal to the number of zones),
 				0 (<a href="#about-false" class="ref">false</a>) is returned.
 				<div class="notice note">
-<img src="Plotnote.png" alt="[Notice]" class="icon">The order in which the ID numbers are returned is completely arbitrary.</div>
+<img src="Plotnote.png" alt="[Notice]" class="icon">
+					The order in which the ID numbers are returned is completely arbitrary.
+					Also note this returns IDs, not zone handles.
+				</div>
 			
 			
 			
@@ -18711,10 +19122,10 @@ end</pre>
 				<h4>get zone extra (zone id, extra num)</h4>
 <p>
 			
-				Returns the value in a zone's "extra data" field numbered <span class="param">extra num</span>,
-				which is a number from 0 to 2.
-				You may use the constants <span class="param">extra 0</span>, <span class="param">extra 1</span> and <span class="param">extra 2</span> to refer to them.
-				You can set a zone's extra data in the Zone Info editor.
+				Returns the value in one of a zone's "extra data" fields, which you can set in the Zone Info editor.
+				<span class="param">extra num</span> is an <a href="#about-extradataindex" class="ref">extra array index</a>.
+				<br>
+				This command is the same as <a href="#about-getextra" class="ref">get extra</a> but only works on zones, and accepts zone IDs as well as zone handles.
 			
 			
 			
@@ -18726,9 +19137,14 @@ end</pre>
 				<h4>set zone extra (zone id, extra num, value)</h4>
 <p>
 			
-				Sets the value of a zone's "extra data" field numbered <span class="param">extra num</span>,
-				which is a number from 0 to 2.
-				You may use the constants <span class="param">extra 0</span>, <span class="param">extra 1</span> and <span class="param">extra 2</span> to refer to them.
+				Sets the value of one of a zone's "extra data" fields.
+				<span class="param">extra num</span> is an <a href="#about-extradataindex" class="ref">extra array index</a>.
+				<br>
+				Extra data has no builtin meaning or effect, so you're free to use it for whatever you want.
+				<br>
+				This command is the same as <a href="#about-setextra" class="ref">set extra</a> but only works on zones, and accepts zone IDs as well as zone handles.
+				See <a href="#about-appendextra" class="ref">append extra</a> and <a href="#about-resizeextra" class="ref">resize extra</a> for more ways to
+				modify zone extra data.
 				<div class="notice note">
 <img src="Plotnote.png" alt="[Notice]" class="icon">
 					Changes to zones are not stored in saved games,
@@ -18746,8 +19162,37 @@ end</pre>
 				<h4>zone number of tiles (zone id)</h4>
 <p>
 			
-				Given a <span class="param">zone id</span> (from 1 to 9999 or a special id),
+				Given a <span class="param">zone id</span> (from 1 to 9999 or a special id) or zone handle,
 				returns the number of tiles that the zone contains.
+			
+			
+			
+			
+		</p>
+</div>
+		<div class="command">
+			<a name="about-getzone"></a>
+				<h4>get zone (zone id)</h4>
+<p>
+			
+				Given a <span class="param">zone id</span> (from 1 to 9999 or a special ID), returns a "zone handle",
+				which is a value that can be passed to any of the <a href="#Extra%20Data%20Array%20Functions" class="ref">Extra Data Array Functions</a>
+				to access the zone's extra data.
+				It can also be used in place of the zone ID in any zone command,
+				but it does nothing useful in that case.
+				For example, you can also pass a zone handle to this command and it returns it unchanged.
+				<div class="notice note">
+<img src="Plotnote.png" alt="[Notice]" class="icon">
+					Zone handles are just numbers that can be recognised by the engine as referring to a zone --
+					because what is <span class="code">5</span>?
+					Is it a zone ID, NPC ID, party slot, map number, ...??
+					There's no way to or necessity to destroy a zone handle after use.
+				</div>
+				<pre>  # Resize to 5 extra data slots
+resize extra(get zone(10), 5)
+# Set the last (10th) extra data field to 42
+set extra(get zone(10), -1, 42) # Can also be written as  set zone extra(10, -1, 42)
+				</pre>
 			
 			
 			
@@ -18995,9 +19440,18 @@ end</pre>
 </div>
 		<div class="command">
 			<a name="about-deletemapstate"></a>
-				<h4>delete map state (whichdata)</h4>
+				<h4>delete map state (whichdata, custom id)</h4>
 <p>
-			Deletes temporary map state files for the current map, so that if the map is set to load NPC or tile data it will load the original data from the game files when it is entered. <span class="param">whichdata</span> is a set of bits in the <a href="#about-savemapstate" class="ref">save map state</a> format to determine what exactly to delete. The default is mapstate:all.
+			
+				Deletes temporary map state for the current map saved either with <a href="#about-savemapstate" class="ref">save map state</a>
+				or by leaving a map set to save state.
+				By default, (if both arguments are omitted) if the map is set to load NPC or tile
+				data it will instead load the original data from the game files when it is entered.
+				<br>
+				<span class="param">whichdata</span> is an optional set of bits in the <a href="#about-savemapstate" class="ref">save map state</a> format to determine
+				what exactly to delete. The default is <span class="code">mapstate:all</span>.
+				<span class="param">customid</span> is an optional number between 0 and 31 of a slot in which a custom save was made.
+			
 			
 			
 			
@@ -20396,8 +20850,16 @@ trace (1) # writes "TRACE: i = ????" to g_debug.txt</pre>
 		<div class="command">
 			<a name="about-tracevalue"></a>
 				<h4>trace value (expression, ...)</h4>
+				<h4>trace value of (expression, ...)</h4>
 <p>
-			Prints one or more expressions and their values to "g_debug.txt". The number of arguments to this command is variable; each is printed as source text along with its value. You can't print strings with this command; use <a href="#about-trace" class="ref">trace</a> instead.
+			
+				Prints one or more expressions and their values to "g_debug.txt".
+				The number of arguments to this command is variable;
+				each is printed as source text along with its value.
+				You can't print strings with this command; use <a href="#about-trace" class="ref">trace</a> instead.
+				<br>
+				<span class="param">trace value of</span> is an alias to <span class="param">trace value</span>.
+			
 			
 			<pre>variable(i)
 i := random (1, 1000)
@@ -20628,6 +21090,7 @@ assert (check tag (tag:initialised) == OFF)  # something ought to be true at thi
 		<a href="#Categories" class="backlink">[Back to top-level index]</a><p></p>
 <div class="select-content-shown" id="Platform Specific-index">
 <button onclick="toggleContent(this);"><span class="content-shown">Hide command index</span><span class="content-hidden">Show command index</span></button><ul><div class="content-shown">
+		<a href="#about-windowisfocused">window is focused</a><br>
 		<a href="#about-runningondesktop">running on desktop</a><br>
 		<a href="#about-runningonwindows">running on Windows</a><br>
 		<a href="#about-runningonmac">running on Mac</a><br>
@@ -20639,6 +21102,22 @@ assert (check tag (tag:initialised) == OFF)  # something ought to be true at thi
 		<a href="#about-showvirtualgamepad">show virtual gamepad</a><br>
 		<a href="#about-autovirtualgamepad">auto virtual gamepad</a><br>
 </div></ul>
+</div>
+		<div class="command">
+			<a name="about-windowisfocused"></a>
+				<h4>window is focused</h4>
+<p>
+			
+				Returns true if the game's window is the currently active (focused) one (or if it's fullscreen and active), or false if the user has switched to a different program.
+				This is always true when running on a smartphone, because when the app is backgrounded the game is
+				paused and scripts don't run.
+				<br>
+				Use this command if you want to pause something when the player switches to another program.
+			
+			
+			
+			
+		</p>
 </div>
 		<div class="command">
 			<a name="about-runningondesktop"></a>
@@ -20786,6 +21265,7 @@ assert (check tag (tag:initialised) == OFF)  # something ought to be true at thi
 		<a href="#about-npcref">NPC references</a><br>
 		<a href="#about-slicehandle">Slice handles</a><br>
 		<a href="#about-blendableslicehandle">Blendable slice handles</a><br>
+		<a href="#about-objecthandle">Object handles</a><br>
 		<a href="#about-lookupcode">Slice lookup codes</a><br>
 		<a href="#about-menuhandle">Menu handles</a><br>
 		<a href="#about-menuitemhandle">Menu item handles</a><br>
@@ -20922,6 +21402,21 @@ assert (check tag (tag:initialised) == OFF)  # something ought to be true at thi
 		</p>
 </div>
 		<div class="command">
+			<a name="about-objecthandle"></a>
+				<h4>Object handles</h4>
+<p>
+			
+				An object handle is either a <a href="#about-slicehandle" class="ref">slice handle</a>, an <a href="#about-npcref" class="ref">NPC reference</a> (NOT an NPC ID!) or a zone handle (NOT a zone ID!).
+				They can be passed to <a href="#Extra%20Data%20Array%20Functions" class="ref">Extra Data Array Functions</a>.
+				Zone handles are returned by <a href="#about-getzone" class="ref">get zone</a>.
+				<a href="#about-false" class="ref">false</a> (zero) is never a valid object handle.
+			
+			
+			
+			
+		</p>
+</div>
+		<div class="command">
 			<a name="about-lookupcode"></a>
 				<h4>Slice lookup codes</h4>
 <p>
@@ -20977,15 +21472,15 @@ assert (check tag (tag:initialised) == OFF)  # something ought to be true at thi
 				<h4>Extra data array index</h4>
 <p>
 			
-				An extra array index is a number telling which element of a slice's extra data array to read/write.
+				An extra array index is a number telling which element of a slice's or zone's extra data array to read/write.
 				(An "array" is a list of values.)
-				The first element of the array is index 0, the second is index 1, etc, up to <span class="code">slice extra length(handle) -- 1</span>.
+				The first element of the array is index 0, the second is index 1, etc, up to <span class="code">extra length(handle) -- 1</span>.
 				<br>
 				For convenience, negative indexing like Python is also supported:
-				the last element is index -1, the second last is index -2, down to <span class="code">-1 * slice extra length(handle)</span> which is the first element.
+				the last element is index -1, the second last is index -2, down to <span class="code">-1 * extra length(handle)</span> which is the first element.
 				Negative indexing is only supported by commands that explicitly say they accept an array index.
 				<br>
-				By default all slices start with a length 3 extra data array, so <span class="param">extra</span> is typically a value from 0 to 2.
+				By default all slices/etc start with a length 3 extra data array, so <span class="param">extra</span> is typically a value from 0 to 2.
 				You may also use the obsolete constants <span class="param">extra 0</span>, <span class="param">extra 1</span>, <span class="param">extra 2</span>
 				which have values 0, 1, 2, if you find them more readable.
 			
@@ -21518,7 +22013,7 @@ run key            # Alias for 'flee key'
                                 (hero zero) in any command that takes a caterpillar party rank as an argument.
                                 It is equal to zero.
                                 You can't write <span class="code">me</span> where a hero party slot or hero ID is needed!
-                                See <a href="http://rpg.hamsterrepublic.com/ohrrpgce/Ways_to_refer_to_a_hero_in_a_script">
+                                See <a href="https://rpg.hamsterrepublic.com/ohrrpgce/Ways_to_refer_to_a_hero_in_a_script">
 				Ways to refer to a hero in a script</a>.
                         
 			
@@ -21787,7 +22282,7 @@ run key            # Alias for 'flee key'
 </div>
 		<hr>
 		</div>
-<p>Stats: There are 922 commands (of which 11 are aliases), 27 constants and 13 definitions of types and other terms in this file.</p>
+<p>Stats: There are 934 commands (of which 11 are aliases), 27 constants and 14 definitions of types and other terms in this file.</p>
 <p>This file was generated from an XML file. The contents were painstakingly transcribed by Mike Caron from the original Plotscripting Dictionary, which was created by James Paige.</p>
 </body>
 </html>

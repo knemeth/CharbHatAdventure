@@ -97,7 +97,8 @@ define function, begin
 74,setdeathscript,1,0       # changes what script is run when you die
 75,fadescreenout,3,0,0,0    # fade screen out (red,green,blue)
 76,fadescreenin,0           # fade back to color after fade screen out
-77,showvalue,1,0            # display a number in the bottom left corner
+77,showvalue,-1             # display one or more numbers in the bottom left corner
+77,showvalues,-1            # display one or more numbers in the bottom left corner
 78,alterNPC,4,0,0,0,-1      # replaces one of an NPC's stats
 79,shownovalue,0            # hide the number from showvalue
 80,currentmap,0             # returns the number of the current map
@@ -269,7 +270,7 @@ define function, begin
 245,savemapstate,2,255,255    #save map data to a temp file (savebits, customid)
 246,loadmapstate,2,255,255    #load map data from a temp file (loadbits, customid)
 247,resetmapstate,1,255       #reload original map data (loadbits)
-248,deletemapstate,1,255      #delete temp map state files (deletebits)
+248,deletemapstate,2,255,255  #delete temp map state files (deletebits, customid)
 249,partymoney,0              #retrieves amount of gold
 250,setmoney,1,0              #sets amount of gold
 251,setstringfromtable,2,0,0  #string support function
@@ -459,7 +460,7 @@ define function, begin
 435,parentslice,1,0           #return a slice's parent
 435,sliceparent,1,0           #alias
 436,childcount,1,0            #return number of children of a slice
-437,lookupslice,2,0,0         #find a slice using a lookup code constant
+437,lookupslice,2,0,0         #find a slice using a lookup code constant (lookup, root)
 438,resetgame,-1              #reset the game (newgame args)
 439,sliceisvalid,1,0          #checks for a real, non-deleted slice handle
 440,iteminslot,1,0            #read inventory by position
@@ -756,10 +757,21 @@ define function, begin
 727,healparty,1,-2            # Restore active party's HP & MP ([revive dead heroes])
 728,setheroautobattle,2,0,0   # Change a hero's auto battle setting
 729,getheroautobattle,1,0     # Return true if the hero is set to auto battle
-730,resizesliceextra,2,0,3    # Resize the 'extra array' (slice, length)
-731,sliceextralength,1,0      # The length of the 'extra' array (slice)
-732,appendsliceextra,2,0,0    # Append to the 'extra' array (slice, value)
-
+730,resizeextra,2,0,3         # Resize an object's 'extra' array (handle, length)
+731,extralength,1,0           # The length of an object's 'extra' array (handle)
+732,appendextra,2,0,0         # Append to an object's 'extra' array (handle, value)
+733,lookupnextslice,3,0,0,0   # Next slice with lookup code (lookupcode, current, root)
+734,nextsliceintree,3,0,0,1   # Next slice (current, root, visit children)
+735,windowisfocused,0         # The game's window is the active one
+736,showvalueofinternal,-1    # "show value of" is translated to this
+737,resetenemydata,2,0,0      # Reset one element of an enemy's data (enemy id, data index)
+738,resetenemyname,1,0        # Reset enemy name to original (enemy id)
+739,getextra,2,0,0            # Index an object's 'extra' array (handle, index)
+739,getmenuitemextra,2,0,0    # Used to be a script
+740,setextra,3,0,0,0          # Set element of an object's 'extra' array (handle, index, value)
+740,setmenuitemextra,3,0,0,0  # Used to be a script
+741,herouseslevelmp,1,0       # Returns true if the hero uses level mp
+742,getzone,1,0               # Create a zone handle (zone id)
 # Don't forget to update maxScriptCmdID in const.bi when adding new commands
 end
 
@@ -1108,6 +1120,10 @@ end
 
 script,setenemystat,hsd:enemyID,hsd:stat,hsd:value,begin
   writeenemydata(hsd:enemyID,hsd:stat+62,hsd:value)
+end
+
+script,resetenemystat,hsd:enemyID,hsd:stat,begin
+  resetenemydata(hsd:enemyID,hsd:stat+62)
 end
 
 #get/set enemy appearance are now simply wrappers. too much confusion to remove them now
@@ -1655,18 +1671,6 @@ script, set menu item bit, hsd:handle, hsd:bit, hsd:value=1, begin
   write menu item int(hsd:handle, 28, hsd:n)
 end
 
-script, set menu item extra, hsd:handle, hsd:extra=0, hsd:n=0, begin
-  if(hsd:extra >= 0 && hsd:extra <= 2) then, begin
-    write menu item int(hsd:handle, 29+hsd:extra, hsd:n)
-  end
-end
-
-script, get menu item extra, hsd:handle, hsd:extra=0, begin
-  if(hsd:extra >= 0 && hsd:extra <= 2) then, begin
-    exit returning(read menu item int(hsd:handle, 29+hsd:extra))
-  end
-end
-
 script, set menu item color, hsd:handle, hsd:n=0, begin
   write menu item int(hsd:handle, 32, hsd:n)
 end
@@ -2117,6 +2121,7 @@ define constant, begin
 -1,getcount
 0,string:outline
 1,string:flat
+# readenemydata constants
 53,Enemy:Picture
 54,Enemy:Palette
 55,Enemy:PictureSize
@@ -2137,6 +2142,7 @@ define constant, begin
 19, StealableItemChance
 20, StealableRareItem
 21, StealableRareItemchance
+# end of readenemydata constants
 0, Crop
 1, Wrap
 2, Defaulttile

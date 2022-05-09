@@ -1,10 +1,10 @@
 WHAT IS NEW?
 
-??? ? 202? [Ichorescent]
+??? ? 2022 [Ichorescent]
 
   *** New Features
-    * From the "Disribute Game" menu, you can upload your game directly
-      to itch.io [James]
+    * From the "Distribute Game" menu, you can upload your game directly to
+      itch.io [James]
     * gfx_fb backend (the one noone uses) supports non 320x200 games now [Ralph]
     * Custom/Game remember the window size when you quit; defaults larger [Ralph]
     * Added "View/edit ohrrpgce_config.ini/gameconfig.ini" options to the F8
@@ -25,6 +25,7 @@ WHAT IS NEW?
       NPC no matter if they are activatable or not. [James]
     * Slices can be marked as Templates, which makes them hidden and ignored for
       almost all purposes. Intended for use with "clone slice". [Ralph]
+    * Slices can be Clamped within their parents or the screen  [Ralph, James]
     * Text box connection editor can insert boxes with tag contitionals [James]
     * New attacker animations "Run and Hide" and "Run In" which behave the
       same as "Jump" and "Land" [James]
@@ -51,6 +52,8 @@ WHAT IS NEW?
     * You can use a custom menu as a template for the Battle Menu [James]
     * Attacks can now cause a target's sprite to flip backwards (or unflip)
       [James]
+    * --hsargs commandline arg to pass extra args to HSpeak when using Custom to
+      import scripts from the commandline [Ralph]
 
    * New Plotscripting Features
     * "dir X", "dir Y" [Ralph]
@@ -62,12 +65,34 @@ WHAT IS NEW?
       debugger/editor [Ralph]
     * "get/set turn based battle mode" and "get/set active time battle mode"
       [James]
-    * Slice extra data are now variable length arrays defaulting to length 3.
-      Maximum length is 1,000,000.
-      Added "resize slice extra", "slice extra length", "append slice extra".
-      Also you can use Python-style negative indexing to read from the back of
-      the extra array: "get slice extra(sl, -1)" is the last value, -2 is the
-      second last, etc. [Ralph]
+    * NPC, slice, zone and menu item extra data are now variable length arrays
+      defaulting to length 3. Maximum length is 5,000,000.
+      * The slice & zone editors allow resizing the extra data; the menu editor
+        remains limited to 3 extra data.
+      * "resize extra", "extra length", "append extra", as well as "get extra"
+        and "set extra" alternatives to "get/set slice/zone/... extra". These can
+        be used with any NPC reference/slice/zone/menu item handle.
+      * "get zone" command returns a zone handle.
+      * You can use Python-style negative indexing to read from the back of
+        the extra array: "get extra(sl, -1)" is the last value, -2 is the second
+        last, etc. Works with all extra data commands.
+      [Ralph]
+    * "lookup next slice", "next slice in tree" [Ralph]
+    * "window is focused" [Ralph]
+    * "show value" can now show multiple values. Added "show values" as an alias.
+      Added "show value of", a cross between "show value" and "trace value" that
+      shows expressions. Added "trace value of" as an alias to "trace value".
+      [Ralph]
+    * "exit(x)" is short for "exit returning(x)" and "exit" is short for
+      "exit script" [Ralph]
+    * (Unix only) --print and --printonly commandline args cause trace/tracevalue
+      to print to the terminal as well as/instead of g_debug.txt [Ralph]
+    * "reset enemy data", "reset enemy stat", "reset enemy name" [Ralph]
+    * "slice is valid" can now tell slice handles apart from anything else (e.g.
+      NPCs, menus) and is safe to use: it no longer returns false positives...
+      until you create and delete at least a million slices. Good enough. [Ralph]
+    * "hero uses level mp" [James]
+    * "delete map state" takes customid arg, like other mapstate commands [Ralph]
 
   *** Changes
     * Removed support for optional prefixes on .ini config settings (e.g.
@@ -76,6 +101,9 @@ WHAT IS NEW?
       Too complex! [Ralph]
     * When you import a slice collection with forbidden slices they are cleaned
       up for you, rather than not importing and telling you to clean it [Ralph]
+    * The number of slices is now limited to 2.1 million because slice handles
+      don't count up from 1, in order to fix "slice is valid". (Handles for
+      slices in old saves still work) [Ralph]
 
   *** Bugfixes
     * Various gfx_sdl2 window size/position/resizing and mouse glitches when
@@ -122,6 +150,9 @@ WHAT IS NEW?
       [Ralph]
     * Crash reporting on Windows stopped working for a while, aside from the
       manual email fallback [Ralph]
+    * "load map state" to load tile & wallmaps from a custom state ID usually
+      wrongly complained about wrong map size [Ralph]
+    * Deleting all party heroes showed a BUG error. It's OK momentarily [Ralph]
 
   *** Stuff Only Developers Will Notice
     * Source code license has been changed to Dual GPLv2+ & MIT license
@@ -132,6 +163,10 @@ WHAT IS NEW?
     * UI in Battle (Hero names, meters, HP, status icons) are now all
       slice-based instead of hardcoded. It still looks the same by
       default! [James]
+    * EditorKit framework to make creating and modifying editors easy. Several
+      editors have been converted to it. Will allow many UI improvements [Ralph]
+    * gfx_fb and gfx_console take a --nogfx arg, combine with --print to create
+      commandline programs [Ralph]
 
 
 September 13 2021 [Hróðvitnir]

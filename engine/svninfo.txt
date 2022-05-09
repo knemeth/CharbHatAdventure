@@ -4,10 +4,10 @@ URL: https://rpg.hamsterrepublic.com/source/wip
 Relative URL: ^/wip
 Repository Root: https://rpg.hamsterrepublic.com/source
 Repository UUID: 7d344553-34f0-0310-a9b1-970ce8f1c3a2
-Revision: 12883
+Revision: 12951
 Node Kind: directory
 Schedule: normal
 Last Changed Author: teeemcee
-Last Changed Rev: 12883
-Last Changed Date: 2022-04-05 21:44:11 -0700 (Tue, 05 Apr 2022)
+Last Changed Rev: 12951
+Last Changed Date: 2022-05-04 07:40:21 -0700 (Wed, 04 May 2022)
 

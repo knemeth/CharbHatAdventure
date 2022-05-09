@@ -29,7 +29,7 @@ script, createProjectile, spr, x, y, w, h, dir, spd=projectile:speed, friendly=f
     setSliceExtra(projectile, extra0, dir)
     setSliceExtra(projectile, extra1, spd)
     setSliceExtra(projectile, extra2, projectile:lifetime / spd)
-    #appendExtra(projectile, walls)
+    appendExtra(projectile, walls)
 
     exitReturning(projectile)
 end
