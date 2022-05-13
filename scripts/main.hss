@@ -75,7 +75,7 @@ defineConstant, begin
     2,player:shootFrames
     42,player:blockSet
     3,player:blockFrames
-    30,player:blockTime
+    15,player:blockTime
     30,player:deadSet
     1,player:deadFrames
     30,player:attackWidth
@@ -332,6 +332,8 @@ script, primaryLoopContents, begin
     animateEffects()
     moveParticles()
     processEmitters()
+
+    writePassBlock(8, 61, (checkTag(tag:caveOpen),xor,true)*(northwall+southwall+eastwall+westwall))
 
     # Player
     evaluateInput()

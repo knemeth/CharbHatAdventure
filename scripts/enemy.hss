@@ -97,7 +97,7 @@ end
 
 script, enemyBehavior, ref, begin
     # check enemy type and apply behavior based on current conditions
-    variable(dist, seq, npcSl, bearing, subX, subY, i, spawn, x, y)
+    variable(dist, seq, npcSl, bearing, subX, subY, i, j, spawn, x, y, vfx)
 
     npcSl := getNPCSlice(ref)
 
@@ -566,7 +566,6 @@ script, enemyBehavior, ref, begin
             if(getEnemyPatternStep(ref) >= 8) then(
                 setEnemyPatternStep(ref, random(0, 2))
                 # showBubble
-                variable(vfx)
                 vfx := loadHeroSprite(14)
                 setParent(vfx, npcSl)
                 setVertAnchor(vfx, edge:bottom)
@@ -955,20 +954,36 @@ script, enemyBehavior, ref, begin
                     # Change locations and put up walls
                     if(getEnemyPatternStep(ref) == 0) then(
                         # Disappear and Clear existing walls
+                        for(j, 0, 6) do(
+                            vfx := loadHeroSprite(3)
+                            setHorizAnchor(vfx, edge:center), setVertAnchor(vfx, edge:middle)
+                            setParent(vfx, fxLayer)
+                            putSlice(vfx, random(npcPixelX(ref)--10,npcPixelX(ref)+30), random(npcPixelY(ref)--10, npcPixelY(ref)+30))
+                            createAnimation(vfx, 32, 4, false, dissolve:fade)
+                        )
                         setSliceVisible(npcSl, false)
+                        teleportObject(npcSl, random(159, 167) * 20, random(75, 76) * 20)
+                        startAOE(sliceCX(npcSl), sliceCY(npcSl), 40, 40, 60, 1, 11, 2)
                         for(i, npcCopyCount(26)--1, 0, -1) do(
                             spawn := npcReference(26, i)
                             writePassBlock(npcX(spawn), npcY(spawn), 0)
                             writeMapBlock(npcX(spawn), npcY(spawn), 0, 2)
                             writeMapBlock(npcX(spawn), npcY(spawn)--1, 0, 7)
+                            for(j, 0, 4) do(
+                                vfx := loadHeroSprite(3)
+                                setHorizAnchor(vfx, edge:center), setVertAnchor(vfx, edge:middle)
+                                setParent(vfx, fxLayer)
+                                putSlice(vfx, random(npcPixelX(spawn),npcPixelX(spawn)+20), random(npcPixelY(spawn), npcPixelY(spawn)+20))
+                                createAnimation(vfx, 32, 4, false, dissolve:fade)
+                            )
                             destroyNPC(spawn)
                         )
                         setEnemyActDelay(ref, 60)
                         setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
                     ) elseif(getEnemyPatternStep(ref) == 1) then(
                         # Reappear and create new walls
-                        teleportObject(npcSl, random(159, 167) * 20, random(75, 76) * 20)
                         setSliceVisible(npcSl, true)
+                        dissolveSprite(getNPCSprite(ref), dissolve:puff, 8, 0, true)
                         x := -2, y := 0
                         for(i, 0, 3) do(
                             if(i == 1) then(x := 0, y := -2)
@@ -978,6 +993,13 @@ script, enemyBehavior, ref, begin
                             if(sliceCX(player)/20 == npcX(spawn) && sliceCY(player)/20 == npcY(spawn)) then(
                                 teleportObject(player, sliceX(player), npcPixelY(spawn)+20)
                                 waitForKey(key:p)
+                            )
+                            for(j, 0, 4) do(
+                                vfx := loadHeroSprite(3)
+                                setHorizAnchor(vfx, edge:center), setVertAnchor(vfx, edge:middle)
+                                setParent(vfx, fxLayer)
+                                putSlice(vfx, random(npcPixelX(spawn),npcPixelX(spawn)+20), random(npcPixelY(spawn), npcPixelY(spawn)+20))
+                                createAnimation(vfx, 32, 4, false, dissolve:fade)
                             )
                             writePassBlock(npcX(spawn), npcY(spawn), northwall+southwall+eastwall+westwall)
                             writeMapBlock(npcX(spawn), npcY(spawn), 69, 2)

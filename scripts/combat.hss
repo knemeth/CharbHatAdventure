@@ -174,8 +174,8 @@ script, evaluateInput, begin
             newState(state:block, player:blockSet, player:blockFrames)
             # Check for perfect block here
             # -----
-            setHeroStat(me, stat:Def, 50, maximumStat)
-            setHeroStat(me, stat:Def, 50)
+            setHeroStat(me, stat:Def, 10, maximumStat)
+            setHeroStat(me, stat:Def, 10)
             setTimer(timer:block, player:blockTime, 1, @returnToIdle)
 
             exitReturning(state:block)
