@@ -77,10 +77,7 @@ script, updateProjectiles, begin
             hit := sliceCollide(player, sl)
             if(hit && getHeroStat(me, stat:Dodge) == 0) then(
                 # Damage player
-                if(getHeroStat(me, stat:Def) > 0) then(
-                    pushObject(hit, bearing, projectile:knockback / 2)
-                ) else(
-                    pushObject(hit, bearing, projectile:knockback)
+                if(getHeroStat(me, stat:Def) == 0) then(
                     damagePlayer(1)
                 )
                 freeSlice(sl)

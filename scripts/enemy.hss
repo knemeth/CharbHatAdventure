@@ -844,7 +844,7 @@ script, enemyBehavior, ref, begin
                                             minionCount += 6
                                         )
                                         case(else) do(
-                                            startAOE((156 + (getEnemyPatternStep(ref),mod,15)) * 20, (74 + (getEnemyPatternStep(ref)*2/15)) * 20, 32, 48, 48, 19, 2)
+                                            startAOE((156 + (getEnemyPatternStep(ref),mod,15)) * 20, (74 + (getEnemyPatternStep(ref)*2/15)) * 20, 32, 48, 48, 19, 2, sfx:flare)
                                         )
                                     )
                                     setEnemyPatternStep(ref, getEnemyPatternStep(ref) + 1)
@@ -864,7 +864,7 @@ script, enemyBehavior, ref, begin
                                 switch(seq) do(
                                     case(2) do(
                                         # AOE follows player
-                                        startAOE(sliceCX(player), sliceCY(player), 100, 100, 80, 2, 18, 2)
+                                        startAOE(sliceCX(player), sliceCY(player), 100, 100, 80, 2, 18, 2, sfx:flare)
                                         setEnemyActDelay(ref, 30)
                                         setEnemySequenceStep(ref, 1)
                                     ) 
@@ -876,7 +876,7 @@ script, enemyBehavior, ref, begin
                                             setEnemyActDelay(ref, 80)
                                             setEnemySequenceStep(ref, 1)
                                         ) else(
-                                            startAOE((156 + (getEnemyPatternStep(ref),mod,15)) * 20, (74 + (getEnemyPatternStep(ref)*2/15)) * 20, 32, 48, 48, 2, 19, 2)
+                                            startAOE((156 + (getEnemyPatternStep(ref),mod,15)) * 20, (74 + (getEnemyPatternStep(ref)*2/15)) * 20, 32, 48, 48, 2, 19, 2, sfx:flare)
                                             setEnemyPatternStep(ref, getEnemyPatternStep(ref) + 1)
                                             setEnemyActDelay(ref, 2)
                                         )
@@ -938,16 +938,32 @@ script, enemyBehavior, ref, begin
                         setEnemyActDelay(ref, 60)
                         setEnemyState(ref, ai:melee)
                     ) elseif(seq == 0) then(
-                        setEnemyActDelay(ref, 50)
+                        setEnemyActDelay(ref, 70)
                         setEnemySequenceStep(ref, 1)
                         setEnemyState(ref, ai:charge)
                     ) elseif(seq == 4) then(
-                        setEnemyActDelay(ref, 50)
+                        setEnemyActDelay(ref, 80)
+                        playSound(sfx:powerup, false, true)
+                        vfx := loadHeroSprite(20)
+                        setParent(vfx, fxLayer)
+                        setHorizAnchor(vfx, edge:center), setVertAnchor(vfx, edge:bottom)
+                        putSlice(vfx, sliceCX(npcSl), sliceCY(npcSl))
+                        createAnimation(vfx, 40, 5)
                         setEnemyState(ref, ai:mega)
                     ) else(
                         setEnemySequenceStep(ref, seq+1)
-                        setEnemyActDelay(ref, 50)
-                        setEnemyState(ref, random(9, 11))
+                        setEnemyActDelay(ref, 40)
+                        
+                        i := random(9, 11)
+                        if(i <> 11) then(
+                            playSound(sfx:powerup, false, true)
+                            vfx := loadHeroSprite(20)
+                            setParent(vfx, fxLayer)
+                            setHorizAnchor(vfx, edge:center), setVertAnchor(vfx, edge:bottom)
+                            putSlice(vfx, sliceCX(npcSl), sliceCY(npcSl))
+                            createAnimation(vfx, 40, 5)
+                        )
+                        setEnemyState(ref, i)
                     )
                 )
                 case(ai:charge) do(
@@ -961,6 +977,7 @@ script, enemyBehavior, ref, begin
                             putSlice(vfx, random(npcPixelX(ref)--10,npcPixelX(ref)+30), random(npcPixelY(ref)--10, npcPixelY(ref)+30))
                             createAnimation(vfx, 32, 4, false, dissolve:fade)
                         )
+                        playSound(sfx:flare, false, true)
                         setSliceVisible(npcSl, false)
                         teleportObject(npcSl, random(159, 167) * 20, random(75, 76) * 20)
                         startAOE(sliceCX(npcSl), sliceCY(npcSl), 40, 40, 60, 1, 11, 2)
@@ -978,7 +995,7 @@ script, enemyBehavior, ref, begin
                             )
                             destroyNPC(spawn)
                         )
-                        setEnemyActDelay(ref, 60)
+                        setEnemyActDelay(ref, 90)
                         setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
                     ) elseif(getEnemyPatternStep(ref) == 1) then(
                         # Reappear and create new walls
@@ -992,7 +1009,6 @@ script, enemyBehavior, ref, begin
                             spawn := createNPC(26, (sliceCX(npcSl)/20)+x, (sliceCY(npcSl)/20)+y) 
                             if(sliceCX(player)/20 == npcX(spawn) && sliceCY(player)/20 == npcY(spawn)) then(
                                 teleportObject(player, sliceX(player), npcPixelY(spawn)+20)
-                                waitForKey(key:p)
                             )
                             for(j, 0, 4) do(
                                 vfx := loadHeroSprite(3)
@@ -1011,6 +1027,7 @@ script, enemyBehavior, ref, begin
                     )
                 )
                 case(ai:spray1) do(
+                    # circles
                     if(getEnemyPatternStep(ref) < 64) then(
                         playSound(sfx:shot, false, true)
                         createProjectile(10, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getEnemyPatternStep(ref)*(360/16), 2000, false, false)
@@ -1018,30 +1035,34 @@ script, enemyBehavior, ref, begin
                             createProjectile(10, sliceCX(npcSl), sliceCY(npcSl), 10, 10, (64 -- getEnemyPatternStep(ref)) * (360/16), 2000, false, false)
                         )
                         setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                        setEnemyActDelay(ref, 6)
                     ) else(
                         setEnemyState(ref, ai:idle)
                         setEnemyPatternStep(ref, 0)
+                        setEnemyActDelay(ref, 140)
                     )
-                    setEnemyActDelay(ref, 6)
                 )
                 case(ai:spray2) do(
+                    # actual spray
                     if(getEnemyPatternStep(ref) < 64) then(
                         playSound(sfx:shot, false, true)
                         createProjectile(10, sliceCX(npcSl), sliceCY(npcSl), 10, 10, getBearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player)) + random(-20,20), 2000, false, false)
                         setEnemyPatternStep(ref, getEnemyPatternStep(ref)+1)
+                        setEnemyActDelay(ref, 2)
                     ) else(
                         setEnemyState(ref, ai:idle)
                         setEnemyPatternStep(ref, 0)
+                        setEnemyActDelay(ref, 220)
                     )
-                    setEnemyActDelay(ref, 2)
                 )
                 case(ai:spray3) do(
+                    # aoe
                     if(getEnemyPatternStep(ref) > 44) then(
                         setEnemyState(ref, ai:idle)
                         setEnemyPatternStep(ref, 0)
-                        setEnemyActDelay(ref, 80)
+                        setEnemyActDelay(ref, 140)
                     ) else(
-                        startAOE((156 + (getEnemyPatternStep(ref),mod,15)) * 20, (74 + (getEnemyPatternStep(ref)*2/15)) * 20, 32, 48, 48, 2, 19, 2)
+                        startAOE((156 + (getEnemyPatternStep(ref),mod,15)) * 20, (74 + (getEnemyPatternStep(ref)*2/15)) * 20, 32, 48, 48, 2, 19, 2, sfx:flare)
                         setEnemyPatternStep(ref, getEnemyPatternStep(ref) + 1)
                         setEnemyActDelay(ref, 2)
                     )
@@ -1179,7 +1200,7 @@ end
 # Attack Patterns
 # ===================================
 
-script, startAOE, x, y, w, h, delay=60, dmg=1, set=5, antFrames=0, begin
+script, startAOE, x, y, w, h, delay=60, dmg=1, set=5, antFrames=0, sfx=false, begin
     variable(sl, fill, sprite)
 
     sl := createRect(w, h)
@@ -1205,9 +1226,11 @@ script, startAOE, x, y, w, h, delay=60, dmg=1, set=5, antFrames=0, begin
     setSliceVisible(sprite, false)
     centerSlice(sprite)
 
+    resizeExtra(sl, 4)
     setSliceExtra(sl, extra0, delay)
     setSliceExtra(sl, extra1, dmg)
     setSliceExtra(sl, extra2, antFrames)
+    setSliceExtra(sl, 3, sfx)
 end
 
 script, processAOE, begin
@@ -1217,6 +1240,9 @@ script, processAOE, begin
         sl := sliceChild(aoeLayer, i)
         timer := getSliceExtra(sl, extra0)
         if(timer <= 0) then(
+            if(getSliceExtra(sl, 3)) then(
+                playSound(getSliceExtra(sl, 3), false, true)
+            )
             if(sliceCollide(sl, player)) then(
                 damagePlayer(getSliceExtra(sl, extra1))
             )
@@ -1376,7 +1402,7 @@ script, getEnemyFrames, ref, begin
             case(enemy:speaker) exitReturning(4)
             case(enemy:stardummy) exitReturning(1)
             case(enemy:barrier) exitReturning(1)
-            case(enemy:charredbile) exitReturning(1)
+            case(enemy:charredbile) exitReturning(4)
             case(else) exitReturning(4)
         )
     ) else(

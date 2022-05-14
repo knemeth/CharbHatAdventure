@@ -75,7 +75,7 @@ defineConstant, begin
     2,player:shootFrames
     42,player:blockSet
     3,player:blockFrames
-    15,player:blockTime
+    14,player:blockTime
     30,player:deadSet
     1,player:deadFrames
     30,player:attackWidth

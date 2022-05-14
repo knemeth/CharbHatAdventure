@@ -51,6 +51,8 @@ define constant, begin
 25,sfx:Shot
 26,sfx:Swish
 27,sfx:Coin
+28,sfx:Flare
+29,sfx:Powerup
 0,stat:HP
 1,stat:SP
 2,stat:Atk
