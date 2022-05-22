@@ -63,7 +63,7 @@ script, updateProjectiles, begin
                 if(npcReferenceFromSlice(hit) && getNPCPool(npcReferenceFromSlice(hit)) == pool:global) then(
                     # Damage enemy/npc
                     switch(getNPCID(npcReferenceFromSlice(hit))) do(
-                        case(enemy:barrier, enemy:flame, enemy:charredbile) break
+                        case(enemy:barrier, enemy:flame, enemy:charredbile, enemy:chartile) break
                         case(else) pushObject(hit, bearing, projectile:knockback)   # from movement.hss
                     )
                     stunEnemy(npcReferenceFromSlice(hit), player:rangedStun)

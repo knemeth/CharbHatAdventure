@@ -18,6 +18,9 @@ define constant, begin
 16,tag:challengeInProgress
 17,tag:climbedMountain
 18,tag:charredbileDefeated
+19,tag:chartileWarning
+20,tag:chartileActivated
+21,tag:chartileHidden
 0,song:Adventure
 1,song:Battle Ready
 2,song:9 Dark Fantasy Studio  Stars
@@ -53,6 +56,9 @@ define constant, begin
 27,sfx:Coin
 28,sfx:Flare
 29,sfx:Powerup
+30,sfx:Shoot1
+31,sfx:Shoot2
+32,sfx:Shoot3
 0,stat:HP
 1,stat:SP
 2,stat:Atk

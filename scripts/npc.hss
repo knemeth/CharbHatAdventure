@@ -978,6 +978,14 @@ script, endChallenge, begin
     stopSong()
 
     setTag(tag:challengeInProgress, off)
+
+    if(challengeProgress == 2) then(
+        controlsSuspended := true 
+        showTextbox(125)
+        timerWaitForTextbox()
+    )
+
+    saveInSlot(1)
 end
 
 # SHOP
@@ -1054,4 +1062,38 @@ plotscript, shopItem, handle, cost, begin
     ) else(
         showTextbox(119)
     )
+end
+
+# CHARTILE
+# =======================================
+
+plotscript, chartileWarning, begin
+    showTextbox(121)
+    controlsSuspended := true 
+    timerWaitForTextbox()
+    setTag(tag:chartileWarning, on)
+end
+
+plotscript, chartileAgro, begin
+    if(checkTag(tag:chartileActivated)) then(
+        controlsSuspended := true
+        showTextbox(124)
+        timerWaitForTextbox()
+    ) else(
+        controlsSuspended := true
+        showTextbox(123)
+        timerWaitForTextbox()
+        setTag(tag:chartileActivated, on)
+        setTag(tag:chartileHidden, on)
+        minionCount := 0
+    )
+end
+
+plotscript, chartileCreate, begin
+    # Create new one
+    variable(x, y, spawn)
+
+    x := random(68, 80), y := random(5, 12)
+    spawn := createEnemy(enemy:chartile, x, y)
+    writeMapBlock(x, y, 86, 0)
 end

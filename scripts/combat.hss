@@ -303,9 +303,11 @@ end
 script, damageEnemy, ref, amount, begin
     variable(sl, current)
 
-    if(getNPCID(ref) == -1) then(exitScript())
     if(amount <= 0) then(amount := 1)
-    if(getNPCID(ref) == enemy:speaker) then(amount := 0)
+    switch(getNPCID(ref)) do(
+        case(-1) exitScript()
+        case(enemy:speaker, enemy:chartile) amount := 0
+    )
 
     sl := getNPCSlice(ref)
     vfx := createText()
@@ -356,7 +358,7 @@ script, damageEnemy, ref, amount, begin
             case(enemy:charvile) charvileKilled()
             case(enemy:chadbile) chadbileKilled()
             case(enemy:starbile) starbileKilled()
-            case(enemy:charredbile) minionCount -= 1, createCoins(100, sliceCX(sli), sliceCY(sli))
+            case(enemy:charredbile) createCoins(100, sliceCX(sli), sliceCY(sli))
             case(enemy:barrier) setTag(tag:caveOpen, on)
             case(else) createRandomPickup(sliceCX(sli), sliceCY(sli)), createCoins(random(1,2), sliceCX(sli), sliceCY(sli))
         )
@@ -380,7 +382,7 @@ script, meleeCollisions, begin
             ref := npcReferenceFromSlice(hit)
             if(ref && getNPCPool(ref) == pool:global && getEnemyHit(ref) == false) then(
                 switch(getNPCID(ref)) do(
-                    case(enemy:barrier, enemy:flame, enemy:charredbile) break
+                    case(enemy:barrier, enemy:flame, enemy:charredbile, enemy:chartile) break
                     case(else) pushObject(hit, getBearing(sliceCX(player), sliceCY(player), sliceCX(hit), sliceCY(hit)), projectile:knockback)
                 )
                 setEnemyHit(ref, true)
