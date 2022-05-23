@@ -191,12 +191,14 @@ script, enemyBehavior, ref, begin
             ) elseif(dist / 20 < 4  && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
                 # Run away
                 bearing := getBearing(sliceCX(player), sliceCY(player), sliceCX(npcSl), sliceCY(npcSl))
+                bearing += 90 + (-180 * random(0,1))
                 setEnemyActDelay(ref, enemy:actDelay)
                 setSliceDir(npcSl, bearing)
                 setSliceV(npcSl, getEnemySpeed(ref))
             ) elseif(dist / 20 < 6 && dist / 20 > 5 && getSliceExtra(getNPCSprite(ref), extra1) == 0) then(
                 # Move towards player
                 bearing := getBearing(sliceCX(npcSl), sliceCY(npcSl), sliceCX(player), sliceCY(player))
+                bearing += 20 + (-40 * random(0,1))
                 setEnemyActDelay(ref, enemy:actDelay)
                 setSliceDir(npcSl, bearing)
                 setSliceV(npcSl, getEnemySpeed(ref))
@@ -848,6 +850,7 @@ script, enemyBehavior, ref, begin
                             seq := getEnemySequenceStep(ref)
                             if(seq == 0 || seq == 2) then(
                                 if(getEnemyPatternStep(ref) > 7) then(
+                                    startAOE(sliceCX(player), sliceCY(player), 100, 100, 80, 2, 18, 2)
                                     setEnemyPatternStep(ref, 0)
                                     setEnemySequenceStep(ref, seq + 1)
                                     setEnemyState(ref, ai:idle)
@@ -882,7 +885,7 @@ script, enemyBehavior, ref, begin
                                             minionCount += 6
                                         )
                                         case(else) do(
-                                            startAOE((156 + (getEnemyPatternStep(ref),mod,15)) * 20, (74 + (getEnemyPatternStep(ref)*2/15)) * 20, 32, 48, 48, 19, 2, sfx:flare)
+                                            startAOE((156 + (getEnemyPatternStep(ref),mod,15)) * 20, (74 + (getEnemyPatternStep(ref)*2/15)) * 20, 32, 48, 48, 2, 19, sfx:flare)
                                         )
                                     )
                                     setEnemyPatternStep(ref, getEnemyPatternStep(ref) + 1)
@@ -1385,6 +1388,8 @@ script, getEnemyWidth, ref, begin
 
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
+        case(enemy:melee) exitReturning(12)
+        case(enemy:ranged) exitReturning(15)
         case(enemy:testboss) exitReturning(40)
         case(enemy:slime) exitReturning(18)
         case(enemy:charvile) exitReturning(40)
@@ -1409,6 +1414,8 @@ script, getEnemyHeight, ref, begin
 
     switch(id) do(
         case(enemy:dummy) exitReturning(10)
+        case(enemy:melee) exitReturning(10)
+        case(enemy:ranged) exitReturning(9)
         case(enemy:testboss) exitReturning(15)
         case(enemy:slime) exitReturning(8)
         case(enemy:charvile) exitReturning(30)
@@ -1462,6 +1469,8 @@ script, getEnemyFrames, ref, begin
 
         switch(id) do(
             case(enemy:dummy) exitReturning(4)
+            case(enemy:melee) exitReturning(2)
+            case(enemy:ranged) exitReturning(2)
             case(enemy:testboss) exitReturning(1)
             case(enemy:slime) exitReturning(2)
             case(enemy:charvile) exitReturning(1)

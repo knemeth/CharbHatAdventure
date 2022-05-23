@@ -59,6 +59,7 @@ define constant, begin
 30,sfx:Shoot1
 31,sfx:Shoot2
 32,sfx:Shoot3
+33,sfx:Sink
 0,stat:HP
 1,stat:SP
 2,stat:Atk

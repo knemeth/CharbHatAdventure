@@ -919,10 +919,11 @@ plotscript, declareChallenge, begin
     timerWaitForTextbox()
 end
 
-plotscript, startChallenge, begin
-    setTag(tag:challengeInProgress, on)
+plotscript, startChallenge, arg, ref, begin
+    controlsSuspended := true
+
     # Temp walls
-    variable(x, y)
+    variable(x, y, vfx)
     for(x, 0, mapWidth()--1) do(
         for(y, 0, mapHeight()--1) do(
             if(readZone(1, x, y)) then(
@@ -932,7 +933,24 @@ plotscript, startChallenge, begin
         )
     )
 
+    vfx := loadHeroSprite(12)
+    setParent(vfx, fxLayer)
+    setHorizAnchor(vfx, edge:center), setVertAnchor(vfx, edge:middle)
+    putSlice(vfx, sliceCX(getNPCSlice(ref)), sliceCY(getNPCSlice(ref))+10)
+    createAnimation(vfx, 120, 15, false, dissolve:fade)
+
+    playSound(sfx:sink)
+
+    dissolveSprite(getNPCSprite(ref), dissolve:sinkintoground, 121)
+    setTimer(timer:cutscene, 120, 1, @finishChallengeStart)
+end
+
+script, finishChallengeStart, begin
+    setTag(tag:challengeInProgress, on)
+
     playSong(1)
+
+    controlsSuspended := false
 
     minionCount := 0
     setEnemyState(globalNPC(enemy:challenger, 0), ai:idle)
