@@ -1115,3 +1115,87 @@ plotscript, chartileCreate, begin
     spawn := createEnemy(enemy:chartile, x, y)
     writeMapBlock(x, y, 86, 0)
 end
+
+# ARRBILE
+# =====================================
+
+plotscript, meetArrbile, begin
+    variable(ref, sl, vfx, vfx2)
+
+    setTag(tag:arrbileTriggered, on)
+
+    controlsSuspended := true 
+    suspendNPCWalls()
+
+    showTextbox(126)
+    waitForTextbox()
+
+    panCamera(north, 4, 1)
+
+    ref := npcReference(30, 0)
+    sl := getNPCSlice(ref)
+    walkNPC(ref, down, 10)
+    waitForNPC(ref)
+    putSliceSubpixel(sl, sliceX(sl)*1000, sliceY(sl)*1000)
+
+    wait(30)
+    showTextbox(127)
+    waitForTextbox()
+    wait(30)
+
+    playSound(sfx:cannonball)
+    vfx := loadAttackSprite(11)
+    centerSlice(vfx)
+    setParent(vfx, getNPCSprite(ref))
+    putSlice(vfx, 0, -12)
+    moveSliceBy(vfx, 0, -140, 45)
+    wait(120)
+    putSlice(vfx, sliceX(vfx)--12, sliceY(vfx))
+    playSound(sfx:falling)
+    wait(80)
+    moveSliceBy(vfx, 0, 140, 45)
+    wait(45)
+
+    setTag(tag:arrbileDefeated, on)
+    ref := npcReference(33, 0)
+
+    playSound(sfx:smash)
+    vfx2 := loadHeroSprite(5)
+    setParent(vfx2, getNPCSprite(ref))
+    centerSlice(vfx2)
+    putSlice(vfx2, sliceX(vfx), sliceY(vfx))
+    freeSlice(vfx)
+    createAnimation(vfx2, 40, 5)
+
+    setTimer(timer:cutscene, 120, 1, @nextArrScene)
+    setTimerArgs(timer:cutscene, 0, ref)    
+end
+
+script, nextArrScene, scene, arg1, arg2, arg3, begin
+    variable(vfx)
+    switch(scene) do(
+        case(0) do(
+            showTextbox(131)
+            
+            setTimer(timer:cutscene, 120, 1, @nextArrScene)
+            setTimerArgs(timer:cutscene, 1, arg1)
+        )
+        case(1) do(
+            showTextbox(132)
+
+            #playSound()
+            vfx := loadHeroSprite(21)
+            setParent(vfx, getNPCSprite(arg1))
+            putSlice(vfx, 11, 2)
+            createAnimation(vfx, 40, 5, true)
+
+            setTimer(timer:cutscene, 120, 1, @nextArrScene)
+            setTimerArgs(timer:cutscene, 2, arg1)
+        )
+        case(2) do(
+            timerWaitForTextbox()
+            resumeNPCWalls()
+            cameraFollowsHero(me)
+        )
+    )
+end

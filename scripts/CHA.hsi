@@ -21,6 +21,8 @@ define constant, begin
 19,tag:chartileWarning
 20,tag:chartileActivated
 21,tag:chartileHidden
+22,tag:arrbileTriggered
+23,tag:arrbileDefeated
 0,song:Adventure
 1,song:Battle Ready
 2,song:9 Dark Fantasy Studio  Stars
@@ -60,6 +62,9 @@ define constant, begin
 31,sfx:Shoot2
 32,sfx:Shoot3
 33,sfx:Sink
+34,sfx:Falling
+35,sfx:Smash
+36,sfx:Cannonball
 0,stat:HP
 1,stat:SP
 2,stat:Atk
