@@ -28,6 +28,7 @@ define constant, begin
 2,song:9 Dark Fantasy Studio  Stars
 3,song:7 Dark Fantasy Studio  Black
 4,song:27Dark Fantasy Studio Myster
+5,song:BRPG_Vanquisher_FULL_Loop
 0,sfx:Melee
 1,sfx:Melee2
 2,sfx:Melee3
@@ -65,6 +66,10 @@ define constant, begin
 34,sfx:Falling
 35,sfx:Smash
 36,sfx:Cannonball
+37,sfx:Select
+38,sfx:MenuClose
+39,sfx:fireball
+40,sfx:Thip
 0,stat:HP
 1,stat:SP
 2,stat:Atk

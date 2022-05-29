@@ -25,6 +25,7 @@ script, evaluateInput, begin
 
     if(escPress && topMenu == false) then(
         controlsSuspended := true
+        playSound(sfx:select, false, true)
         openMenu(0)
     )
     # Check for melee attack
@@ -358,7 +359,7 @@ script, damageEnemy, ref, amount, begin
             case(enemy:charvile) charvileKilled()
             case(enemy:chadbile) chadbileKilled()
             case(enemy:starbile) starbileKilled()
-            case(enemy:charredbile) createCoins(100, sliceCX(sli), sliceCY(sli))
+            case(enemy:charredbile) createCoins(100, sliceCX(sli), sliceCY(sli)), setTag(tag:charredbileDefeated, on)
             case(enemy:barrier) setTag(tag:caveOpen, on)
             case(else) createRandomPickup(sliceCX(sli), sliceCY(sli)), createCoins(random(1,2), sliceCX(sli), sliceCY(sli))
         )

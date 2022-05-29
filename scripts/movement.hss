@@ -165,7 +165,7 @@ script, teleportObject, target, x, y, begin
         playerFrames := player:idleFrames
     )
     setSliceV(target, 0)
-    putSlice(target, x + 10 -- (sliceWidth(target)/2), y  + 20 -- sliceHeight(target))
+    putSlice(target, x + 10, y  + 20 -- sliceHeight(target))
     putSliceSubpixel(target, sliceX(target)*1000, sliceY(target)*1000)
     updateNPCorHeroFromSlice(target)
 end

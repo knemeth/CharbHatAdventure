@@ -243,6 +243,7 @@ end
 plotscript, closeMainMenu, begin
     controlsSuspended := false
     gamePaused := false
+    playSound(sfx:menuclose, false, true)
 end
 
 plotscript, titleScreen, begin
@@ -426,7 +427,8 @@ script, initObject, handle, width, height, atkWidth, atkHeight, begin
     )
 
     setSliceSize(handle, width, height)
-    putSlice(handle, x + (20--width), y + (20--height))
+    setHorizAnchor(handle, edge:center)
+    putSlice(handle, x + 10, y + (20--height))
     updateNPCorHeroFromSlice(handle)
     putSliceSubpixel(handle, sliceX(handle)*1000, sliceY(handle)*1000)
 end
@@ -444,7 +446,7 @@ plotscript, mapAutorun, begin
             )
         ) else(
             switch(getNPCID(ref)) do(
-                case(npc:charmile, 23, 25) initObject(getNPCSlice(ref), 20, 24, 0, 0)
+                case(npc:charmile, 23, 25) initObject(getNPCSlice(ref), getEnemyWidth(ref), 24, 0, 0)
             )
         )
         

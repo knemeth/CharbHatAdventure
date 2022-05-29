@@ -122,7 +122,7 @@ plotscript, charvile, begin
     setEnemyActDelay(globalNPCReference(enemy:charvile), 30)
     setEnemyState(globalNPCReference(enemy:charvile), ai:idle)
     resumeObstruction()
-    playSong(1)
+    playSong(4)
 
     minionCount := 0
 end
@@ -749,6 +749,8 @@ plotscript, upTheMountain, begin
     putSliceSubpixel(player, sliceX(player), sliceY(player))
     updateNPCorHeroFromSlice(player)
 
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
+
     if(checkTag(tag:climbedMountain) == off) then(
         setTag(tag:climbedMountain, on)
         cutsceneBg := loadSliceCollection(4)
@@ -948,7 +950,7 @@ end
 script, finishChallengeStart, begin
     setTag(tag:challengeInProgress, on)
 
-    playSong(1)
+    
 
     controlsSuspended := false
 
@@ -960,11 +962,13 @@ script, finishChallengeStart, begin
             # First Challenge
             challengePoints := 0 
             challengeGoal := 18
+            playSong(1)
         )
         case(1) do(
             # Second Challenge - Melee focus
             challengePoints := 0
             challengeGoal := 28
+            playSong(1)
         )
         case(2) do(
             createEnemy(enemy:charredbile, 163, 78)
@@ -976,6 +980,7 @@ script, finishChallengeStart, begin
             currentBoss := enemy:charredbile
             challengePoints := 0
             challengeGoal := 1
+            playSong(5)
         )
     )
 end
@@ -1120,7 +1125,7 @@ end
 # =====================================
 
 plotscript, meetArrbile, begin
-    variable(ref, sl, vfx, vfx2)
+    variable(ref, vfx, vfx2)
 
     setTag(tag:arrbileTriggered, on)
 
@@ -1130,13 +1135,12 @@ plotscript, meetArrbile, begin
     showTextbox(126)
     waitForTextbox()
 
-    panCamera(north, 4, 1)
+    panCamera(north, 3, 1)
 
     ref := npcReference(30, 0)
-    sl := getNPCSlice(ref)
+    
     walkNPC(ref, down, 10)
     waitForNPC(ref)
-    putSliceSubpixel(sl, sliceX(sl)*1000, sliceY(sl)*1000)
 
     wait(30)
     showTextbox(127)
@@ -1163,8 +1167,7 @@ plotscript, meetArrbile, begin
     vfx2 := loadHeroSprite(5)
     setParent(vfx2, getNPCSprite(ref))
     centerSlice(vfx2)
-    putSlice(vfx2, sliceX(vfx), sliceY(vfx))
-    freeSlice(vfx)
+    putSlice(vfx2, -12, -12)
     createAnimation(vfx2, 40, 5)
 
     setTimer(timer:cutscene, 120, 1, @nextArrScene)
