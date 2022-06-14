@@ -26,8 +26,9 @@ plotscript, keypressHandler, begin
     if(newKeypress(key:esc)) then(escPress := true)
     # DEBUG KEYS
     #if(keypress(key:1)) then(createCoins(10, mousePixelX+cameraPixelX, mousePixelY+cameraPixelY, 40))
-    if(keypress(key:2)) then(setScreenResolution(160, 90), setSliceVisible(hud, false))
-    if(keypress(key:3)) then(setScreenResolution(400, 225), setSliceVisible(hud, true))
+    if(keypress(key:1)) then(setScreenResolution(160, 90), setSliceVisible(hud, false))
+    if(keypress(key:2)) then(setScreenResolution(400, 225), setSliceVisible(hud, true))
+    #if(keypress(key:5)) then(createEnemy(enemy:slime, (mousePixelX+cameraPixelX)/20, (mousePixelY+cameraPixelY)/20))
     #if(keypress(key:4)) then(challengeProgress := 2)
     #if(keypress(key:r)) then(resetGame())
     #if(keyIsPressed(key:l)) then(charmileWidth(1))

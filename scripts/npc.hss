@@ -1011,6 +1011,64 @@ script, endChallenge, begin
     saveInSlot(1)
 end
 
+script, charredbileKilled, begin
+    variable(c, i, vfx, sl)
+
+    controlsSuspended := true
+    stopSong()
+
+    toggleCutsceneBars(true)
+
+    setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
+
+    c := lastChild(projectileLayer) 
+    while(c) do(
+        i := c
+        c := previousSibling(c)
+        freeSlice(i)
+    )
+
+    wait(10)
+
+    variable(x, y)
+    for(x, 0, mapWidth()--1) do(
+        for(y, 0, mapHeight()--1) do(
+            if(readZone(1, x, y)) then(
+                writePassBlock(x, y, 0)
+                writeMapBlock(x, y, 0, 3)
+            )
+        )
+    )
+
+    toggleBossBar(false)
+
+    showTextbox(134)
+    waitForTextbox()
+
+    sl := getNPCSlice(globalNPC(enemy:charredbile, 0))
+    playSound(sfx:DeathEcho, false, true)
+    for(i, 0, 7) do(
+        vfx := loadAttackSprite(5)
+        setParent(vfx, fxLayer)
+        centerSlice(vfx)
+        putSlice(vfx, sliceCX(sl), sliceCY(sl))
+        createParticle(vfx, 50, 4000, i*(360/8), 20)
+    )
+
+    createCoins(50, sliceCX(sl), sliceCY(sl), 30)
+
+    gainHeroStat(me, stat:HP, 1, true)
+
+    toggleCutsceneBars(false)
+
+    setTimer(timer:cutscene, 30, 1, @delayedTb)
+    setTimerArgs(timer:cutscene, 135)
+
+    setTag(tag:charredbileDefeated, on)
+
+    saveInSlot(1)
+end
+
 # SHOP
 # =============================
 

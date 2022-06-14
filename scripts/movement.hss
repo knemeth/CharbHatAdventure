@@ -176,30 +176,30 @@ script, applyMove, handle, subX, subY, begin
     variable(x, y, w, h, hitX, hitY, newX, newY)
 
     if(handle == false || sliceIsValid(handle) == false) then(exitScript)
-
-    x := sliceX(handle)
-    y := sliceY(handle)
+    
     w := sliceWidth(handle)
     h := sliceHeight(handle)
+    x := sliceX(handle) -- (w / 2)
+    y := sliceY(handle)
 
-    if(sliceSubX(handle) < 1000 || sliceSubY(handle) < 1000) then(
+    # in case the subpixel position hasn't been set
+    if(sliceSubX(handle) == 0 && sliceSubY(handle) == 0) then(
+        $0="No subpixel position on slice "
+        appendNumber(0, handle)
+        scriptError(0)
         putSliceSubpixel(handle, sliceX(handle)*1000, sliceY(handle)*1000)
     )
 
-    # round subX,subY down to X000 if a wall is hit
+    # round subX,subY down to X000 if a wall is going to be hit, to prevent storing momentum
     hitX := checkWallCollisionX(x, y, w, h, subX/1000, subY/1000, player:friction)
     if(abs(hitX) < abs(subX/1000)) then(
         subX := hitX * 1000
         setSliceSubX(handle, (sliceSubX(handle)/1000) * 1000)
-    ) elseif(checkWallCollisionX(x, y, w, h, 1*sign(subX), 1*sign(subY), 0) == 0) then(
-        subX := 0
-    )
+    ) 
     hitY := checkWallCollisionY(x, y, w, h, subX/1000, subY/1000, player:friction)
     if(abs(hitY) < abs(subY/1000)) then(
         subY := hitY * 1000
         setSliceSubY(handle, (sliceSubY(handle)/1000) * 1000)
-    ) elseif(checkWallCollisionY(x, y, w, h, 1*sign(subX), 1*sign(subY), 0) == 0) then(
-        subY := 0
     )
 
     newX := sliceSubX(handle) + subX 

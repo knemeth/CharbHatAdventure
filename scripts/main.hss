@@ -188,6 +188,8 @@ script, startGame, begin
     controlsSuspended := false
     gamePaused := false
 
+    resetInputs()
+
     while(true) do(
         primaryLoopContents()
         wait
