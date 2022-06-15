@@ -745,9 +745,7 @@ plotscript, upTheMountain, begin
     fadeScreenOut()
     wait 
 
-    putSlice(player, 164*20, 43*20)
-    putSliceSubpixel(player, sliceX(player), sliceY(player))
-    updateNPCorHeroFromSlice(player)
+    teleportObject(player, 164*20, 43*20)
 
     setHeroStat(me, stat:HP, getHeroStat(me, stat:HP, maximumStat))
 
